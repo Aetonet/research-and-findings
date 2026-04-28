@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Aetonet — Research & Findings</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background: #f5f5f0;
+      color: #1a1a1a;
+      min-height: 100vh;
+      padding: 48px 24px;
+    }
+
+    header {
+      max-width: 760px;
+      margin: 0 auto 48px;
+    }
+
+    header h1 {
+      font-size: 2rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      color: #111;
+    }
+
+    header p {
+      margin-top: 8px;
+      font-size: 1rem;
+      color: #555;
+    }
+
+    main {
+      max-width: 760px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .report-card {
+      display: flex;
+      align-items: flex-start;
+      gap: 20px;
+      background: #fff;
+      border: 1px solid #e0e0da;
+      border-radius: 10px;
+      padding: 24px 28px;
+      text-decoration: none;
+      color: inherit;
+      transition: box-shadow 0.15s ease, border-color 0.15s ease;
+    }
+
+    .report-card:hover {
+      border-color: #bbb;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+    }
+
+    .report-number {
+      flex-shrink: 0;
+      width: 36px;
+      height: 36px;
+      background: #111;
+      color: #fff;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.85rem;
+      font-weight: 700;
+      margin-top: 2px;
+    }
+
+    .report-meta {
+      flex: 1;
+    }
+
+    .report-meta h2 {
+      font-size: 1.05rem;
+      font-weight: 600;
+      line-height: 1.4;
+      color: #111;
+    }
+
+    .report-meta span {
+      display: inline-block;
+      margin-top: 6px;
+      font-size: 0.82rem;
+      color: #888;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .arrow {
+      flex-shrink: 0;
+      color: #bbb;
+      font-size: 1.2rem;
+      margin-top: 4px;
+      transition: transform 0.15s ease, color 0.15s ease;
+    }
+
+    .report-card:hover .arrow {
+      transform: translateX(4px);
+      color: #555;
+    }
+
+    footer {
+      max-width: 760px;
+      margin: 56px auto 0;
+      font-size: 0.8rem;
+      color: #aaa;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>Aetonet — Research &amp; Findings</h1>
+    <p>A curated collection of field reports, audits, and strategic blueprints.</p>
+  </header>
+
+  <main>
+
+    <a class="report-card" href="1_nepal-hospitality-service-design.html">
+      <div class="report-number">1</div>
+      <div class="report-meta">
+        <h2>Service Design in Nepali Hospitality — A Field Report</h2>
+        <span>Field Report</span>
+      </div>
+      <div class="arrow">&#8594;</div>
+    </a>
+
+    <a class="report-card" href="2_tech-reformation-report.html">
+      <div class="report-number">2</div>
+      <div class="report-meta">
+        <h2>Technology Reformation in Nepali Hospitality — Blueprint for Digital Transformation</h2>
+        <span>Blueprint</span>
+      </div>
+      <div class="arrow">&#8594;</div>
+    </a>
+
+    <a class="report-card" href="3_global-tech-nepal-audit.html">
+      <div class="report-number">3</div>
+      <div class="report-meta">
+        <h2>Global Hospitality Tech Services — Nepal Adoption &amp; Viability Assessment</h2>
+        <span>Audit</span>
+      </div>
+      <div class="arrow">&#8594;</div>
+    </a>
+
+    <a class="report-card" href="4_entrepreneur-blueprint.html">
+      <div class="report-number">4</div>
+      <div class="report-meta">
+        <h2>Built in Nepal: 10 Viable Tech Services for Hospitality — Entrepreneur's Blueprint</h2>
+        <span>Blueprint</span>
+      </div>
+      <div class="arrow">&#8594;</div>
+    </a>
+
+  </main>
+
+  <footer>
+    &copy; 2026 Aetonet. All rights reserved.
+  </footer>
+
+</body>
+</html>
