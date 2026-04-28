@@ -1,0 +1,1262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>The Cracks &amp; The Openings — A Strategy Brief</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Newsreader:ital,opsz,wght@0,6..72,200..800;1,6..72,200..800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ivory: #f6efe1;
+    --ivory-deep: #ede4d0;
+    --paper: #fdfaf3;
+    --ink: #1a1410;
+    --ink-soft: #4a3f33;
+    --ink-mute: #8b7d6a;
+    --terracotta: #a8442a;
+    --terracotta-deep: #7d2e1a;
+    --saffron: #c98a1e;
+    --teal: #1d4e4a;
+    --teal-bright: #2d756f;
+    --indigo: #2b3a67;
+    --rule: #c9b896;
+    --rule-soft: #ddd0b4;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--ivory);
+    color: var(--ink);
+    font-family: 'Newsreader', Georgia, serif;
+    font-size: 17px;
+    line-height: 1.65;
+    overflow-x: hidden;
+    position: relative;
+  }
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 100;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+    opacity: 0.04;
+    mix-blend-mode: multiply;
+  }
+
+  .container {
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 0 32px;
+  }
+
+  /* ============ HERO ============ */
+  .hero {
+    padding: 80px 0 60px;
+    border-bottom: 1px solid var(--rule);
+    position: relative;
+  }
+  .hero-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    margin-bottom: 48px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--rule);
+  }
+  .hero-meta span:first-child::before {
+    content: '◇ ';
+    color: var(--teal);
+  }
+  .hero-title {
+    font-family: 'Fraunces', serif;
+    font-size: clamp(56px, 9vw, 132px);
+    font-weight: 300;
+    line-height: 0.92;
+    letter-spacing: -0.04em;
+    margin-bottom: 32px;
+    font-variation-settings: 'opsz' 144, 'SOFT' 30;
+  }
+  .hero-title em {
+    font-style: italic;
+    font-weight: 400;
+    color: var(--teal);
+    font-variation-settings: 'opsz' 144, 'SOFT' 100;
+  }
+  .hero-deck {
+    font-family: 'Newsreader', serif;
+    font-size: clamp(20px, 2.4vw, 28px);
+    line-height: 1.4;
+    font-weight: 300;
+    font-style: italic;
+    color: var(--ink-soft);
+    max-width: 820px;
+    margin-bottom: 48px;
+  }
+  .hero-pull {
+    font-family: 'Fraunces', serif;
+    font-size: clamp(22px, 2.6vw, 30px);
+    font-weight: 400;
+    line-height: 1.35;
+    border-left: 4px solid var(--teal);
+    padding: 24px 0 24px 32px;
+    margin: 32px 0 0;
+    max-width: 880px;
+    color: var(--ink);
+  }
+  .hero-pull em {
+    color: var(--terracotta);
+    font-style: italic;
+  }
+
+  section {
+    padding: 80px 0;
+  }
+  .section-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    color: var(--teal);
+    margin-bottom: 12px;
+    text-transform: uppercase;
+  }
+  .section-title {
+    font-family: 'Fraunces', serif;
+    font-size: clamp(36px, 5vw, 60px);
+    font-weight: 400;
+    line-height: 1.0;
+    letter-spacing: -0.025em;
+    margin-bottom: 20px;
+    font-variation-settings: 'opsz' 96, 'SOFT' 50;
+  }
+  .section-title em {
+    font-style: italic;
+    color: var(--terracotta);
+  }
+  .section-title em.teal {
+    color: var(--teal);
+  }
+  .section-deck {
+    font-size: 19px;
+    color: var(--ink-soft);
+    max-width: 760px;
+    margin-bottom: 56px;
+    font-style: italic;
+    font-weight: 300;
+  }
+
+  /* ============ LIMITATIONS LIST ============ */
+  .limits-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+    gap: 1px;
+    background: var(--rule);
+    border: 1px solid var(--rule);
+  }
+  .limit-card {
+    background: var(--paper);
+    padding: 30px 28px;
+    position: relative;
+  }
+  .limit-card::before {
+    content: counter(lim, decimal-leading-zero);
+    counter-increment: lim;
+    position: absolute;
+    top: 28px; right: 24px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    color: var(--terracotta);
+    opacity: 0.7;
+  }
+  .limits-grid { counter-reset: lim; }
+  .limit-tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    margin-bottom: 8px;
+  }
+  .limit-title {
+    font-family: 'Fraunces', serif;
+    font-size: 23px;
+    font-weight: 500;
+    line-height: 1.15;
+    letter-spacing: -0.015em;
+    margin-bottom: 14px;
+    padding-right: 40px;
+  }
+  .limit-body {
+    font-size: 15px;
+    line-height: 1.55;
+    color: var(--ink-soft);
+    margin-bottom: 14px;
+  }
+  .limit-evidence {
+    padding-top: 14px;
+    border-top: 1px dashed var(--rule);
+    font-family: 'Newsreader', serif;
+    font-style: italic;
+    font-size: 13px;
+    color: var(--terracotta-deep);
+  }
+  .limit-evidence::before {
+    content: '↳ ';
+    color: var(--terracotta);
+    font-style: normal;
+  }
+
+  /* ============ STRATEGY BREAKDOWN ============ */
+  .strat-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 24px;
+  }
+  .strat-card {
+    background: var(--paper);
+    border: 1px solid var(--rule);
+    padding: 24px;
+    position: relative;
+  }
+  .strat-card-q {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    color: var(--ink-mute);
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+  .strat-card-h {
+    font-family: 'Fraunces', serif;
+    font-size: 21px;
+    font-weight: 500;
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+    margin-bottom: 12px;
+  }
+  .strat-card-h em {
+    font-style: italic;
+    color: var(--terracotta);
+  }
+  .strat-card-p {
+    font-size: 14px;
+    line-height: 1.55;
+    color: var(--ink-soft);
+  }
+
+  /* ============ OPPORTUNITY MATRIX ============ */
+  .matrix-wrapper {
+    background: var(--paper);
+    border: 1px solid var(--rule);
+    padding: 40px;
+  }
+  .matrix-svg {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  /* ============ WHITESPACE MAP ============ */
+  .ws-wrapper {
+    background: var(--paper);
+    border: 1px solid var(--rule);
+    overflow-x: auto;
+  }
+  .ws-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+    min-width: 880px;
+  }
+  .ws-table th, .ws-table td {
+    padding: 14px 12px;
+    text-align: left;
+    border-right: 1px solid var(--rule-soft);
+    border-bottom: 1px solid var(--rule-soft);
+  }
+  .ws-table thead th {
+    background: var(--ink);
+    color: var(--ivory);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    font-weight: 500;
+  }
+  .ws-table .seg-cell {
+    font-family: 'Fraunces', serif;
+    font-weight: 600;
+    background: var(--ivory-deep);
+    min-width: 200px;
+  }
+  .ws-table .gap-cell {
+    background: linear-gradient(135deg, transparent 49%, var(--terracotta) 49.5%, var(--terracotta) 50.5%, transparent 51%), var(--paper);
+    color: var(--terracotta-deep);
+    font-weight: 600;
+    text-align: center;
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+  }
+  .ws-table .sparse-cell {
+    background: #f4ead2;
+    color: var(--ink-soft);
+    font-style: italic;
+    text-align: center;
+  }
+  .ws-table .filled-cell {
+    text-align: center;
+    color: var(--ink);
+    font-family: 'Fraunces', serif;
+  }
+
+  /* ============ STARTUP IDEAS ============ */
+  .ideas-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+    gap: 1px;
+    background: var(--rule);
+    border: 1px solid var(--rule);
+  }
+  .idea {
+    background: var(--paper);
+    padding: 32px 28px;
+    position: relative;
+  }
+  .idea-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 16px;
+    padding-bottom: 14px;
+    border-bottom: 1px dashed var(--rule);
+  }
+  .idea-codename {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    color: var(--teal);
+    text-transform: uppercase;
+  }
+  .idea-tags {
+    display: flex;
+    gap: 6px;
+  }
+  .idea-tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.1em;
+    padding: 3px 7px;
+    border: 1px solid var(--rule);
+    color: var(--ink-soft);
+    text-transform: uppercase;
+  }
+  .idea-tag.hot { background: var(--terracotta); color: var(--ivory); border-color: var(--terracotta); }
+  .idea-tag.deep { background: var(--indigo); color: var(--ivory); border-color: var(--indigo); }
+  .idea-name {
+    font-family: 'Fraunces', serif;
+    font-size: 28px;
+    font-weight: 500;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    margin-bottom: 6px;
+  }
+  .idea-pitch {
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-size: 15px;
+    color: var(--terracotta);
+    margin-bottom: 16px;
+  }
+  .idea-body {
+    font-size: 14px;
+    line-height: 1.55;
+    color: var(--ink-soft);
+    margin-bottom: 16px;
+  }
+  .idea-grid-attrs {
+    display: grid;
+    grid-template-columns: 90px 1fr;
+    gap: 6px 12px;
+    font-size: 12px;
+    padding-top: 14px;
+    border-top: 1px dashed var(--rule);
+  }
+  .idea-grid-attrs dt {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.12em;
+    color: var(--ink-mute);
+    text-transform: uppercase;
+    padding-top: 2px;
+  }
+  .idea-grid-attrs dd {
+    color: var(--ink);
+    font-size: 13px;
+  }
+
+  /* ============ SERVICE PATTERNS ============ */
+  .pattern-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1px;
+    background: var(--rule);
+    border: 1px solid var(--rule);
+  }
+  .pattern {
+    background: var(--paper);
+    padding: 28px;
+    position: relative;
+  }
+  .pattern-num {
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-size: 48px;
+    color: var(--teal);
+    line-height: 1;
+    margin-bottom: 8px;
+    opacity: 0.85;
+  }
+  .pattern-h {
+    font-family: 'Fraunces', serif;
+    font-size: 22px;
+    font-weight: 500;
+    line-height: 1.2;
+    margin-bottom: 12px;
+  }
+  .pattern-h em {
+    color: var(--terracotta);
+    font-style: italic;
+  }
+  .pattern-p {
+    font-size: 14px;
+    line-height: 1.55;
+    color: var(--ink-soft);
+    margin-bottom: 12px;
+  }
+  .pattern-eg {
+    font-family: 'Newsreader', serif;
+    font-style: italic;
+    font-size: 13px;
+    color: var(--terracotta-deep);
+    border-top: 1px dashed var(--rule);
+    padding-top: 12px;
+  }
+  .pattern-eg::before {
+    content: 'e.g. ';
+    font-family: 'JetBrains Mono', monospace;
+    font-style: normal;
+    font-size: 9px;
+    letter-spacing: 0.15em;
+    color: var(--ink-mute);
+    text-transform: uppercase;
+    margin-right: 4px;
+  }
+
+  /* ============ TIMELINE ============ */
+  .timeline-wrapper {
+    background: var(--paper);
+    border: 1px solid var(--rule);
+    padding: 40px 24px;
+    overflow-x: auto;
+  }
+  .timeline-svg {
+    width: 100%;
+    min-width: 900px;
+    height: auto;
+    display: block;
+  }
+
+  /* ============ REALITY CHECK ============ */
+  .reality-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+  }
+  .reality {
+    background: var(--paper);
+    border: 1px solid var(--rule);
+    padding: 24px 22px;
+    position: relative;
+  }
+  .reality::before {
+    content: '⚠';
+    position: absolute;
+    top: 18px; right: 18px;
+    font-size: 20px;
+    color: var(--terracotta);
+    opacity: 0.5;
+  }
+  .reality-h {
+    font-family: 'Fraunces', serif;
+    font-size: 19px;
+    font-weight: 500;
+    margin-bottom: 10px;
+    padding-right: 32px;
+  }
+  .reality-p {
+    font-size: 13px;
+    color: var(--ink-soft);
+    line-height: 1.55;
+  }
+
+  /* ============ FOOTER ============ */
+  .colophon {
+    border-top: 1px solid var(--rule);
+    padding: 60px 0 80px;
+    margin-top: 40px;
+  }
+  .colophon-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 60px;
+  }
+  .colophon h4 {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    color: var(--teal);
+    text-transform: uppercase;
+    margin-bottom: 16px;
+  }
+  .colophon p {
+    font-size: 14px;
+    color: var(--ink-soft);
+    line-height: 1.6;
+    margin-bottom: 12px;
+  }
+
+  @media (max-width: 768px) {
+    .container { padding: 0 20px; }
+    .colophon-grid { grid-template-columns: 1fr; gap: 32px; }
+    .pattern-grid { grid-template-columns: 1fr; }
+    .idea-grid-attrs { grid-template-columns: 80px 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ============ HERO ============ -->
+<header class="hero">
+  <div class="container">
+    <div class="hero-meta">
+      <span>Strategy Brief &nbsp;/&nbsp; Companion to Field Report Vol. 01</span>
+      <span>Vol. 02 &nbsp;·&nbsp; 2026</span>
+    </div>
+    <h1 class="hero-title">The cracks<br>&amp; the <em>openings</em>.</h1>
+    <p class="hero-deck">Where the fourteen incumbents fall short, why their business strategies leave money on the table, and what an entrepreneur can build into the white space.</p>
+
+    <p class="hero-pull">A market with <em>900+ schools on one platform</em> looks crowded. A market where no one has solved offline learning, teacher tooling, vocational tracks, parent literacy, or non-Nepali language education is <em>wide open</em>. Both are true.</p>
+  </div>
+</header>
+
+<!-- ============ SECTION 01: SERVICE-DESIGN LIMITATIONS ============ -->
+<section>
+  <div class="container">
+    <div class="section-num">§ 01 — Where the Service Design Breaks</div>
+    <h2 class="section-title">Twelve <em>cracks</em> in the current stack.</h2>
+    <p class="section-deck">These aren't edge cases. They are the recurring complaints from administrators, teachers, students, and parents who actually use these systems day to day.</p>
+
+    <div class="limits-grid">
+
+      <div class="limit-card">
+        <div class="limit-tag">Language &amp; Localisation</div>
+        <h3 class="limit-title">English-first interfaces in a non-English country.</h3>
+        <p class="limit-body">Most ERPs ship with English-default UIs. Rural admin staff and teachers struggle. Parent apps push notifications in English to parents who don't read English. Nepali support is often a half-translated layer, and other home languages — Maithili, Bhojpuri, Tharu, Newari — are absent entirely.</p>
+        <div class="limit-evidence">Only OLE Nepal and Sikai Chautari treat language seriously. None of the commercial ERPs do.</div>
+      </div>
+
+      <div class="limit-card">
+        <div class="limit-tag">Connectivity</div>
+        <h3 class="limit-title">Designed for cities with reliable internet.</h3>
+        <p class="limit-body">Almost every commercial platform assumes always-online. In hill and mountain districts, internet drops daily. Schools lose attendance records, can't run online classes, can't process fees during outages. There is no major commercial offline-first / sync-when-online option.</p>
+        <div class="limit-evidence">OLE Nepal proved offline EdTech works at scale — but it's a non-profit, not a commercial product.</div>
+      </div>
+
+      <div class="limit-card">
+        <div class="limit-tag">Pedagogy Gap</div>
+        <h3 class="limit-title">ERPs treat learning as an afterthought.</h3>
+        <p class="limit-body">Veda, e-School, Nimble &amp; co. excel at billing and admissions. Their "LMS" is usually a file uploader plus a Zoom link. Real learning features — adaptive practice, formative assessment, learning analytics — are largely absent.</p>
+        <div class="limit-evidence">No Nepali platform meaningfully combines a strong ERP with a strong LMS in one product.</div>
+      </div>
+
+      <div class="limit-card">
+        <div class="limit-tag">Teacher Tooling</div>
+        <h3 class="limit-title">Teachers are treated as data-entry users.</h3>
+        <p class="limit-body">Lesson planning, curriculum mapping, rubric design, peer observation, professional-development tracking — none are seriously supported. The teacher's workflow is "log in, mark attendance, enter marks, log out." That's a clerical job, not a teaching job.</p>
+        <div class="limit-evidence">A teacher-first product would have zero direct competition in Nepal today.</div>
+      </div>
+
+      <div class="limit-card">
+        <div class="limit-tag">Parent Engagement</div>
+        <h3 class="limit-title">Parent apps are one-way notification feeds.</h3>
+        <p class="limit-body">Fee reminder. Attendance alert. Holiday notice. Repeat. There is no two-way conversation, no parenting support, no progress dialogue, no early-warning interventions for struggling kids. Parents become passive recipients, not partners in learning.</p>
+        <div class="limit-evidence">Parent literacy &amp; engagement is the highest-leverage unaddressed lever in Nepali education.</div>
+      </div>
+
+      <div class="limit-card">
+        <div class="limit-tag">Assessment Depth</div>
+        <h3 class="limit-title">Marks in, marks out — no insight in between.</h3>
+        <p class="limit-body">Exam modules record numbers and produce report cards. They don't generate item analysis, identify learning gaps, suggest remediation, or flag students at risk. Online exams lack proper proctoring, anti-cheating, or honest pedagogy beyond MCQs.</p>
+        <div class="limit-evidence">Assessment-as-a-service is an entire product category waiting to be built.</div>
+      </div>
+
+      <div class="limit-card">
+        <div class="limit-tag">Vocational / TVET</div>
+        <h3 class="limit-title">Almost nothing for the technical &amp; vocational sector.</h3>
+        <p class="limit-body">CTEVT-affiliated institutes train hundreds of thousands annually in trades, hospitality, IT, agriculture. Their workflows are different — practical assessments, internships, industry placements. Mainstream school ERPs don't fit. The TVET stack is largely manual.</p>
+        <div class="limit-evidence">Nepal's TVET sector is officially prioritised but commercially unserved.</div>
+      </div>
+
+      <div class="limit-card">
+        <div class="limit-tag">University Depth</div>
+        <h3 class="limit-title">Beyond e-Zone, universities are underserved.</h3>
+        <p class="limit-body">Research management, thesis tracking, plagiarism detection, alumni engagement, internationalisation, exchange programs, faculty research output — the higher-ed long tail is barely touched. e-Zone covers EMIS/FMIS at the regulator level; nothing covers the modern research university.</p>
+        <div class="limit-evidence">Universities import expensive foreign tools (Turnitin, Mendeley, Blackboard) for what local products could do.</div>
+      </div>
+
+      <div class="limit-card">
+        <div class="limit-tag">Accessibility</div>
+        <h3 class="limit-title">Special education and disability are an afterthought.</h3>
+        <p class="limit-body">OLE Nepal's Sanketik Sikai is the only platform meaningfully addressing sign language. Screen readers, dyslexia-friendly typography, ADHD-aware UI, autism accommodations — basically absent. WCAG compliance is rarely tested.</p>
+        <div class="limit-evidence">Accessibility-first EdTech could win moral authority and government partnerships.</div>
+      </div>
+
+      <div class="limit-card">
+        <div class="limit-tag">Interoperability</div>
+        <h3 class="limit-title">Every platform is a walled garden.</h3>
+        <p class="limit-body">Schools using two systems can't make them talk. NEB results don't import cleanly into all ERPs. Government EMIS doesn't sync with private school systems. There's no Nepali equivalent of OneRoster, no API standard, no common data schema.</p>
+        <div class="limit-evidence">Interoperability infrastructure is unglamorous but the lack of it slows the entire sector.</div>
+      </div>
+
+      <div class="limit-card">
+        <div class="limit-tag">Analytics</div>
+        <h3 class="limit-title">Systems of record, not systems of insight.</h3>
+        <p class="limit-body">Dashboards exist; useful predictions don't. Which students are at risk of dropping out? Which teachers' classes consistently underperform? Which fee-defaulters are likely to leave? Where is learning loss concentrated? None of this is surfaced — data sits in tables.</p>
+        <div class="limit-evidence">Predictive analytics is a thin layer on existing data — high-leverage, low-build.</div>
+      </div>
+
+      <div class="limit-card">
+        <div class="limit-tag">Pricing &amp; Access</div>
+        <h3 class="limit-title">Small schools are priced out.</h3>
+        <p class="limit-body">Per-student SaaS pricing means a 200-student community school can't afford Veda or e-School. Their only options are free government tools (limited features) or doing nothing (the most common choice). The bottom 60 % of the market is unserved.</p>
+        <div class="limit-evidence">A genuine freemium tier or co-op model would unlock thousands of small institutions.</div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ============ SECTION 02: BUSINESS STRATEGY LIMITATIONS ============ -->
+<section style="background: var(--ivory-deep);">
+  <div class="container">
+    <div class="section-num">§ 02 — Where the Business Strategy Limps</div>
+    <h2 class="section-title">Eight <em class="teal">strategic</em> blind spots.</h2>
+    <p class="section-deck">It's not just the products. The way these companies sell, price, distribute and partner has structural flaws that an entrepreneur can systematically exploit.</p>
+
+    <div class="strat-grid">
+
+      <div class="strat-card">
+        <div class="strat-card-q">Sales Motion</div>
+        <h4 class="strat-card-h">Relationship-driven, <em>not product-led.</em></h4>
+        <p class="strat-card-p">Most vendors close deals via principal/owner relationships, not via product trials. There is no self-serve onboarding, no free 30-day pilot, no viral parent-app loop. New entrants with product-led growth could leapfrog the incumbents' sales advantage.</p>
+      </div>
+
+      <div class="strat-card">
+        <div class="strat-card-q">Pricing</div>
+        <h4 class="strat-card-h">No freemium, <em>no co-op.</em></h4>
+        <p class="strat-card-p">Per-student SaaS suits big schools. It excludes small ones. There's no shared-cost model where ten village schools pool one ERP licence, no "free for under 100 students" tier, no government-subsidised ladder.</p>
+      </div>
+
+      <div class="strat-card">
+        <div class="strat-card-q">Capital</div>
+        <h4 class="strat-card-h">Bootstrapped, <em>so under-built.</em></h4>
+        <p class="strat-card-p">Almost no VC has flowed into Nepali EdTech. Most products are funded by services revenue. That keeps R&amp;D thin and prevents the kind of UX investment global players make. A funded entrant could out-build everyone.</p>
+      </div>
+
+      <div class="strat-card">
+        <div class="strat-card-q">Customer Success</div>
+        <h4 class="strat-card-h">Onboarding takes <em>months and often fails.</em></h4>
+        <p class="strat-card-p">A typical school takes 3–6 months to fully roll out an ERP — many never finish. There's no playbook, no white-glove implementation team, no first-90-days outcomes guarantee. Customer success is treated as a cost centre.</p>
+      </div>
+
+      <div class="strat-card">
+        <div class="strat-card-q">Distribution</div>
+        <h4 class="strat-card-h">Direct sales only — <em>no channels.</em></h4>
+        <p class="strat-card-p">No reseller network. No teacher-college partnerships. No district-education-office bundles. No NGO distribution. Every sale is one-by-one, which caps growth at the speed of the founder's calendar.</p>
+      </div>
+
+      <div class="strat-card">
+        <div class="strat-card-q">Foreign Competition</div>
+        <h4 class="strat-card-h">Google &amp; Microsoft eat the LMS layer <em>for free.</em></h4>
+        <p class="strat-card-p">Google Classroom and Microsoft Teams are free to schools and pay no Nepali tax. They quietly dominate the "online classes" use case. Local LMS players can't compete on price; they have to compete on Nepal-specific features and integration.</p>
+      </div>
+
+      <div class="strat-card">
+        <div class="strat-card-q">Government</div>
+        <h4 class="strat-card-h">Public tenders <em>favour the incumbents.</em></h4>
+        <p class="strat-card-p">Big government EdTech tenders tend to land with the same one or two vendors — often e-Zone — because of past performance requirements. New entrants are effectively frozen out unless they partner with incumbents or win at the local-government layer first.</p>
+      </div>
+
+      <div class="strat-card">
+        <div class="strat-card-q">Product Roadmap</div>
+        <h4 class="strat-card-h">Reactive features, <em>not opinionated design.</em></h4>
+        <p class="strat-card-p">Most vendors build whatever the loudest customer asks for. The result: bloated, unfocused products. There is no Nepali Linear, no Nepali Notion — no opinionated, design-driven product that says no to features. That's an opening.</p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ============ SECTION 03: WHITE-SPACE MAP ============ -->
+<section>
+  <div class="container">
+    <div class="section-num">§ 03 — White-Space Map</div>
+    <h2 class="section-title">Where the existing fourteen <em>aren't.</em></h2>
+    <p class="section-deck">Crossing user segments against use-cases, the gaps light up. A diagonal slash means no meaningful provider; a tinted cell means thin coverage; a name means it's well-served.</p>
+
+    <div class="ws-wrapper">
+      <table class="ws-table">
+        <thead>
+          <tr>
+            <th>Segment ↓ &nbsp; / &nbsp; Need →</th>
+            <th>Admin / ERP</th>
+            <th>Online classes</th>
+            <th>Curriculum content</th>
+            <th>Assessment / Analytics</th>
+            <th>Teacher development</th>
+            <th>Parent engagement</th>
+            <th>Career / placement</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="seg-cell">Premium private school (1k+)</td>
+            <td class="filled-cell">Veda</td>
+            <td class="filled-cell">Fuse Classroom</td>
+            <td class="sparse-cell">thin</td>
+            <td class="gap-cell">GAP</td>
+            <td class="gap-cell">GAP</td>
+            <td class="sparse-cell">notifications only</td>
+            <td class="gap-cell">GAP</td>
+          </tr>
+          <tr>
+            <td class="seg-cell">Mid-tier private school</td>
+            <td class="filled-cell">Veda · Nimble</td>
+            <td class="sparse-cell">Zoom inside ERP</td>
+            <td class="filled-cell">Kullabs / mST</td>
+            <td class="gap-cell">GAP</td>
+            <td class="gap-cell">GAP</td>
+            <td class="sparse-cell">notifications</td>
+            <td class="gap-cell">GAP</td>
+          </tr>
+          <tr>
+            <td class="seg-cell">Small / community school</td>
+            <td class="sparse-cell">Paathshala</td>
+            <td class="gap-cell">GAP</td>
+            <td class="filled-cell">Sikai · OLE</td>
+            <td class="gap-cell">GAP</td>
+            <td class="gap-cell">GAP</td>
+            <td class="gap-cell">GAP</td>
+            <td class="gap-cell">GAP</td>
+          </tr>
+          <tr>
+            <td class="seg-cell">Government / public school</td>
+            <td class="sparse-cell">EMIS (regulator only)</td>
+            <td class="gap-cell">GAP</td>
+            <td class="filled-cell">Sikai · OLE</td>
+            <td class="gap-cell">GAP</td>
+            <td class="gap-cell">GAP</td>
+            <td class="gap-cell">GAP</td>
+            <td class="gap-cell">GAP</td>
+          </tr>
+          <tr>
+            <td class="seg-cell">+2 / NEB college</td>
+            <td class="filled-cell">Nimble · Veda</td>
+            <td class="sparse-cell">basic</td>
+            <td class="filled-cell">mySecondTeacher</td>
+            <td class="sparse-cell">past papers (MeroSiksha)</td>
+            <td class="gap-cell">GAP</td>
+            <td class="sparse-cell">notifications</td>
+            <td class="gap-cell">GAP</td>
+          </tr>
+          <tr>
+            <td class="seg-cell">University / research campus</td>
+            <td class="filled-cell">e-School</td>
+            <td class="sparse-cell">Google Meet</td>
+            <td class="gap-cell">GAP</td>
+            <td class="gap-cell">GAP</td>
+            <td class="gap-cell">GAP</td>
+            <td class="sparse-cell">N/A</td>
+            <td class="gap-cell">GAP</td>
+          </tr>
+          <tr>
+            <td class="seg-cell">CTEVT / vocational institute</td>
+            <td class="gap-cell">GAP</td>
+            <td class="gap-cell">GAP</td>
+            <td class="gap-cell">GAP</td>
+            <td class="gap-cell">GAP</td>
+            <td class="gap-cell">GAP</td>
+            <td class="gap-cell">GAP</td>
+            <td class="gap-cell">GAP</td>
+          </tr>
+          <tr>
+            <td class="seg-cell">Special-needs / disability</td>
+            <td class="gap-cell">GAP</td>
+            <td class="gap-cell">GAP</td>
+            <td class="sparse-cell">OLE Sanketik Sikai</td>
+            <td class="gap-cell">GAP</td>
+            <td class="gap-cell">GAP</td>
+            <td class="gap-cell">GAP</td>
+            <td class="gap-cell">GAP</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p style="font-family: 'Newsreader', serif; font-style: italic; color: var(--ink-mute); font-size: 14px; margin-top: 24px; text-align: center;">— Fig. 3.1 · The blank cells are the opportunities. The CTEVT and special-needs rows are entire markets nobody is serving. —</p>
+  </div>
+</section>
+
+<!-- ============ SECTION 04: OPPORTUNITY MATRIX ============ -->
+<section style="background: var(--ivory-deep);">
+  <div class="container">
+    <div class="section-num">§ 04 — Opportunity Matrix</div>
+    <h2 class="section-title">Sized against <em>buildability.</em></h2>
+    <p class="section-deck">Twelve potential ventures, plotted by market size against ease of execution. The top-right is where most founders should look first; the top-left is where bigger bets and patient capital live.</p>
+
+    <div class="matrix-wrapper">
+      <svg class="matrix-svg" viewBox="0 0 1100 720" xmlns="http://www.w3.org/2000/svg">
+        <!-- background and grid -->
+        <rect x="100" y="60" width="900" height="560" fill="#fdfaf3" stroke="#c9b896" stroke-width="1"/>
+
+        <!-- Quadrant tints -->
+        <rect x="100" y="60" width="450" height="280" fill="#1d4e4a" opacity="0.06"/>
+        <rect x="550" y="60" width="450" height="280" fill="#7d2e1a" opacity="0.07"/>
+        <rect x="100" y="340" width="450" height="280" fill="#8b7d6a" opacity="0.05"/>
+        <rect x="550" y="340" width="450" height="280" fill="#c98a1e" opacity="0.07"/>
+
+        <!-- Axes -->
+        <line x1="550" y1="60" x2="550" y2="620" stroke="#1a1410" stroke-width="1.5" stroke-dasharray="3 4"/>
+        <line x1="100" y1="340" x2="1000" y2="340" stroke="#1a1410" stroke-width="1.5" stroke-dasharray="3 4"/>
+
+        <!-- Axis labels -->
+        <text x="550" y="35" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="11" letter-spacing="2" fill="#1a1410">EASE OF EXECUTION →</text>
+        <text x="320" y="52" text-anchor="middle" font-family="Fraunces, serif" font-size="14" font-style="italic" fill="#1a1410">harder · capital-intensive · slow</text>
+        <text x="780" y="52" text-anchor="middle" font-family="Fraunces, serif" font-size="14" font-style="italic" fill="#1a1410">faster · lighter · 1–2 founders</text>
+
+        <text x="60" y="340" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="11" letter-spacing="2" fill="#1a1410" transform="rotate(-90 60 340)">↑ MARKET SIZE</text>
+        <text x="80" y="180" text-anchor="middle" font-family="Fraunces, serif" font-size="13" font-style="italic" fill="#1a1410" transform="rotate(-90 80 180)">large</text>
+        <text x="80" y="490" text-anchor="middle" font-family="Fraunces, serif" font-size="13" font-style="italic" fill="#1a1410" transform="rotate(-90 80 490)">niche</text>
+
+        <!-- Quadrant labels -->
+        <text x="320" y="80" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="9" letter-spacing="1.5" fill="#1d4e4a" opacity="0.7">BIG BETS · NEED CAPITAL</text>
+        <text x="780" y="80" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="9" letter-spacing="1.5" fill="#7d2e1a" opacity="0.7">SWEET SPOT</text>
+        <text x="320" y="610" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="9" letter-spacing="1.5" fill="#8b7d6a" opacity="0.8">AVOID</text>
+        <text x="780" y="610" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="9" letter-spacing="1.5" fill="#a8442a" opacity="0.8">QUICK WINS · SIDE PROJECTS</text>
+
+        <!-- Big bets quadrant (top-left) -->
+        <g>
+          <circle cx="220" cy="160" r="32" fill="#1d4e4a" stroke="#fdfaf3" stroke-width="3"/>
+          <text x="220" y="160" text-anchor="middle" font-family="Fraunces, serif" font-size="10" font-weight="600" fill="#fdfaf3">CTEVT</text>
+          <text x="220" y="173" text-anchor="middle" font-family="Fraunces, serif" font-size="10" font-weight="600" fill="#fdfaf3">platform</text>
+        </g>
+        <g>
+          <circle cx="380" cy="200" r="36" fill="#1d4e4a" stroke="#fdfaf3" stroke-width="3"/>
+          <text x="380" y="195" text-anchor="middle" font-family="Fraunces, serif" font-size="10" font-weight="600" fill="#fdfaf3">Offline-first</text>
+          <text x="380" y="208" text-anchor="middle" font-family="Fraunces, serif" font-size="10" font-weight="600" fill="#fdfaf3">rural ERP</text>
+        </g>
+        <g>
+          <circle cx="280" cy="260" r="34" fill="#1d4e4a" stroke="#fdfaf3" stroke-width="3"/>
+          <text x="280" y="255" text-anchor="middle" font-family="Fraunces, serif" font-size="10" font-weight="600" fill="#fdfaf3">Nepali AI</text>
+          <text x="280" y="268" text-anchor="middle" font-family="Fraunces, serif" font-size="10" font-weight="600" fill="#fdfaf3">tutor</text>
+        </g>
+        <g>
+          <circle cx="450" cy="290" r="28" fill="#1d4e4a" stroke="#fdfaf3" stroke-width="3"/>
+          <text x="450" y="285" text-anchor="middle" font-family="Fraunces, serif" font-size="10" font-weight="600" fill="#fdfaf3">University</text>
+          <text x="450" y="298" text-anchor="middle" font-family="Fraunces, serif" font-size="10" font-weight="600" fill="#fdfaf3">research suite</text>
+        </g>
+
+        <!-- Sweet spot quadrant (top-right) -->
+        <g>
+          <circle cx="700" cy="180" r="32" fill="#7d2e1a" stroke="#fdfaf3" stroke-width="3"/>
+          <text x="700" y="180" text-anchor="middle" font-family="Fraunces, serif" font-size="10" font-weight="600" fill="#fdfaf3">Teacher-first</text>
+          <text x="700" y="193" text-anchor="middle" font-family="Fraunces, serif" font-size="10" font-weight="600" fill="#fdfaf3">SaaS</text>
+        </g>
+        <g>
+          <circle cx="850" cy="160" r="34" fill="#7d2e1a" stroke="#fdfaf3" stroke-width="3"/>
+          <text x="850" y="160" text-anchor="middle" font-family="Fraunces, serif" font-size="10" font-weight="600" fill="#fdfaf3">Parent</text>
+          <text x="850" y="173" text-anchor="middle" font-family="Fraunces, serif" font-size="10" font-weight="600" fill="#fdfaf3">WhatsApp</text>
+        </g>
+        <g>
+          <circle cx="780" cy="270" r="30" fill="#7d2e1a" stroke="#fdfaf3" stroke-width="3"/>
+          <text x="780" y="265" text-anchor="middle" font-family="Fraunces, serif" font-size="10" font-weight="600" fill="#fdfaf3">Assessment</text>
+          <text x="780" y="278" text-anchor="middle" font-family="Fraunces, serif" font-size="10" font-weight="600" fill="#fdfaf3">analytics</text>
+        </g>
+        <g>
+          <circle cx="920" cy="260" r="26" fill="#7d2e1a" stroke="#fdfaf3" stroke-width="3"/>
+          <text x="920" y="255" text-anchor="middle" font-family="Fraunces, serif" font-size="10" font-weight="600" fill="#fdfaf3">Career</text>
+          <text x="920" y="268" text-anchor="middle" font-family="Fraunces, serif" font-size="10" font-weight="600" fill="#fdfaf3">/ admissions</text>
+        </g>
+
+        <!-- Quick wins quadrant (bottom-right) -->
+        <g>
+          <circle cx="700" cy="430" r="22" fill="#c98a1e" stroke="#fdfaf3" stroke-width="3"/>
+          <text x="700" y="425" text-anchor="middle" font-family="Fraunces, serif" font-size="10" font-weight="600" fill="#1a1410">Fee-EMI</text>
+          <text x="700" y="438" text-anchor="middle" font-family="Fraunces, serif" font-size="10" font-weight="600" fill="#1a1410">platform</text>
+        </g>
+        <g>
+          <circle cx="850" cy="450" r="20" fill="#c98a1e" stroke="#fdfaf3" stroke-width="3"/>
+          <text x="850" y="445" text-anchor="middle" font-family="Fraunces, serif" font-size="9" font-weight="600" fill="#1a1410">Local-lang.</text>
+          <text x="850" y="457" text-anchor="middle" font-family="Fraunces, serif" font-size="9" font-weight="600" fill="#1a1410">tutoring</text>
+        </g>
+        <g>
+          <circle cx="780" cy="510" r="20" fill="#c98a1e" stroke="#fdfaf3" stroke-width="3"/>
+          <text x="780" y="505" text-anchor="middle" font-family="Fraunces, serif" font-size="9" font-weight="600" fill="#1a1410">Accessibility</text>
+          <text x="780" y="517" text-anchor="middle" font-family="Fraunces, serif" font-size="9" font-weight="600" fill="#1a1410">audit-as-svc</text>
+        </g>
+        <g>
+          <circle cx="920" cy="500" r="20" fill="#c98a1e" stroke="#fdfaf3" stroke-width="3"/>
+          <text x="920" y="495" text-anchor="middle" font-family="Fraunces, serif" font-size="9" font-weight="600" fill="#1a1410">School-ops</text>
+          <text x="920" y="507" text-anchor="middle" font-family="Fraunces, serif" font-size="9" font-weight="600" fill="#1a1410">co-op</text>
+        </g>
+
+        <!-- Annotation -->
+        <text x="550" y="685" text-anchor="middle" font-family="Newsreader, serif" font-size="13" font-style="italic" fill="#8b7d6a">— Fig. 4.1 · Twelve venture concepts plotted on Market Size × Ease of Execution —</text>
+      </svg>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SECTION 05: CONCRETE STARTUP IDEAS ============ -->
+<section>
+  <div class="container">
+    <div class="section-num">§ 05 — Eight Concepts</div>
+    <h2 class="section-title">What an entrepreneur could <em>actually build.</em></h2>
+    <p class="section-deck">Each concept ties to a specific gap above. Pitch line, who it's for, why now, why it can win. Pick one — don't try to build all of them.</p>
+
+    <div class="ideas-grid">
+
+      <div class="idea">
+        <div class="idea-meta">
+          <span class="idea-codename">Concept 01</span>
+          <div class="idea-tags"><span class="idea-tag hot">Hot</span><span class="idea-tag">B2B</span></div>
+        </div>
+        <h3 class="idea-name">Shikshak</h3>
+        <p class="idea-pitch">A teacher-first OS — lesson planning, rubrics, peer learning, PD tracking.</p>
+        <p class="idea-body">Veda runs the school; Shikshak runs the teacher. Curriculum-aligned lesson templates, shared rubric library, classroom observation logs, and a peer-learning feed where teachers across schools swap what works. Sells per-teacher (₨ 200/month) into schools that already have an ERP.</p>
+        <dl class="idea-grid-attrs">
+          <dt>Solves</dt><dd>Teacher tooling vacuum; PD invisibility</dd>
+          <dt>Buyer</dt><dd>Principal · Academic Coordinator</dd>
+          <dt>Beachhead</dt><dd>50–100 ambitious mid-tier private schools</dd>
+          <dt>Moat</dt><dd>Network effects from peer content</dd>
+        </dl>
+      </div>
+
+      <div class="idea">
+        <div class="idea-meta">
+          <span class="idea-codename">Concept 02</span>
+          <div class="idea-tags"><span class="idea-tag hot">Hot</span><span class="idea-tag">B2B2C</span></div>
+        </div>
+        <h3 class="idea-name">Abhibhavak</h3>
+        <p class="idea-pitch">WhatsApp-first parent engagement that meets parents where they are.</p>
+        <p class="idea-body">Forget app downloads. A WhatsApp Business stack that the school plugs into its ERP, sending personalised progress nudges, fee reminders, parenting tips and 2-way Q&amp;A — in Nepali, Maithili or English depending on parent profile. Voice notes for low-literacy parents. Solves the one-way notification problem at the channel parents actually open.</p>
+        <dl class="idea-grid-attrs">
+          <dt>Solves</dt><dd>Parent engagement; literacy gap</dd>
+          <dt>Buyer</dt><dd>School (subscription) · or D2C parents</dd>
+          <dt>Beachhead</dt><dd>+2 colleges fighting fee defaults</dd>
+          <dt>Moat</dt><dd>WhatsApp BSP cost + content library</dd>
+        </dl>
+      </div>
+
+      <div class="idea">
+        <div class="idea-meta">
+          <span class="idea-codename">Concept 03</span>
+          <div class="idea-tags"><span class="idea-tag deep">Deep</span><span class="idea-tag">B2B</span></div>
+        </div>
+        <h3 class="idea-name">Sip</h3>
+        <p class="idea-pitch">The CTEVT operating system — vocational institute ERP + industry placement.</p>
+        <p class="idea-body">A purpose-built platform for Nepal's 1,000+ CTEVT-affiliated institutes: practical-skills assessment, internship management, employer matching, certification tracking. Government-aligned, tied to industry placement contracts. The TVET sector is officially prioritised but has zero serious software provider.</p>
+        <dl class="idea-grid-attrs">
+          <dt>Solves</dt><dd>Entire vocational segment unserved</dd>
+          <dt>Buyer</dt><dd>CTEVT institutes · government dept.</dd>
+          <dt>Beachhead</dt><dd>Hospitality + IT + automotive trades</dd>
+          <dt>Moat</dt><dd>CTEVT regulatory partnerships</dd>
+        </dl>
+      </div>
+
+      <div class="idea">
+        <div class="idea-meta">
+          <span class="idea-codename">Concept 04</span>
+          <div class="idea-tags"><span class="idea-tag hot">Hot</span><span class="idea-tag">D2C</span></div>
+        </div>
+        <h3 class="idea-name">Margadarshan</h3>
+        <p class="idea-pitch">Career counselling + admissions concierge for +2 students.</p>
+        <p class="idea-body">From SEE result onwards: aptitude tests, course recommendations, college shortlisting, application help, scholarship discovery, study-abroad pathway — for the millions of students whose parents have no clue how to navigate +2-to-bachelor's choices. Subscription, ₨ 999/year. School partnerships boost CAC.</p>
+        <dl class="idea-grid-attrs">
+          <dt>Solves</dt><dd>Career-guidance vacuum</dd>
+          <dt>Buyer</dt><dd>Students/parents · school partnerships</dd>
+          <dt>Beachhead</dt><dd>SEE-passing students each May–June</dd>
+          <dt>Moat</dt><dd>College &amp; scholarship database</dd>
+        </dl>
+      </div>
+
+      <div class="idea">
+        <div class="idea-meta">
+          <span class="idea-codename">Concept 05</span>
+          <div class="idea-tags"><span class="idea-tag deep">Deep</span><span class="idea-tag">B2B</span></div>
+        </div>
+        <h3 class="idea-name">Pahunch</h3>
+        <p class="idea-pitch">Offline-first ERP for hill / mountain / community schools.</p>
+        <p class="idea-body">A radically simpler ERP that works fully offline, syncs when the bandwidth shows up, runs on cheap Android tablets, and uses Nepali-first UI. Priced at one-fifth of Veda. Distribute via district education offices and INGOs. Take OLE Nepal's offline DNA into the commercial admin layer.</p>
+        <dl class="idea-grid-attrs">
+          <dt>Solves</dt><dd>Connectivity assumptions; pricing exclusion</dd>
+          <dt>Buyer</dt><dd>Community / public schools · NGOs</dd>
+          <dt>Beachhead</dt><dd>One hill district as proof-of-concept</dd>
+          <dt>Moat</dt><dd>Sync technology + government trust</dd>
+        </dl>
+      </div>
+
+      <div class="idea">
+        <div class="idea-meta">
+          <span class="idea-codename">Concept 06</span>
+          <div class="idea-tags"><span class="idea-tag">Add-on</span><span class="idea-tag">B2B</span></div>
+        </div>
+        <h3 class="idea-name">Pariksha</h3>
+        <p class="idea-pitch">Assessment-as-a-service: item banks, proctoring, analytics.</p>
+        <p class="idea-body">Sit on top of any ERP. Generate question papers from a curriculum-tagged item bank. Run proctored online exams with AI invigilation. Produce learning-gap reports per student, per topic, per teacher. Sells as an add-on (no need to displace incumbent ERP) — a wedge into the assessment layer everyone has neglected.</p>
+        <dl class="idea-grid-attrs">
+          <dt>Solves</dt><dd>Assessment depth; analytics gap</dd>
+          <dt>Buyer</dt><dd>Schools using any ERP</dd>
+          <dt>Beachhead</dt><dd>+2 colleges (NEB prep market)</dd>
+          <dt>Moat</dt><dd>Item bank + proctoring tech</dd>
+        </dl>
+      </div>
+
+      <div class="idea">
+        <div class="idea-meta">
+          <span class="idea-codename">Concept 07</span>
+          <div class="idea-tags"><span class="idea-tag">Side</span><span class="idea-tag">B2B</span></div>
+        </div>
+        <h3 class="idea-name">Kisti</h3>
+        <p class="idea-pitch">Fee-EMI &amp; education-financing rails for schools.</p>
+        <p class="idea-body">Not a school product — a fintech-EdTech crossover. Schools embed it; parents pay annual fees in monthly EMIs. Backed by partner banks/MFIs. School gets paid up-front, parent pays gradually, you take the spread. Solves the cashflow pain that keeps small schools fee-collection-bound and parents in fee-default cycles.</p>
+        <dl class="idea-grid-attrs">
+          <dt>Solves</dt><dd>Pricing exclusion (parent side)</dd>
+          <dt>Buyer</dt><dd>School (zero-cost embed) · parent (consumer)</dd>
+          <dt>Beachhead</dt><dd>One school chain pilot</dd>
+          <dt>Moat</dt><dd>NRB licensing + bank partnerships</dd>
+        </dl>
+      </div>
+
+      <div class="idea">
+        <div class="idea-meta">
+          <span class="idea-codename">Concept 08</span>
+          <div class="idea-tags"><span class="idea-tag deep">Deep</span><span class="idea-tag">B2B</span></div>
+        </div>
+        <h3 class="idea-name">Anusandhan</h3>
+        <p class="idea-pitch">A research operating system for Nepali universities.</p>
+        <p class="idea-body">Thesis tracking, plagiarism detection (Nepali-aware), citation management, research output dashboards, alumni networking, journal submissions. Universities currently stitch together Turnitin, Mendeley, ad-hoc spreadsheets and email. One coherent product, priced at university-level enterprise rates, sold via UGC partnerships. Long sales cycle but defensible enterprise revenue.</p>
+        <dl class="idea-grid-attrs">
+          <dt>Solves</dt><dd>University depth gap</dd>
+          <dt>Buyer</dt><dd>Universities · UGC</dd>
+          <dt>Beachhead</dt><dd>One progressive deemed university</dd>
+          <dt>Moat</dt><dd>Nepali-language plagiarism detection</dd>
+        </dl>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ============ SECTION 06: SERVICE INNOVATION PATTERNS ============ -->
+<section style="background: var(--ivory-deep);">
+  <div class="container">
+    <div class="section-num">§ 06 — Service Design Patterns</div>
+    <h2 class="section-title">Six <em class="teal">service-model</em> innovations.</h2>
+    <p class="section-deck">Beyond product features — these are ways of <em>delivering</em> the service that no one in Nepal does well. Apply any of them on top of any concept above and the offering becomes hard to copy.</p>
+
+    <div class="pattern-grid">
+
+      <div class="pattern">
+        <div class="pattern-num">i</div>
+        <h3 class="pattern-h">Outcomes-as-a-service, <em>not features.</em></h3>
+        <p class="pattern-p">Sell the result, not the software. "We will get your NEB pass rate to 90% or your fee back." "We will reduce your fee-default rate by 30%." This shifts the conversation from RFP-style feature checklists to outcomes — and lets you charge premiums no feature-vendor can match.</p>
+        <p class="pattern-eg">A +2 college pays a per-student bonus for every distinction grade above baseline.</p>
+      </div>
+
+      <div class="pattern">
+        <div class="pattern-num">ii</div>
+        <h3 class="pattern-h">Co-op pricing for <em>small schools.</em></h3>
+        <p class="pattern-p">A cluster of 5–10 small schools pools an annual fee that gets them shared access to the platform plus one shared admin officer who supports all of them. Per-school cost drops 70%. The bottom-of-pyramid market opens up. The vendor builds a moat through relationships in the cluster.</p>
+        <p class="pattern-eg">Five community schools in Sindhupalchok share one ERP licence + one part-time admin.</p>
+      </div>
+
+      <div class="pattern">
+        <div class="pattern-num">iii</div>
+        <h3 class="pattern-h">Two-week implementation <em>guarantee.</em></h3>
+        <p class="pattern-p">Onboarding is the silent killer of EdTech ROI. A vendor that promises and delivers a fully-rolled-out system in 14 days — versus the industry's 3-to-6-month average — wins on word of mouth alone. Build a dedicated implementation squad, not a part-time CSM team.</p>
+        <p class="pattern-eg">"Day 14, parent app live with all students enrolled, or we extend free for 6 months."</p>
+      </div>
+
+      <div class="pattern">
+        <div class="pattern-num">iv</div>
+        <h3 class="pattern-h">Bundled <em>hardware + software.</em></h3>
+        <p class="pattern-p">Schools shouldn't have to source biometric devices, fingerprint scanners, ID-card printers and tablets separately. A vendor that ships the whole kit pre-configured, on a 3-year lease that bundles the software fee, removes a huge buyer-side friction and locks in the customer.</p>
+        <p class="pattern-eg">"₨ 50K/year per school: software, biometrics, parent-app branding, on-site setup."</p>
+      </div>
+
+      <div class="pattern">
+        <div class="pattern-num">v</div>
+        <h3 class="pattern-h">Multi-channel by default — <em>app, SMS, voice, WhatsApp.</em></h3>
+        <p class="pattern-p">Most products force every parent into the app. A meaningful chunk of Nepali parents won't or can't download an app. A service that automatically reaches each parent through the channel they actually use — voice IVR for low-literacy, SMS for feature-phone, WhatsApp for the rest — has wider engagement than any app-only competitor.</p>
+        <p class="pattern-eg">Same fee-reminder gets sent as voice in Tharu to one parent, WhatsApp in Nepali to another.</p>
+      </div>
+
+      <div class="pattern">
+        <div class="pattern-num">vi</div>
+        <h3 class="pattern-h">Data sovereignty <em>as a selling point.</em></h3>
+        <p class="pattern-p">All Nepali student data hosted in Nepal, processed under future Nepali data-protection law, audited locally. As compliance regimes tighten globally, "your data never leaves the country" becomes a real procurement argument — especially for government and university buyers who cannot use foreign-hosted alternatives at all.</p>
+        <p class="pattern-eg">A government tender that can't legally use AWS-hosted Google Classroom; you can win it.</p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ============ SECTION 07: TIMELINE / HORIZON ============ -->
+<section>
+  <div class="container">
+    <div class="section-num">§ 07 — Sequencing</div>
+    <h2 class="section-title">A <em>five-year</em> horizon.</h2>
+    <p class="section-deck">Not all opportunities mature at the same time. Some can be built and sold this year; others wait on regulation, behaviour change or a wave of capital. A rough sequencing.</p>
+
+    <div class="timeline-wrapper">
+      <svg class="timeline-svg" viewBox="0 0 1100 540" xmlns="http://www.w3.org/2000/svg">
+        <!-- Timeline base -->
+        <line x1="80" y1="60" x2="1040" y2="60" stroke="#1a1410" stroke-width="1.5"/>
+        <line x1="80" y1="60" x2="80" y2="500" stroke="#1a1410" stroke-width="1"/>
+
+        <!-- Year markers -->
+        <g font-family="JetBrains Mono, monospace" font-size="11" letter-spacing="2" fill="#1a1410">
+          <text x="80" y="40" text-anchor="middle">NOW</text>
+          <text x="320" y="40" text-anchor="middle">2026</text>
+          <text x="560" y="40" text-anchor="middle">2027</text>
+          <text x="800" y="40" text-anchor="middle">2028+</text>
+          <text x="1040" y="40" text-anchor="middle">2030</text>
+        </g>
+        <line x1="80" y1="55" x2="80" y2="65" stroke="#1a1410" stroke-width="1.5"/>
+        <line x1="320" y1="55" x2="320" y2="65" stroke="#1a1410" stroke-width="1.5"/>
+        <line x1="560" y1="55" x2="560" y2="65" stroke="#1a1410" stroke-width="1.5"/>
+        <line x1="800" y1="55" x2="800" y2="65" stroke="#1a1410" stroke-width="1.5"/>
+        <line x1="1040" y1="55" x2="1040" y2="65" stroke="#1a1410" stroke-width="1.5"/>
+
+        <!-- Horizon labels -->
+        <g font-family="Fraunces, serif" font-size="14" font-style="italic">
+          <text x="80" y="100" fill="#7d2e1a">Horizon 1 · Build now</text>
+          <text x="80" y="220" fill="#1d4e4a">Horizon 2 · Build into</text>
+          <text x="80" y="370" fill="#2b3a67">Horizon 3 · Position for</text>
+        </g>
+
+        <!-- Horizon 1 bars -->
+        <rect x="80" y="115" width="380" height="22" fill="#7d2e1a" rx="2"/>
+        <text x="90" y="131" fill="#fdfaf3" font-family="JetBrains Mono, monospace" font-size="10" letter-spacing="1">SHIKSHAK · teacher SaaS</text>
+
+        <rect x="80" y="143" width="280" height="22" fill="#7d2e1a" rx="2" opacity="0.85"/>
+        <text x="90" y="159" fill="#fdfaf3" font-family="JetBrains Mono, monospace" font-size="10" letter-spacing="1">ABHIBHAVAK · WhatsApp engagement</text>
+
+        <rect x="80" y="171" width="320" height="22" fill="#7d2e1a" rx="2" opacity="0.7"/>
+        <text x="90" y="187" fill="#fdfaf3" font-family="JetBrains Mono, monospace" font-size="10" letter-spacing="1">MARGADARSHAN · career concierge</text>
+
+        <!-- Horizon 2 bars -->
+        <rect x="200" y="240" width="500" height="22" fill="#1d4e4a" rx="2"/>
+        <text x="210" y="256" fill="#fdfaf3" font-family="JetBrains Mono, monospace" font-size="10" letter-spacing="1">PARIKSHA · assessment-as-a-service</text>
+
+        <rect x="280" y="268" width="500" height="22" fill="#1d4e4a" rx="2" opacity="0.85"/>
+        <text x="290" y="284" fill="#fdfaf3" font-family="JetBrains Mono, monospace" font-size="10" letter-spacing="1">KISTI · fee-EMI fintech</text>
+
+        <rect x="320" y="296" width="520" height="22" fill="#1d4e4a" rx="2" opacity="0.7"/>
+        <text x="330" y="312" fill="#fdfaf3" font-family="JetBrains Mono, monospace" font-size="10" letter-spacing="1">PAHUNCH · offline rural ERP</text>
+
+        <!-- Horizon 3 bars -->
+        <rect x="500" y="390" width="540" height="22" fill="#2b3a67" rx="2"/>
+        <text x="510" y="406" fill="#fdfaf3" font-family="JetBrains Mono, monospace" font-size="10" letter-spacing="1">SIP · CTEVT operating system</text>
+
+        <rect x="600" y="418" width="440" height="22" fill="#2b3a67" rx="2" opacity="0.85"/>
+        <text x="610" y="434" fill="#fdfaf3" font-family="JetBrains Mono, monospace" font-size="10" letter-spacing="1">ANUSANDHAN · university research</text>
+
+        <rect x="680" y="446" width="360" height="22" fill="#2b3a67" rx="2" opacity="0.7"/>
+        <text x="690" y="462" fill="#fdfaf3" font-family="JetBrains Mono, monospace" font-size="10" letter-spacing="1">NEPALI AI TUTOR · LLM-first learning</text>
+
+        <!-- Caption -->
+        <text x="550" y="525" text-anchor="middle" font-family="Newsreader, serif" font-size="13" font-style="italic" fill="#8b7d6a">— Fig. 7.1 · Horizon-based sequencing of EdTech ventures by feasibility &amp; market readiness —</text>
+      </svg>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SECTION 08: REALITY CHECKS ============ -->
+<section style="background: var(--ivory-deep);">
+  <div class="container">
+    <div class="section-num">§ 08 — Things That Will Bite You</div>
+    <h2 class="section-title">Six <em>reality checks.</em></h2>
+    <p class="section-deck">Every opportunity above comes with a known failure mode. Founders who go in blind fail; founders who go in with eyes open survive.</p>
+
+    <div class="reality-grid">
+      <div class="reality">
+        <h4 class="reality-h">Schools buy slowly.</h4>
+        <p class="reality-p">Sales cycles of 4–9 months are normal. Decisions are made by a principal/owner who sees five vendors a year and trusts the one their friend's school uses. Plan capital for the gap.</p>
+      </div>
+      <div class="reality">
+        <h4 class="reality-h">Government tenders aren't a path.</h4>
+        <p class="reality-p">Big public-sector EdTech contracts cluster with established vendors. Past-performance criteria can lock newcomers out. Win a private market first; tender later.</p>
+      </div>
+      <div class="reality">
+        <h4 class="reality-h">Free competitors set the floor.</h4>
+        <p class="reality-p">Google Classroom &amp; Microsoft Teams are free, polished, and globally maintained. Don't try to out-feature them at the LMS layer. Win on Nepal-specific layers they can't copy.</p>
+      </div>
+      <div class="reality">
+        <h4 class="reality-h">Implementation eats the margin.</h4>
+        <p class="reality-p">SaaS economics assume self-serve. Nepali schools need on-site setup, training, hand-holding. Either price implementation in, or industrialise it — but never assume customers will figure it out alone.</p>
+      </div>
+      <div class="reality">
+        <h4 class="reality-h">D2C EdTech has thin LTVs.</h4>
+        <p class="reality-p">Student subscribers churn after exams. Per-user revenue is small. Pure D2C without an institutional channel rarely reaches scale in Nepal — pair it with school partnerships from day one.</p>
+      </div>
+      <div class="reality">
+        <h4 class="reality-h">Talent is the bottleneck, not ideas.</h4>
+        <p class="reality-p">Nepali product designers, ML engineers, growth marketers are scarce and expensive. Most EdTech failures come from execution, not strategy. Hire and retain ruthlessly — or partner with a stronger team early.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ COLOPHON ============ -->
+<footer class="colophon">
+  <div class="container">
+    <div class="colophon-grid">
+      <div>
+        <h4>Reading this Brief</h4>
+        <p>This is a strategy companion to <em style="color:var(--terracotta);font-style:italic;">The Nepal EdTech Landscape — Field Report Vol. 01</em>. The fourteen incumbents catalogued there inform the gaps mapped here. Read in order, the two documents take you from "what exists" to "what could exist."</p>
+        <p>Concept names (Shikshak, Abhibhavak, Pahunch, etc.) are placeholders to make the ideas concrete, not branded recommendations. The opportunity, not the name, is the point.</p>
+      </div>
+      <div>
+        <h4>Composition</h4>
+        <p>Set in <em style="color:var(--teal);font-style:italic;">Fraunces</em> &amp; <em style="color:var(--teal);font-style:italic;">Newsreader</em>, with metadata in JetBrains Mono.</p>
+        <p style="font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--ink-mute); letter-spacing: 0.1em; margin-top: 24px;">— END OF STRATEGY BRIEF —</p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

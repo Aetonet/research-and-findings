@@ -1,0 +1,1555 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>The Field Hazards — A Risk &amp; Mitigation Brief</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Newsreader:ital,opsz,wght@0,6..72,200..800;1,6..72,200..800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ivory: #f6efe1;
+    --ivory-deep: #ede4d0;
+    --paper: #fdfaf3;
+    --ink: #1a1410;
+    --ink-soft: #4a3f33;
+    --ink-mute: #8b7d6a;
+    --terracotta: #a8442a;
+    --terracotta-deep: #7d2e1a;
+    --saffron: #c98a1e;
+    --teal: #1d4e4a;
+    --indigo: #2b3a67;
+    --indigo-deep: #1a2548;
+    --crimson: #8a1c2c;
+    --rule: #c9b896;
+    --rule-soft: #ddd0b4;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--ivory);
+    color: var(--ink);
+    font-family: 'Newsreader', Georgia, serif;
+    font-size: 17px;
+    line-height: 1.65;
+    overflow-x: hidden;
+    position: relative;
+  }
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 100;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+    opacity: 0.04;
+    mix-blend-mode: multiply;
+  }
+
+  .container {
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 0 32px;
+  }
+
+  /* ============ HERO ============ */
+  .hero {
+    padding: 80px 0 60px;
+    border-bottom: 1px solid var(--rule);
+    position: relative;
+  }
+  .hero-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    margin-bottom: 48px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--rule);
+  }
+  .hero-meta span:first-child::before {
+    content: '◈ ';
+    color: var(--indigo);
+  }
+  .hero-title {
+    font-family: 'Fraunces', serif;
+    font-size: clamp(56px, 9vw, 132px);
+    font-weight: 300;
+    line-height: 0.92;
+    letter-spacing: -0.04em;
+    margin-bottom: 32px;
+    font-variation-settings: 'opsz' 144, 'SOFT' 30;
+  }
+  .hero-title em {
+    font-style: italic;
+    font-weight: 400;
+    color: var(--indigo);
+    font-variation-settings: 'opsz' 144, 'SOFT' 100;
+  }
+  .hero-deck {
+    font-family: 'Newsreader', serif;
+    font-size: clamp(20px, 2.4vw, 28px);
+    line-height: 1.4;
+    font-weight: 300;
+    font-style: italic;
+    color: var(--ink-soft);
+    max-width: 820px;
+    margin-bottom: 48px;
+  }
+  .hero-pull {
+    font-family: 'Fraunces', serif;
+    font-size: clamp(22px, 2.6vw, 30px);
+    font-weight: 400;
+    line-height: 1.35;
+    border-left: 4px solid var(--terracotta);
+    padding: 24px 0 24px 32px;
+    margin: 32px 0 0;
+    max-width: 880px;
+    color: var(--ink);
+  }
+  .hero-pull em {
+    color: var(--terracotta);
+    font-style: italic;
+  }
+
+  section {
+    padding: 80px 0;
+  }
+  .section-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    color: var(--indigo);
+    margin-bottom: 12px;
+    text-transform: uppercase;
+  }
+  .section-title {
+    font-family: 'Fraunces', serif;
+    font-size: clamp(36px, 5vw, 60px);
+    font-weight: 400;
+    line-height: 1.0;
+    letter-spacing: -0.025em;
+    margin-bottom: 20px;
+    font-variation-settings: 'opsz' 96, 'SOFT' 50;
+  }
+  .section-title em {
+    font-style: italic;
+    color: var(--terracotta);
+  }
+  .section-title em.indigo {
+    color: var(--indigo);
+  }
+  .section-deck {
+    font-size: 19px;
+    color: var(--ink-soft);
+    max-width: 760px;
+    margin-bottom: 56px;
+    font-style: italic;
+    font-weight: 300;
+  }
+
+  /* ============ TAXONOMY DIAGRAM ============ */
+  .taxonomy-wrapper {
+    background: var(--paper);
+    border: 1px solid var(--rule);
+    padding: 40px;
+    overflow-x: auto;
+  }
+  .taxonomy-svg {
+    width: 100%;
+    min-width: 1000px;
+    height: auto;
+    display: block;
+  }
+
+  /* ============ RISK CARDS ============ */
+  .risk-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(420px, 1fr));
+    gap: 1px;
+    background: var(--rule);
+    border: 1px solid var(--rule);
+  }
+  .risk-card {
+    background: var(--paper);
+    padding: 32px 28px;
+    position: relative;
+  }
+  .risk-meta {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    margin-bottom: 16px;
+    padding-bottom: 14px;
+    border-bottom: 1px dashed var(--rule);
+  }
+  .risk-id {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    color: var(--terracotta);
+    text-transform: uppercase;
+  }
+  .risk-severity {
+    display: flex;
+    gap: 4px;
+  }
+  .sev-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--rule);
+  }
+  .sev-dot.on { background: var(--terracotta); }
+  .risk-title {
+    font-family: 'Fraunces', serif;
+    font-size: 25px;
+    font-weight: 500;
+    line-height: 1.15;
+    letter-spacing: -0.015em;
+    margin-bottom: 8px;
+  }
+  .risk-subtitle {
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-size: 15px;
+    color: var(--terracotta);
+    margin-bottom: 18px;
+  }
+  .risk-body {
+    font-size: 14.5px;
+    line-height: 1.6;
+    color: var(--ink-soft);
+    margin-bottom: 20px;
+  }
+  .mitigation {
+    background: var(--ivory-deep);
+    border-left: 3px solid var(--indigo);
+    padding: 16px 18px;
+    margin-top: 16px;
+    position: relative;
+  }
+  .mitigation-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.2em;
+    color: var(--indigo);
+    text-transform: uppercase;
+    margin-bottom: 8px;
+    display: block;
+  }
+  .mitigation-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  .mitigation-list li {
+    font-size: 13.5px;
+    line-height: 1.55;
+    color: var(--ink);
+    padding-left: 18px;
+    position: relative;
+    margin-bottom: 6px;
+  }
+  .mitigation-list li:last-child { margin-bottom: 0; }
+  .mitigation-list li::before {
+    content: '→';
+    position: absolute;
+    left: 0;
+    top: 0;
+    color: var(--indigo);
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 600;
+  }
+
+  /* ============ HEAT MAP ============ */
+  .heatmap-wrapper {
+    background: var(--paper);
+    border: 1px solid var(--rule);
+    padding: 40px;
+    overflow-x: auto;
+  }
+  .heatmap-svg {
+    width: 100%;
+    min-width: 800px;
+    height: auto;
+    display: block;
+    max-height: 720px;
+  }
+
+  /* ============ CASCADE ============ */
+  .cascade-wrapper {
+    background: var(--paper);
+    border: 1px solid var(--rule);
+    padding: 40px;
+    overflow-x: auto;
+  }
+  .cascade-svg {
+    width: 100%;
+    min-width: 1000px;
+    height: auto;
+    display: block;
+  }
+
+  /* ============ THE BIG THREE ============ */
+  .bigthree-wrapper {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: var(--rule);
+    border: 1px solid var(--rule);
+  }
+  .bigthree {
+    background: var(--ink);
+    color: var(--ivory);
+    padding: 40px 32px;
+    position: relative;
+  }
+  .bigthree-rank {
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-size: 96px;
+    line-height: 0.8;
+    color: var(--terracotta);
+    margin-bottom: 16px;
+    opacity: 0.9;
+  }
+  .bigthree-h {
+    font-family: 'Fraunces', serif;
+    font-size: 28px;
+    font-weight: 500;
+    line-height: 1.15;
+    margin-bottom: 16px;
+    letter-spacing: -0.015em;
+  }
+  .bigthree-p {
+    font-size: 15px;
+    line-height: 1.6;
+    color: var(--ivory);
+    opacity: 0.85;
+    margin-bottom: 18px;
+  }
+  .bigthree-tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.18em;
+    color: var(--saffron);
+    text-transform: uppercase;
+    border-top: 1px solid rgba(246, 239, 225, 0.2);
+    padding-top: 14px;
+    display: block;
+  }
+
+  @media (max-width: 900px) {
+    .bigthree-wrapper { grid-template-columns: 1fr; }
+  }
+
+  /* ============ MASTER PLAYBOOK ============ */
+  .playbook-wrapper {
+    overflow-x: auto;
+    border: 1px solid var(--rule);
+    background: var(--paper);
+  }
+  .playbook {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+    min-width: 880px;
+  }
+  .playbook thead th {
+    background: var(--indigo);
+    color: var(--ivory);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    font-weight: 500;
+    padding: 14px 12px;
+    text-align: left;
+    vertical-align: bottom;
+  }
+  .playbook td {
+    padding: 14px 12px;
+    border-bottom: 1px solid var(--rule-soft);
+    border-right: 1px solid var(--rule-soft);
+    vertical-align: top;
+    line-height: 1.5;
+  }
+  .playbook tr:hover td { background: var(--ivory-deep); }
+  .playbook .risk-name {
+    font-family: 'Fraunces', serif;
+    font-weight: 600;
+    font-size: 14px;
+    min-width: 140px;
+  }
+  .severity-pill {
+    display: inline-block;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.1em;
+    padding: 3px 7px;
+    text-transform: uppercase;
+    border-radius: 2px;
+    color: var(--ivory);
+  }
+  .sev-existential { background: var(--crimson); }
+  .sev-high { background: var(--terracotta); }
+  .sev-medium { background: var(--saffron); color: var(--ink); }
+  .sev-low { background: var(--ink-mute); }
+
+  /* ============ TIMELINE ============ */
+  .timeline-wrapper {
+    background: var(--paper);
+    border: 1px solid var(--rule);
+    padding: 40px 24px;
+    overflow-x: auto;
+  }
+  .timeline-svg {
+    width: 100%;
+    min-width: 1000px;
+    height: auto;
+    display: block;
+  }
+
+  /* ============ FOOTER ============ */
+  .colophon {
+    border-top: 1px solid var(--rule);
+    padding: 60px 0 80px;
+    margin-top: 40px;
+  }
+  .colophon-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 60px;
+  }
+  .colophon h4 {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    color: var(--indigo);
+    text-transform: uppercase;
+    margin-bottom: 16px;
+  }
+  .colophon p {
+    font-size: 14px;
+    color: var(--ink-soft);
+    line-height: 1.6;
+    margin-bottom: 12px;
+  }
+
+  /* ============ CALLOUT ============ */
+  .callout {
+    background: var(--ink);
+    color: var(--ivory);
+    padding: 48px 40px;
+    margin: 48px 0;
+    position: relative;
+  }
+  .callout::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 6px;
+    height: 100%;
+    background: var(--terracotta);
+  }
+  .callout-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    color: var(--saffron);
+    text-transform: uppercase;
+    margin-bottom: 16px;
+    display: block;
+  }
+  .callout-text {
+    font-family: 'Fraunces', serif;
+    font-size: clamp(20px, 2.4vw, 26px);
+    font-weight: 400;
+    line-height: 1.4;
+    font-style: italic;
+    max-width: 880px;
+  }
+  .callout-text em {
+    color: var(--saffron);
+    font-style: italic;
+  }
+
+  @media (max-width: 768px) {
+    .container { padding: 0 20px; }
+    .colophon-grid { grid-template-columns: 1fr; gap: 32px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ============ HERO ============ -->
+<header class="hero">
+  <div class="container">
+    <div class="hero-meta">
+      <span>Risk Brief &nbsp;/&nbsp; Companion to Vol. 01 &amp; 02</span>
+      <span>Vol. 03 &nbsp;·&nbsp; 2026</span>
+    </div>
+    <h1 class="hero-title">The field<br><em>hazards</em>.</h1>
+    <p class="hero-deck">Twenty-four ways an EdTech founder in Nepal gets killed — and what to do about each, from sales-cycle starvation to brain drain to the data-breach you didn't see coming.</p>
+
+    <p class="hero-pull">Most Nepali EdTech startups don't fail on the idea. They fail on a known, named, predictable risk that the founder either didn't see, or saw and didn't respect. This volume names them, ranks them, and pairs each with a <em>concrete mitigation</em>.</p>
+  </div>
+</header>
+
+<!-- ============ SECTION 01: TAXONOMY ============ -->
+<section>
+  <div class="container">
+    <div class="section-num">§ 01 — The Risk Landscape</div>
+    <h2 class="section-title">Six families, <em>twenty-four risks.</em></h2>
+    <p class="section-deck">Risks don't come randomly — they cluster into families. Treat them like that. Solve a family's root pattern and you neutralise several risks at once.</p>
+
+    <div class="taxonomy-wrapper">
+      <svg class="taxonomy-svg" viewBox="0 0 1100 580" xmlns="http://www.w3.org/2000/svg">
+        <!-- Center -->
+        <circle cx="550" cy="290" r="80" fill="#1a1410"/>
+        <text x="550" y="282" text-anchor="middle" fill="#f6efe1" font-family="JetBrains Mono, monospace" font-size="10" letter-spacing="2">EDTECH</text>
+        <text x="550" y="298" text-anchor="middle" fill="#c98a1e" font-family="Fraunces, serif" font-size="14" font-style="italic">risk surface</text>
+        <text x="550" y="318" text-anchor="middle" fill="#f6efe1" font-family="JetBrains Mono, monospace" font-size="10" letter-spacing="2">NEPAL · 2026</text>
+
+        <!-- Six branches as petals -->
+        <!-- Top -->
+        <line x1="550" y1="210" x2="550" y2="150" stroke="#1a1410" stroke-width="1.5"/>
+        <rect x="400" y="60" width="300" height="90" fill="#a8442a"/>
+        <text x="550" y="86" text-anchor="middle" fill="#f6efe1" font-family="JetBrains Mono, monospace" font-size="10" letter-spacing="2">FAMILY 01</text>
+        <text x="550" y="108" text-anchor="middle" fill="#f6efe1" font-family="Fraunces, serif" font-size="20" font-weight="500">Market &amp; Customer</text>
+        <text x="550" y="130" text-anchor="middle" fill="#f6efe1" font-family="Newsreader, serif" font-size="12" font-style="italic" opacity="0.85">slow sales · payment delays · concentration</text>
+
+        <!-- Top-right -->
+        <line x1="610" y1="240" x2="780" y2="170" stroke="#1a1410" stroke-width="1.5"/>
+        <rect x="800" y="120" width="270" height="90" fill="#7d2e1a"/>
+        <text x="935" y="146" text-anchor="middle" fill="#f6efe1" font-family="JetBrains Mono, monospace" font-size="10" letter-spacing="2">FAMILY 02</text>
+        <text x="935" y="168" text-anchor="middle" fill="#f6efe1" font-family="Fraunces, serif" font-size="20" font-weight="500">Financial</text>
+        <text x="935" y="190" text-anchor="middle" fill="#f6efe1" font-family="Newsreader, serif" font-size="12" font-style="italic" opacity="0.85">cash burn · capital scarcity · FX</text>
+
+        <!-- Bottom-right -->
+        <line x1="610" y1="340" x2="780" y2="410" stroke="#1a1410" stroke-width="1.5"/>
+        <rect x="800" y="370" width="270" height="90" fill="#2b3a67"/>
+        <text x="935" y="396" text-anchor="middle" fill="#f6efe1" font-family="JetBrains Mono, monospace" font-size="10" letter-spacing="2">FAMILY 03</text>
+        <text x="935" y="418" text-anchor="middle" fill="#f6efe1" font-family="Fraunces, serif" font-size="20" font-weight="500">Regulatory &amp; Legal</text>
+        <text x="935" y="440" text-anchor="middle" fill="#f6efe1" font-family="Newsreader, serif" font-size="12" font-style="italic" opacity="0.85">privacy · IP · IRD · tenders</text>
+
+        <!-- Bottom -->
+        <line x1="550" y1="370" x2="550" y2="430" stroke="#1a1410" stroke-width="1.5"/>
+        <rect x="400" y="430" width="300" height="90" fill="#1d4e4a"/>
+        <text x="550" y="456" text-anchor="middle" fill="#f6efe1" font-family="JetBrains Mono, monospace" font-size="10" letter-spacing="2">FAMILY 04</text>
+        <text x="550" y="478" text-anchor="middle" fill="#f6efe1" font-family="Fraunces, serif" font-size="20" font-weight="500">Operational &amp; Talent</text>
+        <text x="550" y="500" text-anchor="middle" fill="#f6efe1" font-family="Newsreader, serif" font-size="12" font-style="italic" opacity="0.85">brain drain · burnout · hiring · ops</text>
+
+        <!-- Bottom-left -->
+        <line x1="490" y1="340" x2="320" y2="410" stroke="#1a1410" stroke-width="1.5"/>
+        <rect x="30" y="370" width="270" height="90" fill="#c98a1e"/>
+        <text x="165" y="396" text-anchor="middle" fill="#1a1410" font-family="JetBrains Mono, monospace" font-size="10" letter-spacing="2">FAMILY 05</text>
+        <text x="165" y="418" text-anchor="middle" fill="#1a1410" font-family="Fraunces, serif" font-size="20" font-weight="500">Competitive &amp; Tech</text>
+        <text x="165" y="440" text-anchor="middle" fill="#1a1410" font-family="Newsreader, serif" font-size="12" font-style="italic" opacity="0.85">copycats · free competition · breaches</text>
+
+        <!-- Top-left -->
+        <line x1="490" y1="240" x2="320" y2="170" stroke="#1a1410" stroke-width="1.5"/>
+        <rect x="30" y="120" width="270" height="90" fill="#8a1c2c"/>
+        <text x="165" y="146" text-anchor="middle" fill="#f6efe1" font-family="JetBrains Mono, monospace" font-size="10" letter-spacing="2">FAMILY 06</text>
+        <text x="165" y="168" text-anchor="middle" fill="#f6efe1" font-family="Fraunces, serif" font-size="20" font-weight="500">Founder &amp; Macro</text>
+        <text x="165" y="190" text-anchor="middle" fill="#f6efe1" font-family="Newsreader, serif" font-size="12" font-style="italic" opacity="0.85">co-founder · politics · disasters</text>
+
+        <!-- Caption -->
+        <text x="550" y="555" text-anchor="middle" font-family="Newsreader, serif" font-size="13" font-style="italic" fill="#8b7d6a">— Fig. 1.1 · Risk taxonomy across six families · 24 named risks total —</text>
+      </svg>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SECTION 02: MARKET RISKS ============ -->
+<section style="background: var(--ivory-deep);">
+  <div class="container">
+    <div class="section-num">§ 02 — Family 01 · Market &amp; Customer</div>
+    <h2 class="section-title">When the buyer <em>moves slowly.</em></h2>
+    <p class="section-deck">Schools are the most patient buyers in Nepali B2B. Cash runs out at the speed of patience.</p>
+
+    <div class="risk-grid">
+
+      <div class="risk-card">
+        <div class="risk-meta">
+          <span class="risk-id">Risk 01 · slow-sales</span>
+          <div class="risk-severity">
+            <span class="sev-dot on"></span><span class="sev-dot on"></span><span class="sev-dot on"></span><span class="sev-dot on"></span><span class="sev-dot"></span>
+          </div>
+        </div>
+        <h3 class="risk-title">Sales cycles eat the runway.</h3>
+        <p class="risk-subtitle">4–9 months from intro to signed contract is normal.</p>
+        <p class="risk-body">Schools meet five vendors, ask the same questions, defer to the next academic-year budget cycle, and only sign during a narrow window — typically pre-Baishakh (March–May). A startup that runs out of cash before the buying window dies whether or not the product was good.</p>
+        <div class="mitigation">
+          <span class="mitigation-label">Mitigation</span>
+          <ul class="mitigation-list">
+            <li>Time fundraising so 18+ months of runway covers two academic cycles, not one.</li>
+            <li>Build a free or nearly-free tier that gets you live in schools <em>during</em> the off-cycle, so you're already on the inside when budgets reopen.</li>
+            <li>Sell add-ons to schools that already have an ERP — shorter cycle, no displacement battle.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="risk-card">
+        <div class="risk-meta">
+          <span class="risk-id">Risk 02 · payment-delays</span>
+          <div class="risk-severity">
+            <span class="sev-dot on"></span><span class="sev-dot on"></span><span class="sev-dot on"></span><span class="sev-dot on"></span><span class="sev-dot"></span>
+          </div>
+        </div>
+        <h3 class="risk-title">Schools pay 4–6 months late.</h3>
+        <p class="risk-subtitle">Receivables age faster than cash arrives.</p>
+        <p class="risk-body">Payment terms agreed on paper rarely match payment dates in reality. A school that owes ₨ 2 lakh in March may not pay until September. Multiply by twenty schools and your working capital evaporates while revenue technically grows.</p>
+        <div class="mitigation">
+          <span class="mitigation-label">Mitigation</span>
+          <ul class="mitigation-list">
+            <li>Bill annually upfront with a 10–15% discount, not monthly arrears.</li>
+            <li>Automate payment: integrate eSewa / Khalti / ConnectIPS so parents pay through your gateway and you net out school fees from the float.</li>
+            <li>Tie product access to payment status — politely throttle features rather than chase invoices.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="risk-card">
+        <div class="risk-meta">
+          <span class="risk-id">Risk 03 · concentration</span>
+          <div class="risk-severity">
+            <span class="sev-dot on"></span><span class="sev-dot on"></span><span class="sev-dot on"></span><span class="sev-dot"></span><span class="sev-dot"></span>
+          </div>
+        </div>
+        <h3 class="risk-title">Top three customers = half your revenue.</h3>
+        <p class="risk-subtitle">Lose one, lose the company's quarter.</p>
+        <p class="risk-body">Early-stage EdTech in Nepal is structurally concentrated — a handful of marquee schools account for most of the topline. Any one of them switching, deferring, or going through ownership change knocks out a quarter or more.</p>
+        <div class="mitigation">
+          <span class="mitigation-label">Mitigation</span>
+          <ul class="mitigation-list">
+            <li>Track the "no-customer-over-15%" rule from year two onwards.</li>
+            <li>Don't customise heavily for any single customer — every custom feature deepens lock-in for them, not for you.</li>
+            <li>Build a smaller-school self-serve product as a long tail to dilute concentration.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="risk-card">
+        <div class="risk-meta">
+          <span class="risk-id">Risk 04 · word-of-mouth</span>
+          <div class="risk-severity">
+            <span class="sev-dot on"></span><span class="sev-dot on"></span><span class="sev-dot on"></span><span class="sev-dot"></span><span class="sev-dot"></span>
+          </div>
+        </div>
+        <h3 class="risk-title">One angry principal, twenty lost deals.</h3>
+        <p class="risk-subtitle">Reputation transmits through closed networks.</p>
+        <p class="risk-body">Nepal's school-owner community is small and gossip-rich. PABSON, NPABSON, HISSAN groups talk. A single botched implementation or a publicised bug becomes a brand event. Conversely, one delighted principal becomes ten warm intros — but the asymmetry is brutal.</p>
+        <div class="mitigation">
+          <span class="mitigation-label">Mitigation</span>
+          <ul class="mitigation-list">
+            <li>Over-invest in the first ten customers; they are your sales force whether you pay them or not.</li>
+            <li>Build a customer-success function from day one, not month thirty-six.</li>
+            <li>Have a public incident-response playbook so problems are handled visibly well.</li>
+          </ul>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ============ SECTION 03: FINANCIAL RISKS ============ -->
+<section>
+  <div class="container">
+    <div class="section-num">§ 03 — Family 02 · Financial</div>
+    <h2 class="section-title">When the <em>capital</em> doesn't come.</h2>
+    <p class="section-deck">Nepal's startup capital pool is small, slow, and conservative. Plan for that, or plan to die.</p>
+
+    <div class="risk-grid">
+
+      <div class="risk-card">
+        <div class="risk-meta">
+          <span class="risk-id">Risk 05 · capital-thin</span>
+          <div class="risk-severity">
+            <span class="sev-dot on"></span><span class="sev-dot on"></span><span class="sev-dot on"></span><span class="sev-dot on"></span><span class="sev-dot on"></span>
+          </div>
+        </div>
+        <h3 class="risk-title">There is almost no Nepali EdTech VC.</h3>
+        <p class="risk-subtitle">Dolma, True North, One to Watch &amp; a thin angel layer — that's it.</p>
+        <p class="risk-body">Indian, US, or Singaporean capital is reachable but adds Foreign Investment approval (DOI/NRB), longer diligence, and FX layers. Local family offices exist but rarely write meaningful EdTech cheques. The funding desert kills companies with otherwise viable products.</p>
+        <div class="mitigation">
+          <span class="mitigation-label">Mitigation</span>
+          <ul class="mitigation-list">
+            <li>Plan to be cashflow-positive by month 24 — assume no Series A will rescue you.</li>
+            <li>Layer in services / consulting revenue early. Many successful Nepali tech firms started as agencies that productised.</li>
+            <li>Court grant capital — World Bank, ADB, USAID, FCDO, INGOs — for socially-positioned products like rural ERP or vocational platforms.</li>
+            <li>Consider revenue-based financing or convertible notes from local angels rather than priced rounds.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="risk-card">
+        <div class="risk-meta">
+          <span class="risk-id">Risk 06 · burn-rate</span>
+          <div class="risk-severity">
+            <span class="sev-dot on"></span><span class="sev-dot on"></span><span class="sev-dot on"></span><span class="sev-dot on"></span><span class="sev-dot"></span>
+          </div>
+        </div>
+        <h3 class="risk-title">The implementation team eats the SaaS margin.</h3>
+        <p class="risk-subtitle">Nepali schools need on-site setup; SaaS economics assume self-serve.</p>
+        <p class="risk-body">A "₨ 1 lakh/year ERP" looks profitable until you count the three-week onboarding, twice-yearly trainings, and a customer-success person who handles four schools at most. Real margin per customer is often negative for the first 18 months.</p>
+        <div class="mitigation">
+          <span class="mitigation-label">Mitigation</span>
+          <ul class="mitigation-list">
+            <li>Charge a one-time setup fee (₨ 25k–75k depending on size) — non-negotiable, separate from subscription.</li>
+            <li>Industrialise onboarding into a 14-day playbook with checklists, video courses, and a dedicated implementation pod.</li>
+            <li>Push self-serve from day one, even if adoption is slow — every quarter you wait makes the unit economics worse.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="risk-card">
+        <div class="risk-meta">
+          <span class="risk-id">Risk 07 · pricing-pressure</span>
+          <div class="risk-severity">
+            <span class="sev-dot on"></span><span class="sev-dot on"></span><span class="sev-dot on"></span><span class="sev-dot"></span><span class="sev-dot"></span>
+          </div>
+        </div>
+        <h3 class="risk-title">A race to the bottom on price.</h3>
+        <p class="risk-subtitle">Incumbents discount aggressively to defend market share.</p>
+        <p class="risk-body">When you knock on a Veda customer's door, the easiest defensive move is a 30% discount and a year's free support. Eight competitors mean prices keep falling. Founders who don't differentiate on something other than price become irrelevant.</p>
+        <div class="mitigation">
+          <span class="mitigation-label">Mitigation</span>
+          <ul class="mitigation-list">
+            <li>Win on a clearly different value axis: outcomes, accessibility, niche segment, AI feature — not on rupees per student.</li>
+            <li>Bundle proprietary content / data so the price is for the bundle, not the software.</li>
+            <li>Don't compete head-on for the customers incumbents will fight hardest for. Go where they aren't.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="risk-card">
+        <div class="risk-meta">
+          <span class="risk-id">Risk 08 · fx-and-policy</span>
+          <div class="risk-severity">
+            <span class="sev-dot on"></span><span class="sev-dot on"></span><span class="sev-dot"></span><span class="sev-dot"></span><span class="sev-dot"></span>
+          </div>
+        </div>
+        <h3 class="risk-title">Currency &amp; capital-flow surprises.</h3>
+        <p class="risk-subtitle">NRB rules can shift; remitting USD revenue isn't always simple.</p>
+        <p class="risk-body">If your business serves NRN diaspora or foreign B2B clients, paying contractors in Nepal involves bank conversions, FX paperwork, and rules that occasionally tighten. Founders who scale before sorting their entity structure get stuck.</p>
+        <div class="mitigation">
+          <span class="mitigation-label">Mitigation</span>
+          <ul class="mitigation-list">
+            <li>Engage an NRB-experienced accountant from incorporation day.</li>
+            <li>If targeting overseas customers, consider a Singapore or Delaware parent with a Nepal subsidiary — done early, this is cheap; done late, it's a nightmare.</li>
+            <li>Keep at least 6 months of operating cash on shore in Nepal regardless of foreign banking arrangements.</li>
+          </ul>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ============ SECTION 04: REGULATORY ============ -->
+<section style="background: var(--ivory-deep);">
+  <div class="container">
+    <div class="section-num">§ 04 — Family 03 · Regulatory &amp; Legal</div>
+    <h2 class="section-title">The <em class="indigo">paperwork</em> that bites.</h2>
+    <p class="section-deck">Compliance failures rarely kill startups outright — they kill the next funding round, the government tender, or the acquisition.</p>
+
+    <div class="risk-grid">
+
+      <div class="risk-card">
+        <div class="risk-meta">
+          <span class="risk-id">Risk 09 · child-data</span>
+          <div class="risk-severity">
+            <span class="sev-dot on"></span><span class="sev-dot on"></span><span class="sev-dot on"></span><span class="sev-dot on"></span><span class="sev-dot on"></span>
+          </div>
+        </div>
+        <h3 class="risk-title">You're handling minors' personal data.</h3>
+        <p class="risk-subtitle">Nepal's Privacy Act &amp; emerging data-protection law treat this strictly.</p>
+        <p class="risk-body">Student names, photos, attendance records, exam marks, biometric scans, parent contacts — every EdTech is a children's data company whether the founder thinks of it that way or not. A breach involving minors is a brand-ending event in Nepal as elsewhere.</p>
+        <div class="mitigation">
+          <span class="mitigation-label">Mitigation</span>
+          <ul class="mitigation-list">
+            <li>Data-minimise from day one — collect only what the product needs, delete what it doesn't.</li>
+            <li>Encrypt at rest and in transit. Use cloud providers' default encryption; don't roll your own.</li>
+            <li>Run an annual third-party security audit even when nobody requires it. Make this a marketing point.</li>
+            <li>Publish a clear, plain-Nepali privacy policy — most schools and parents don't get one.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="risk-card">
+        <div class="risk-meta">
+          <span class="risk-id">Risk 10 · ird-vat</span>
+          <div class="risk-severity">
+            <span class="sev-dot on"></span><span class="sev-dot on"></span><span class="sev-dot on"></span><span class="sev-dot"></span><span class="sev-dot"></span>
+          </div>
+        </div>
+        <h3 class="risk-title">VAT, TDS, and IRD audits.</h3>
+        <p class="risk-subtitle">Tax compliance is unforgiving and back-dated penalties are real.</p>
+        <p class="risk-body">SaaS billing in Nepal carries VAT obligations many founders discover late. TDS on contractor payments, advance tax, e-invoicing — the IRD has been digitising and tightening enforcement. Schools also expect IRD-compliant invoices from your platform.</p>
+        <div class="mitigation">
+          <span class="mitigation-label">Mitigation</span>
+          <ul class="mitigation-list">
+            <li>Hire a Nepal-based CA from month one. Don't try to DIY this.</li>
+            <li>Build IRD-compliant invoicing into the product itself if you're billing schools — eases your customer's compliance and yours.</li>
+            <li>Keep separate books for any foreign-currency or grant revenue; it has different tax treatment.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="risk-card">
+        <div class="risk-meta">
+          <span class="risk-id">Risk 11 · tender-lockout</span>
+          <div class="risk-severity">
+            <span class="sev-dot on"></span><span class="sev-dot on"></span><span class="sev-dot"></span><span class="sev-dot"></span><span class="sev-dot"></span>
+          </div>
+        </div>
+        <h3 class="risk-title">Public tenders favour incumbents.</h3>
+        <p class="risk-subtitle">Past-performance criteria can structurally exclude you for years.</p>
+        <p class="risk-body">Government EdTech tenders — at MoEST, UGC, CTEVT, local-government level — routinely require 3–5 years of similar projects, ISO certifications, and minimum revenue thresholds. New entrants rarely qualify, even if they have the better product.</p>
+        <div class="mitigation">
+          <span class="mitigation-label">Mitigation</span>
+          <ul class="mitigation-list">
+            <li>Win the private market first; tender for public work in years 3–5, not year 1.</li>
+            <li>Subcontract to a qualifying prime — you build, they bid. Less revenue, but real referenceable scale.</li>
+            <li>Target lower-government tiers (rural municipalities, ward-level) where past-performance bars are softer.</li>
+            <li>Pursue ISO 27001 / 9001 early; tenders increasingly check.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="risk-card">
+        <div class="risk-meta">
+          <span class="risk-id">Risk 12 · ip-weak</span>
+          <div class="risk-severity">
+            <span class="sev-dot on"></span><span class="sev-dot on"></span><span class="sev-dot"></span><span class="sev-dot"></span><span class="sev-dot"></span>
+          </div>
+        </div>
+        <h3 class="risk-title">IP protection is thin in practice.</h3>
+        <p class="risk-subtitle">Copying happens; legal recourse is slow and rarely worth it.</p>
+        <p class="risk-body">A competitor can clone your UI in weeks and a court case takes years. Patents are theoretically available but rarely defended successfully. Trade-secret protection depends on your own internal hygiene.</p>
+        <div class="mitigation">
+          <span class="mitigation-label">Mitigation</span>
+          <ul class="mitigation-list">
+            <li>Treat speed and network effects as your real moat, not legal IP.</li>
+            <li>Tight NDAs and non-competes for engineers — and a culture worth staying in so they don't want to leave.</li>
+            <li>Trademark your brand name early; that's the one IP fight that does work in Nepal.</li>
+            <li>Keep proprietary data (item banks, content libraries, integration code) in modules you don't expose, not in the front-end.</li>
+          </ul>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ============ SECTION 05: OPERATIONAL ============ -->
+<section>
+  <div class="container">
+    <div class="section-num">§ 05 — Family 04 · Operational &amp; Talent</div>
+    <h2 class="section-title">When the <em>team</em> wobbles.</h2>
+    <p class="section-deck">Nepal's biggest startup risk isn't the product or the market — it's keeping a team intact while the rest of the world tries to hire your engineers.</p>
+
+    <div class="risk-grid">
+
+      <div class="risk-card">
+        <div class="risk-meta">
+          <span class="risk-id">Risk 13 · brain-drain</span>
+          <div class="risk-severity">
+            <span class="sev-dot on"></span><span class="sev-dot on"></span><span class="sev-dot on"></span><span class="sev-dot on"></span><span class="sev-dot on"></span>
+          </div>
+        </div>
+        <h3 class="risk-title">Your best engineer leaves for Australia.</h3>
+        <p class="risk-subtitle">Or the US, the Gulf, or remote work paying USD.</p>
+        <p class="risk-body">This is the single biggest operational risk in Nepali tech today. A senior Nepali engineer can earn 4–8× more on a remote contract for a US firm than at a Nepali startup. Student visas to Australia/Canada accelerate the exit further. Losing two senior people in a quarter can stall product development for half a year.</p>
+        <div class="mitigation">
+          <span class="mitigation-label">Mitigation</span>
+          <ul class="mitigation-list">
+            <li>Pay above local market — but accept you can't match foreign-remote rates. Compete on equity, mission, and growth.</li>
+            <li>Hire deliberately from outside Kathmandu (Pokhara, Biratnagar, Butwal); retention is structurally higher.</li>
+            <li>Build a documentation culture — assume any individual can leave at any time and the system has to keep running.</li>
+            <li>Take ESOP seriously; not as a gimmick. If equity is real, retention is real.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="risk-card">
+        <div class="risk-meta">
+          <span class="risk-id">Risk 14 · founder-burnout</span>
+          <div class="risk-severity">
+            <span class="sev-dot on"></span><span class="sev-dot on"></span><span class="sev-dot on"></span><span class="sev-dot on"></span><span class="sev-dot"></span>
+          </div>
+        </div>
+        <h3 class="risk-title">The founder running on fumes.</h3>
+        <p class="risk-subtitle">Year three is when most founders quietly break.</p>
+        <p class="risk-body">Long sales cycles, customer hand-holding, fundraising pressure, family expectations, and the lonely psychology of running a small company in a small market — these compound. Burnout in Nepal is under-discussed because admitting it carries social stigma.</p>
+        <div class="mitigation">
+          <span class="mitigation-label">Mitigation</span>
+          <ul class="mitigation-list">
+            <li>Have a co-founder, not a solo build. Equity dilution is cheaper than collapse.</li>
+            <li>Find a peer group of three or four other Nepali founders; meet monthly. The conversations are the therapy.</li>
+            <li>Take a real holiday at least once a year. The company will not collapse in a week off; it will collapse in a year of you not having one.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="risk-card">
+        <div class="risk-meta">
+          <span class="risk-id">Risk 15 · cofounder-conflict</span>
+          <div class="risk-severity">
+            <span class="sev-dot on"></span><span class="sev-dot on"></span><span class="sev-dot on"></span><span class="sev-dot on"></span><span class="sev-dot"></span>
+          </div>
+        </div>
+        <h3 class="risk-title">Co-founders fall out.</h3>
+        <p class="risk-subtitle">The most common cause of small-company death globally — and Nepal is no exception.</p>
+        <p class="risk-body">Disagreements over direction, equity, work intensity, money, family — they accumulate. In Nepal's small ecosystem, a public co-founder split also damages future fundraising and recruiting.</p>
+        <div class="mitigation">
+          <span class="mitigation-label">Mitigation</span>
+          <ul class="mitigation-list">
+            <li>Vesting schedules from day one — no exceptions. 4-year vest, 1-year cliff, even between best friends.</li>
+            <li>Written shareholders' agreement covering exits, deadlocks, and what happens if one founder wants out.</li>
+            <li>Quarterly "are we okay?" conversations, formally scheduled. Hard, but it works.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="risk-card">
+        <div class="risk-meta">
+          <span class="risk-id">Risk 16 · scaling-ops</span>
+          <div class="risk-severity">
+            <span class="sev-dot on"></span><span class="sev-dot on"></span><span class="sev-dot on"></span><span class="sev-dot"></span><span class="sev-dot"></span>
+          </div>
+        </div>
+        <h3 class="risk-title">Customer support becomes a black hole.</h3>
+        <p class="risk-subtitle">Schools call directly, expect immediate help, in their language.</p>
+        <p class="risk-body">A Nepali school doesn't open a ticket. They call the founder's mobile, in Nepali, often during exam week, and expect the bug fixed today. As the customer base grows, this support load swallows the founder's time and then the engineering team's.</p>
+        <div class="mitigation">
+          <span class="mitigation-label">Mitigation</span>
+          <ul class="mitigation-list">
+            <li>Build self-help: a Nepali-language help centre, video tutorials, in-app guidance — earlier than feels comfortable.</li>
+            <li>Hire support staff from teaching/admin backgrounds, not engineering. They speak the customer's language literally.</li>
+            <li>Train customers, not just users — a one-day onboarding workshop reduces support tickets by 60%.</li>
+          </ul>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ============ CALLOUT ============ -->
+<div class="container">
+  <div class="callout">
+    <span class="callout-label">Pull quote · § 05</span>
+    <p class="callout-text">In Nepal's tech market, a brilliant founder with a mediocre team will lose to a mediocre founder with a <em>retained, documented, well-paid team.</em> Hiring is product strategy.</p>
+  </div>
+</div>
+
+<!-- ============ SECTION 06: COMPETITIVE & TECH ============ -->
+<section style="background: var(--ivory-deep);">
+  <div class="container">
+    <div class="section-num">§ 06 — Family 05 · Competitive &amp; Tech</div>
+    <h2 class="section-title">When someone <em>better-funded</em> shows up.</h2>
+    <p class="section-deck">It might be Google with a free product, an Indian SaaS expanding northward, or a local incumbent that finally noticed you. Either way — assume they will.</p>
+
+    <div class="risk-grid">
+
+      <div class="risk-card">
+        <div class="risk-meta">
+          <span class="risk-id">Risk 17 · free-incumbents</span>
+          <div class="risk-severity">
+            <span class="sev-dot on"></span><span class="sev-dot on"></span><span class="sev-dot on"></span><span class="sev-dot on"></span><span class="sev-dot"></span>
+          </div>
+        </div>
+        <h3 class="risk-title">Google &amp; Microsoft give away your category.</h3>
+        <p class="risk-subtitle">Google Classroom and Teams are free, polished, and globally maintained.</p>
+        <p class="risk-body">For the LMS / online-class layer, you are competing with $0 from a company with infinite resources. Your school customers will quietly use both: your platform for ERP, Google Classroom for actual teaching. Anything you build at the LMS layer must beat free.</p>
+        <div class="mitigation">
+          <span class="mitigation-label">Mitigation</span>
+          <ul class="mitigation-list">
+            <li>Don't compete head-on at the generic LMS layer. Win on Nepal-specific layers — language, NEB-aligned content, biometric integration, parent comms.</li>
+            <li>Integrate <em>with</em> Google Classroom rather than against it: import grades, sync rosters. Be the bridge, not the rival.</li>
+            <li>Make admin / Nepal-compliance the primary value, with light LMS as a feature, not the core.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="risk-card">
+        <div class="risk-meta">
+          <span class="risk-id">Risk 18 · indian-saas</span>
+          <div class="risk-severity">
+            <span class="sev-dot on"></span><span class="sev-dot on"></span><span class="sev-dot on"></span><span class="sev-dot"></span><span class="sev-dot"></span>
+          </div>
+        </div>
+        <h3 class="risk-title">An Indian SaaS lands with venture money.</h3>
+        <p class="risk-subtitle">Camu, Teachmint, Classplus &amp; cohorts have already eyed Nepal.</p>
+        <p class="risk-body">A well-funded Indian EdTech can move into Nepal with marketing budgets you can't match, hire your sales reps, and underprice you for two years to take share. Their disadvantage is local nuance — IRD compliance, Nepali language depth, government relationships.</p>
+        <div class="mitigation">
+          <span class="mitigation-label">Mitigation</span>
+          <ul class="mitigation-list">
+            <li>Make Nepali-specific compliance, language, and integrations a deep moat — things they can't replicate without a Nepal team.</li>
+            <li>Lock in marquee schools with multi-year deals when threats appear.</li>
+            <li>Consider strategic partnerships rather than pure competition — a regional player needing local presence may acquire rather than compete.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="risk-card">
+        <div class="risk-meta">
+          <span class="risk-id">Risk 19 · adjacent-entry</span>
+          <div class="risk-severity">
+            <span class="sev-dot on"></span><span class="sev-dot on"></span><span class="sev-dot on"></span><span class="sev-dot"></span><span class="sev-dot"></span>
+          </div>
+        </div>
+        <h3 class="risk-title">Banks &amp; telcos move into your category.</h3>
+        <p class="risk-subtitle">Fee fintech is a natural extension for any Nepali bank.</p>
+        <p class="risk-body">If your wedge is fee-collection or payments, expect NIC Asia, Nabil, Global IME or eSewa itself to launch a school-fee product within 24 months. They have distribution you can't match — every parent already has the bank app.</p>
+        <div class="mitigation">
+          <span class="mitigation-label">Mitigation</span>
+          <ul class="mitigation-list">
+            <li>Don't sit on the payments layer alone. Wrap payments inside a richer school workflow they won't build.</li>
+            <li>Partner with one bank early — be the application layer they distribute, not the rival.</li>
+            <li>Move up the value chain to academic management before the payments commoditise.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="risk-card">
+        <div class="risk-meta">
+          <span class="risk-id">Risk 20 · breach</span>
+          <div class="risk-severity">
+            <span class="sev-dot on"></span><span class="sev-dot on"></span><span class="sev-dot on"></span><span class="sev-dot on"></span><span class="sev-dot on"></span>
+          </div>
+        </div>
+        <h3 class="risk-title">A data breach.</h3>
+        <p class="risk-subtitle">The single most catastrophic technical risk you face.</p>
+        <p class="risk-body">Student data, parent contacts, fee records, biometric scans — a leak ruins customer trust permanently. Even if you survive operationally, it ends the founder's reputation in the closed school-owner community for years.</p>
+        <div class="mitigation">
+          <span class="mitigation-label">Mitigation</span>
+          <ul class="mitigation-list">
+            <li>Security is a senior-engineering responsibility, not a checkbox. Have a named security owner from team-of-five onwards.</li>
+            <li>Penetration testing twice a year by an external firm. Budget it.</li>
+            <li>Incident-response runbook ready before you need it: who calls whom, what gets disclosed, how parents are notified.</li>
+            <li>Cyber-liability insurance — small Nepali market for it, but the larger insurers offer policies. Get one.</li>
+          </ul>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ============ SECTION 07: FOUNDER & MACRO ============ -->
+<section>
+  <div class="container">
+    <div class="section-num">§ 07 — Family 06 · Founder &amp; Macro</div>
+    <h2 class="section-title">The risks <em>you don't control.</em></h2>
+    <p class="section-deck">Earthquakes, elections, pandemics, currency moves. You can't prevent them — you can only build resilience for when they arrive.</p>
+
+    <div class="risk-grid">
+
+      <div class="risk-card">
+        <div class="risk-meta">
+          <span class="risk-id">Risk 21 · political</span>
+          <div class="risk-severity">
+            <span class="sev-dot on"></span><span class="sev-dot on"></span><span class="sev-dot on"></span><span class="sev-dot"></span><span class="sev-dot"></span>
+          </div>
+        </div>
+        <h3 class="risk-title">Government changes; education policy reverses.</h3>
+        <p class="risk-subtitle">A new minister, a new curriculum, a paused initiative — and three months of work shifts under you.</p>
+        <p class="risk-body">Nepal has had multiple education ministers in recent years. CDC priorities, NEB structure, school-grading systems — all open to revision. If your product depends on one specific policy direction, you're exposed.</p>
+        <div class="mitigation">
+          <span class="mitigation-label">Mitigation</span>
+          <ul class="mitigation-list">
+            <li>Build for the underlying need (assessment, attendance, billing) not the specific regulation. Needs persist; rules don't.</li>
+            <li>Stay close to multiple stakeholders — MoEST, CDC, UGC — without depending on any one.</li>
+            <li>Diversify across school types so a policy change in one segment is partial damage, not total.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="risk-card">
+        <div class="risk-meta">
+          <span class="risk-id">Risk 22 · disasters</span>
+          <div class="risk-severity">
+            <span class="sev-dot on"></span><span class="sev-dot on"></span><span class="sev-dot on"></span><span class="sev-dot"></span><span class="sev-dot"></span>
+          </div>
+        </div>
+        <h3 class="risk-title">Earthquake. Pandemic. Floods. Strikes.</h3>
+        <p class="risk-subtitle">Nepal's exposure is real and recurring.</p>
+        <p class="risk-body">2015 earthquake; 2020 COVID lockdowns; recurring monsoon floods; political bandhs. Schools close, payment systems pause, your team can't get to office, your servers can't be reached. Each event is survivable — being unprepared isn't.</p>
+        <div class="mitigation">
+          <span class="mitigation-label">Mitigation</span>
+          <ul class="mitigation-list">
+            <li>Cloud-host with offsite backup outside Nepal. Don't run critical infra on a single Kathmandu data centre.</li>
+            <li>Remote-first work culture — proven in COVID, still useful. The team should be functional from anywhere.</li>
+            <li>Keep 6 months of cash buffer specifically tagged as "disaster runway", separate from operating reserves.</li>
+            <li>A documented business-continuity plan that's been rehearsed at least once.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="risk-card">
+        <div class="risk-meta">
+          <span class="risk-id">Risk 23 · econ-downturn</span>
+          <div class="risk-severity">
+            <span class="sev-dot on"></span><span class="sev-dot on"></span><span class="sev-dot on"></span><span class="sev-dot"></span><span class="sev-dot"></span>
+          </div>
+        </div>
+        <h3 class="risk-title">Schools cut IT spend in a slow economy.</h3>
+        <p class="risk-subtitle">EdTech is the first line item to defer when fees are short.</p>
+        <p class="risk-body">A weak remittance year, a banking-sector wobble, or rising inflation → schools delay upgrades, parents default on fees, your churn rises and new sales slow. EdTech revenue is more cyclical than founders typically believe.</p>
+        <div class="mitigation">
+          <span class="mitigation-label">Mitigation</span>
+          <ul class="mitigation-list">
+            <li>Position as cost-saver in tough times: "We reduce your admin headcount cost by X." Not "we are an upgrade."</li>
+            <li>Have annual contracts with auto-renewal so a downturn affects new sales but not existing book.</li>
+            <li>Diversify revenue: institutional + consumer + government grants spread the cycles.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="risk-card">
+        <div class="risk-meta">
+          <span class="risk-id">Risk 24 · founder-network</span>
+          <div class="risk-severity">
+            <span class="sev-dot on"></span><span class="sev-dot on"></span><span class="sev-dot on"></span><span class="sev-dot"></span><span class="sev-dot"></span>
+          </div>
+        </div>
+        <h3 class="risk-title">No network in the school-owner community.</h3>
+        <p class="risk-subtitle">In Nepal's relationship-driven B2B, the cold founder loses.</p>
+        <p class="risk-body">Founders without family or social access to PABSON / NPABSON / HISSAN circles spend years building what insiders inherit. Cold pitches to principals work, but at 5–10% the conversion of warm intros.</p>
+        <div class="mitigation">
+          <span class="mitigation-label">Mitigation</span>
+          <ul class="mitigation-list">
+            <li>Recruit one co-founder, advisor, or first-hire who has those relationships — or marry the function into a senior sales hire.</li>
+            <li>Become a presence at industry conferences (PABSON conventions, principal training events). Showing up consistently for a year creates the network.</li>
+            <li>Offer free product to the most-respected school in your segment in exchange for case studies and intros. The reference is worth more than the revenue.</li>
+          </ul>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ============ SECTION 08: HEAT MAP ============ -->
+<section style="background: var(--ivory-deep);">
+  <div class="container">
+    <div class="section-num">§ 08 — Heat Map</div>
+    <h2 class="section-title">Probability <em>against</em> impact.</h2>
+    <p class="section-deck">All twenty-four risks plotted on the same chart. The top-right is where attention belongs first. Bottom-left risks are real but not strategic.</p>
+
+    <div class="heatmap-wrapper">
+      <svg class="heatmap-svg" viewBox="0 0 1000 720" xmlns="http://www.w3.org/2000/svg">
+        <!-- Grid -->
+        <rect x="100" y="60" width="840" height="560" fill="#fdfaf3" stroke="#c9b896" stroke-width="1"/>
+
+        <!-- Quadrant tints -->
+        <rect x="100" y="60" width="420" height="280" fill="#8b7d6a" opacity="0.05"/>
+        <rect x="520" y="60" width="420" height="280" fill="#8a1c2c" opacity="0.10"/>
+        <rect x="100" y="340" width="420" height="280" fill="#c98a1e" opacity="0.05"/>
+        <rect x="520" y="340" width="420" height="280" fill="#a8442a" opacity="0.08"/>
+
+        <!-- Axes -->
+        <line x1="520" y1="60" x2="520" y2="620" stroke="#1a1410" stroke-width="1.5" stroke-dasharray="3 4"/>
+        <line x1="100" y1="340" x2="940" y2="340" stroke="#1a1410" stroke-width="1.5" stroke-dasharray="3 4"/>
+
+        <!-- Axis labels -->
+        <text x="520" y="35" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="11" letter-spacing="2" fill="#1a1410">PROBABILITY →</text>
+        <text x="310" y="52" text-anchor="middle" font-family="Fraunces, serif" font-size="13" font-style="italic" fill="#1a1410">unlikely</text>
+        <text x="730" y="52" text-anchor="middle" font-family="Fraunces, serif" font-size="13" font-style="italic" fill="#1a1410">likely</text>
+
+        <text x="60" y="340" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="11" letter-spacing="2" fill="#1a1410" transform="rotate(-90 60 340)">↑ IMPACT</text>
+        <text x="80" y="180" text-anchor="middle" font-family="Fraunces, serif" font-size="13" font-style="italic" fill="#1a1410" transform="rotate(-90 80 180)">existential</text>
+        <text x="80" y="490" text-anchor="middle" font-family="Fraunces, serif" font-size="13" font-style="italic" fill="#1a1410" transform="rotate(-90 80 490)">manageable</text>
+
+        <!-- Quadrant labels -->
+        <text x="310" y="80" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="9" letter-spacing="1.5" fill="#8b7d6a" opacity="0.7">UNLIKELY · CRITICAL</text>
+        <text x="730" y="80" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="9" letter-spacing="1.5" fill="#8a1c2c" opacity="0.85">DEFCON · ATTACK FIRST</text>
+        <text x="310" y="610" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="9" letter-spacing="1.5" fill="#c98a1e" opacity="0.85">IGNORE · NOISE</text>
+        <text x="730" y="610" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="9" letter-spacing="1.5" fill="#a8442a" opacity="0.85">FREQUENT · MANAGE</text>
+
+        <!-- ===== High prob / High impact (top-right) — DEFCON ===== -->
+        <g>
+          <circle cx="780" cy="140" r="22" fill="#8a1c2c" stroke="#fdfaf3" stroke-width="2.5"/>
+          <text x="780" y="145" text-anchor="middle" font-family="Fraunces, serif" font-size="11" font-weight="600" fill="#fdfaf3">R13</text>
+        </g>
+        <g>
+          <circle cx="850" cy="180" r="20" fill="#8a1c2c" stroke="#fdfaf3" stroke-width="2.5"/>
+          <text x="850" y="184" text-anchor="middle" font-family="Fraunces, serif" font-size="10" font-weight="600" fill="#fdfaf3">R05</text>
+        </g>
+        <g>
+          <circle cx="700" cy="190" r="20" fill="#8a1c2c" stroke="#fdfaf3" stroke-width="2.5"/>
+          <text x="700" y="194" text-anchor="middle" font-family="Fraunces, serif" font-size="10" font-weight="600" fill="#fdfaf3">R01</text>
+        </g>
+        <g>
+          <circle cx="800" cy="240" r="18" fill="#8a1c2c" stroke="#fdfaf3" stroke-width="2.5"/>
+          <text x="800" y="244" text-anchor="middle" font-family="Fraunces, serif" font-size="10" font-weight="600" fill="#fdfaf3">R02</text>
+        </g>
+        <g>
+          <circle cx="650" cy="260" r="18" fill="#8a1c2c" stroke="#fdfaf3" stroke-width="2.5"/>
+          <text x="650" y="264" text-anchor="middle" font-family="Fraunces, serif" font-size="10" font-weight="600" fill="#fdfaf3">R09</text>
+        </g>
+        <g>
+          <circle cx="900" cy="280" r="16" fill="#8a1c2c" stroke="#fdfaf3" stroke-width="2.5"/>
+          <text x="900" y="284" text-anchor="middle" font-family="Fraunces, serif" font-size="10" font-weight="600" fill="#fdfaf3">R17</text>
+        </g>
+
+        <!-- Top-left (unlikely / critical) -->
+        <g>
+          <circle cx="280" cy="160" r="16" fill="#7d2e1a" stroke="#fdfaf3" stroke-width="2.5"/>
+          <text x="280" y="164" text-anchor="middle" font-family="Fraunces, serif" font-size="10" font-weight="600" fill="#fdfaf3">R20</text>
+        </g>
+        <g>
+          <circle cx="380" cy="200" r="16" fill="#7d2e1a" stroke="#fdfaf3" stroke-width="2.5"/>
+          <text x="380" y="204" text-anchor="middle" font-family="Fraunces, serif" font-size="10" font-weight="600" fill="#fdfaf3">R22</text>
+        </g>
+        <g>
+          <circle cx="200" cy="260" r="14" fill="#7d2e1a" stroke="#fdfaf3" stroke-width="2.5"/>
+          <text x="200" y="264" text-anchor="middle" font-family="Fraunces, serif" font-size="10" font-weight="600" fill="#fdfaf3">R15</text>
+        </g>
+        <g>
+          <circle cx="450" cy="290" r="14" fill="#7d2e1a" stroke="#fdfaf3" stroke-width="2.5"/>
+          <text x="450" y="294" text-anchor="middle" font-family="Fraunces, serif" font-size="10" font-weight="600" fill="#fdfaf3">R14</text>
+        </g>
+
+        <!-- Bottom-right (frequent / manageable) -->
+        <g>
+          <circle cx="700" cy="430" r="16" fill="#a8442a" stroke="#fdfaf3" stroke-width="2.5"/>
+          <text x="700" y="434" text-anchor="middle" font-family="Fraunces, serif" font-size="10" font-weight="600" fill="#fdfaf3">R06</text>
+        </g>
+        <g>
+          <circle cx="780" cy="450" r="14" fill="#a8442a" stroke="#fdfaf3" stroke-width="2.5"/>
+          <text x="780" y="454" text-anchor="middle" font-family="Fraunces, serif" font-size="9" font-weight="600" fill="#fdfaf3">R10</text>
+        </g>
+        <g>
+          <circle cx="850" cy="430" r="14" fill="#a8442a" stroke="#fdfaf3" stroke-width="2.5"/>
+          <text x="850" y="434" text-anchor="middle" font-family="Fraunces, serif" font-size="9" font-weight="600" fill="#fdfaf3">R04</text>
+        </g>
+        <g>
+          <circle cx="630" cy="490" r="14" fill="#a8442a" stroke="#fdfaf3" stroke-width="2.5"/>
+          <text x="630" y="494" text-anchor="middle" font-family="Fraunces, serif" font-size="9" font-weight="600" fill="#fdfaf3">R16</text>
+        </g>
+        <g>
+          <circle cx="900" cy="490" r="14" fill="#a8442a" stroke="#fdfaf3" stroke-width="2.5"/>
+          <text x="900" y="494" text-anchor="middle" font-family="Fraunces, serif" font-size="9" font-weight="600" fill="#fdfaf3">R07</text>
+        </g>
+        <g>
+          <circle cx="780" cy="540" r="13" fill="#a8442a" stroke="#fdfaf3" stroke-width="2.5"/>
+          <text x="780" y="544" text-anchor="middle" font-family="Fraunces, serif" font-size="9" font-weight="600" fill="#fdfaf3">R23</text>
+        </g>
+        <g>
+          <circle cx="690" cy="560" r="12" fill="#a8442a" stroke="#fdfaf3" stroke-width="2.5"/>
+          <text x="690" y="564" text-anchor="middle" font-family="Fraunces, serif" font-size="9" font-weight="600" fill="#fdfaf3">R03</text>
+        </g>
+        <g>
+          <circle cx="850" cy="570" r="12" fill="#a8442a" stroke="#fdfaf3" stroke-width="2.5"/>
+          <text x="850" y="574" text-anchor="middle" font-family="Fraunces, serif" font-size="9" font-weight="600" fill="#fdfaf3">R24</text>
+        </g>
+
+        <!-- Bottom-left (low priority) -->
+        <g>
+          <circle cx="220" cy="430" r="12" fill="#c98a1e" stroke="#fdfaf3" stroke-width="2.5"/>
+          <text x="220" y="434" text-anchor="middle" font-family="Fraunces, serif" font-size="9" font-weight="600" fill="#1a1410">R11</text>
+        </g>
+        <g>
+          <circle cx="350" cy="470" r="12" fill="#c98a1e" stroke="#fdfaf3" stroke-width="2.5"/>
+          <text x="350" y="474" text-anchor="middle" font-family="Fraunces, serif" font-size="9" font-weight="600" fill="#1a1410">R12</text>
+        </g>
+        <g>
+          <circle cx="280" cy="540" r="12" fill="#c98a1e" stroke="#fdfaf3" stroke-width="2.5"/>
+          <text x="280" y="544" text-anchor="middle" font-family="Fraunces, serif" font-size="9" font-weight="600" fill="#1a1410">R08</text>
+        </g>
+        <g>
+          <circle cx="420" cy="560" r="12" fill="#c98a1e" stroke="#fdfaf3" stroke-width="2.5"/>
+          <text x="420" y="564" text-anchor="middle" font-family="Fraunces, serif" font-size="9" font-weight="600" fill="#1a1410">R21</text>
+        </g>
+        <g>
+          <circle cx="200" cy="570" r="12" fill="#c98a1e" stroke="#fdfaf3" stroke-width="2.5"/>
+          <text x="200" y="574" text-anchor="middle" font-family="Fraunces, serif" font-size="9" font-weight="600" fill="#1a1410">R18</text>
+        </g>
+        <g>
+          <circle cx="370" cy="580" r="12" fill="#c98a1e" stroke="#fdfaf3" stroke-width="2.5"/>
+          <text x="370" y="584" text-anchor="middle" font-family="Fraunces, serif" font-size="9" font-weight="600" fill="#1a1410">R19</text>
+        </g>
+
+        <!-- Legend / numbering reference -->
+        <text x="100" y="660" font-family="JetBrains Mono, monospace" font-size="10" letter-spacing="1.2" fill="#4a3f33" font-weight="600">DEFCON ZONE — attend before any other strategic work:</text>
+        <text x="100" y="680" font-family="Newsreader, serif" font-size="11" font-style="italic" fill="#4a3f33">R01 sales-cycle · R02 payment-delays · R05 capital-thin · R09 child-data · R13 brain-drain · R17 free-incumbents</text>
+        <text x="100" y="700" font-family="Newsreader, serif" font-size="11" font-style="italic" fill="#8b7d6a">— Fig. 8.1 · 24 risks plotted by probability × impact —</text>
+      </svg>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SECTION 09: CASCADE ============ -->
+<section>
+  <div class="container">
+    <div class="section-num">§ 09 — Risk Cascade</div>
+    <h2 class="section-title">How <em>one risk</em> becomes three.</h2>
+    <p class="section-deck">Risks rarely arrive solo. A late payment delays salary, salary delay triggers a senior departure, departure stalls product, stall causes a customer to churn. The cascade is the real killer — track it.</p>
+
+    <div class="cascade-wrapper">
+      <svg class="cascade-svg" viewBox="0 0 1100 600" xmlns="http://www.w3.org/2000/svg">
+        <!-- Trigger -->
+        <rect x="40" y="270" width="170" height="60" fill="#8a1c2c"/>
+        <text x="125" y="295" text-anchor="middle" fill="#f6efe1" font-family="JetBrains Mono, monospace" font-size="9" letter-spacing="1.5">TRIGGER</text>
+        <text x="125" y="315" text-anchor="middle" fill="#f6efe1" font-family="Fraunces, serif" font-size="14" font-weight="500">School pays late</text>
+
+        <!-- First-order arrow -->
+        <line x1="210" y1="300" x2="270" y2="300" stroke="#1a1410" stroke-width="1.5"/>
+        <polygon points="270,294 285,300 270,306" fill="#1a1410"/>
+
+        <!-- First-order effects -->
+        <rect x="290" y="160" width="170" height="56" fill="#a8442a"/>
+        <text x="375" y="185" text-anchor="middle" fill="#f6efe1" font-family="JetBrains Mono, monospace" font-size="9" letter-spacing="1.5">FIRST-ORDER</text>
+        <text x="375" y="203" text-anchor="middle" fill="#f6efe1" font-family="Fraunces, serif" font-size="13" font-weight="500">Cash-flow strain</text>
+
+        <rect x="290" y="270" width="170" height="56" fill="#a8442a"/>
+        <text x="375" y="295" text-anchor="middle" fill="#f6efe1" font-family="JetBrains Mono, monospace" font-size="9" letter-spacing="1.5">FIRST-ORDER</text>
+        <text x="375" y="313" text-anchor="middle" fill="#f6efe1" font-family="Fraunces, serif" font-size="13" font-weight="500">Salary delays</text>
+
+        <rect x="290" y="380" width="170" height="56" fill="#a8442a"/>
+        <text x="375" y="405" text-anchor="middle" fill="#f6efe1" font-family="JetBrains Mono, monospace" font-size="9" letter-spacing="1.5">FIRST-ORDER</text>
+        <text x="375" y="423" text-anchor="middle" fill="#f6efe1" font-family="Fraunces, serif" font-size="13" font-weight="500">Founder stress</text>
+
+        <line x1="210" y1="300" x2="290" y2="188" stroke="#1a1410" stroke-width="1" stroke-dasharray="2 3"/>
+        <line x1="210" y1="300" x2="290" y2="408" stroke="#1a1410" stroke-width="1" stroke-dasharray="2 3"/>
+
+        <!-- Second-order arrow -->
+        <line x1="460" y1="298" x2="520" y2="298" stroke="#1a1410" stroke-width="1.5"/>
+        <polygon points="520,292 535,298 520,304" fill="#1a1410"/>
+
+        <!-- Second-order effects -->
+        <rect x="540" y="80" width="170" height="56" fill="#7d2e1a"/>
+        <text x="625" y="105" text-anchor="middle" fill="#f6efe1" font-family="JetBrains Mono, monospace" font-size="9" letter-spacing="1.5">SECOND-ORDER</text>
+        <text x="625" y="123" text-anchor="middle" fill="#f6efe1" font-family="Fraunces, serif" font-size="12" font-weight="500">Vendor payments halted</text>
+
+        <rect x="540" y="180" width="170" height="56" fill="#7d2e1a"/>
+        <text x="625" y="205" text-anchor="middle" fill="#f6efe1" font-family="JetBrains Mono, monospace" font-size="9" letter-spacing="1.5">SECOND-ORDER</text>
+        <text x="625" y="223" text-anchor="middle" fill="#f6efe1" font-family="Fraunces, serif" font-size="12" font-weight="500">Senior engineer leaves</text>
+
+        <rect x="540" y="280" width="170" height="56" fill="#7d2e1a"/>
+        <text x="625" y="305" text-anchor="middle" fill="#f6efe1" font-family="JetBrains Mono, monospace" font-size="9" letter-spacing="1.5">SECOND-ORDER</text>
+        <text x="625" y="323" text-anchor="middle" fill="#f6efe1" font-family="Fraunces, serif" font-size="12" font-weight="500">Roadmap slips</text>
+
+        <rect x="540" y="380" width="170" height="56" fill="#7d2e1a"/>
+        <text x="625" y="405" text-anchor="middle" fill="#f6efe1" font-family="JetBrains Mono, monospace" font-size="9" letter-spacing="1.5">SECOND-ORDER</text>
+        <text x="625" y="423" text-anchor="middle" fill="#f6efe1" font-family="Fraunces, serif" font-size="12" font-weight="500">Co-founder tension</text>
+
+        <rect x="540" y="480" width="170" height="56" fill="#7d2e1a"/>
+        <text x="625" y="505" text-anchor="middle" fill="#f6efe1" font-family="JetBrains Mono, monospace" font-size="9" letter-spacing="1.5">SECOND-ORDER</text>
+        <text x="625" y="523" text-anchor="middle" fill="#f6efe1" font-family="Fraunces, serif" font-size="12" font-weight="500">Support response slips</text>
+
+        <!-- Third-order arrow -->
+        <line x1="710" y1="298" x2="770" y2="298" stroke="#1a1410" stroke-width="1.5"/>
+        <polygon points="770,292 785,298 770,304" fill="#1a1410"/>
+
+        <!-- Third-order: existential -->
+        <rect x="790" y="170" width="270" height="100" fill="#1a1410"/>
+        <text x="925" y="200" text-anchor="middle" fill="#c98a1e" font-family="JetBrains Mono, monospace" font-size="10" letter-spacing="2">THIRD-ORDER · EXISTENTIAL</text>
+        <text x="925" y="225" text-anchor="middle" fill="#f6efe1" font-family="Fraunces, serif" font-size="16" font-weight="500">Customer churn ↑</text>
+        <text x="925" y="250" text-anchor="middle" fill="#f6efe1" font-family="Newsreader, serif" font-size="13" font-style="italic">Reputation damage in school network</text>
+
+        <rect x="790" y="320" width="270" height="100" fill="#1a1410"/>
+        <text x="925" y="350" text-anchor="middle" fill="#c98a1e" font-family="JetBrains Mono, monospace" font-size="10" letter-spacing="2">THIRD-ORDER · EXISTENTIAL</text>
+        <text x="925" y="375" text-anchor="middle" fill="#f6efe1" font-family="Fraunces, serif" font-size="16" font-weight="500">Revenue collapse</text>
+        <text x="925" y="400" text-anchor="middle" fill="#f6efe1" font-family="Newsreader, serif" font-size="13" font-style="italic">Cannot raise next round</text>
+
+        <!-- Caption -->
+        <text x="550" y="580" text-anchor="middle" font-family="Newsreader, serif" font-size="13" font-style="italic" fill="#8b7d6a">— Fig. 9.1 · A single late-payment event cascading into existential outcomes —</text>
+      </svg>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SECTION 10: THE BIG THREE ============ -->
+<section style="background: var(--ivory-deep);">
+  <div class="container">
+    <div class="section-num">§ 10 — Priority</div>
+    <h2 class="section-title">If you only fight <em>three.</em></h2>
+    <p class="section-deck">Twenty-four risks is too many to attend equally. Founders who do this well attack three relentlessly and accept proportional preparation on the rest.</p>
+
+    <div class="bigthree-wrapper">
+
+      <div class="bigthree">
+        <div class="bigthree-rank">i.</div>
+        <h3 class="bigthree-h">Capital scarcity (R05).</h3>
+        <p class="bigthree-p">Without money, none of the other twenty-three matter. The Nepali EdTech founder who plans for cashflow positivity by month 24, layers in services revenue, courts grant capital, and never bets on an external round to rescue them — that founder survives.</p>
+        <span class="bigthree-tag">Family 02 · Financial</span>
+      </div>
+
+      <div class="bigthree">
+        <div class="bigthree-rank">ii.</div>
+        <h3 class="bigthree-h">Brain drain (R13).</h3>
+        <p class="bigthree-p">Your second-best engineer moves to Sydney; your senior product person joins a US-remote contract. Documented systems, ESOP that's actually meaningful, hiring outside Kathmandu, and a culture worth staying in are not soft assets — they are the difference between continuing and quietly ending.</p>
+        <span class="bigthree-tag">Family 04 · Operational</span>
+      </div>
+
+      <div class="bigthree">
+        <div class="bigthree-rank">iii.</div>
+        <h3 class="bigthree-h">Child-data breach (R09 / R20).</h3>
+        <p class="bigthree-p">A trust event that ends a brand permanently. Every other risk has recovery paths; this one closes them. Treat security as a senior engineering responsibility, run third-party penetration tests, and prepare an incident-response runbook before you ever need it.</p>
+        <span class="bigthree-tag">Family 03 · Regulatory</span>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ============ SECTION 11: TIMELINE ============ -->
+<section>
+  <div class="container">
+    <div class="section-num">§ 11 — When Each Risk Hits</div>
+    <h2 class="section-title">Risks have a <em>schedule.</em></h2>
+    <p class="section-deck">Different risks bite at different stages of the company. Mapping them to startup phase tells you what to prepare next, not what to worry about now.</p>
+
+    <div class="timeline-wrapper">
+      <svg class="timeline-svg" viewBox="0 0 1100 480" xmlns="http://www.w3.org/2000/svg">
+        <!-- Phase markers -->
+        <line x1="100" y1="60" x2="1040" y2="60" stroke="#1a1410" stroke-width="1.5"/>
+        <line x1="100" y1="60" x2="100" y2="440" stroke="#1a1410" stroke-width="1"/>
+
+        <g font-family="JetBrains Mono, monospace" font-size="10" letter-spacing="2" fill="#1a1410">
+          <text x="100" y="40" text-anchor="start">PRE-SEED</text>
+          <text x="335" y="40" text-anchor="middle">YR 1–2</text>
+          <text x="570" y="40" text-anchor="middle">YR 2–3</text>
+          <text x="805" y="40" text-anchor="middle">YR 3–5</text>
+          <text x="1040" y="40" text-anchor="end">SCALE</text>
+        </g>
+        <line x1="100" y1="55" x2="100" y2="65" stroke="#1a1410" stroke-width="1.5"/>
+        <line x1="335" y1="55" x2="335" y2="65" stroke="#1a1410" stroke-width="1.5"/>
+        <line x1="570" y1="55" x2="570" y2="65" stroke="#1a1410" stroke-width="1.5"/>
+        <line x1="805" y1="55" x2="805" y2="65" stroke="#1a1410" stroke-width="1.5"/>
+        <line x1="1040" y1="55" x2="1040" y2="65" stroke="#1a1410" stroke-width="1.5"/>
+
+        <!-- Risk bars by stage -->
+        <!-- Pre-seed / yr 1 -->
+        <rect x="100" y="100" width="280" height="20" fill="#8a1c2c" rx="2"/>
+        <text x="110" y="114" fill="#fdfaf3" font-family="JetBrains Mono, monospace" font-size="9" letter-spacing="1">R15 · CO-FOUNDER CONFLICT</text>
+
+        <rect x="100" y="125" width="320" height="20" fill="#8a1c2c" rx="2"/>
+        <text x="110" y="139" fill="#fdfaf3" font-family="JetBrains Mono, monospace" font-size="9" letter-spacing="1">R05 · CAPITAL SCARCITY</text>
+
+        <rect x="100" y="150" width="350" height="20" fill="#a8442a" rx="2"/>
+        <text x="110" y="164" fill="#fdfaf3" font-family="JetBrains Mono, monospace" font-size="9" letter-spacing="1">R24 · NETWORK ACCESS</text>
+
+        <!-- Year 1-2 -->
+        <rect x="200" y="180" width="540" height="20" fill="#8a1c2c" rx="2"/>
+        <text x="210" y="194" fill="#fdfaf3" font-family="JetBrains Mono, monospace" font-size="9" letter-spacing="1">R01 · SLOW SALES CYCLES</text>
+
+        <rect x="280" y="205" width="500" height="20" fill="#a8442a" rx="2"/>
+        <text x="290" y="219" fill="#fdfaf3" font-family="JetBrains Mono, monospace" font-size="9" letter-spacing="1">R02 · PAYMENT DELAYS</text>
+
+        <rect x="200" y="230" width="600" height="20" fill="#a8442a" rx="2" opacity="0.85"/>
+        <text x="210" y="244" fill="#fdfaf3" font-family="JetBrains Mono, monospace" font-size="9" letter-spacing="1">R06 · IMPLEMENTATION BURN</text>
+
+        <!-- Year 2-3 -->
+        <rect x="450" y="260" width="540" height="20" fill="#8a1c2c" rx="2"/>
+        <text x="460" y="274" fill="#fdfaf3" font-family="JetBrains Mono, monospace" font-size="9" letter-spacing="1">R13 · BRAIN DRAIN</text>
+
+        <rect x="500" y="285" width="500" height="20" fill="#a8442a" rx="2"/>
+        <text x="510" y="299" fill="#fdfaf3" font-family="JetBrains Mono, monospace" font-size="9" letter-spacing="1">R03 · CONCENTRATION RISK</text>
+
+        <rect x="450" y="310" width="540" height="20" fill="#a8442a" rx="2" opacity="0.85"/>
+        <text x="460" y="324" fill="#fdfaf3" font-family="JetBrains Mono, monospace" font-size="9" letter-spacing="1">R14 · FOUNDER BURNOUT</text>
+
+        <rect x="500" y="335" width="540" height="20" fill="#7d2e1a" rx="2"/>
+        <text x="510" y="349" fill="#fdfaf3" font-family="JetBrains Mono, monospace" font-size="9" letter-spacing="1">R16 · SUPPORT SCALE</text>
+
+        <!-- Year 3+ -->
+        <rect x="700" y="365" width="340" height="20" fill="#8a1c2c" rx="2"/>
+        <text x="710" y="379" fill="#fdfaf3" font-family="JetBrains Mono, monospace" font-size="9" letter-spacing="1">R09 · CHILD DATA / R20 · BREACH</text>
+
+        <rect x="750" y="390" width="290" height="20" fill="#7d2e1a" rx="2"/>
+        <text x="760" y="404" fill="#fdfaf3" font-family="JetBrains Mono, monospace" font-size="9" letter-spacing="1">R17 · FREE INCUMBENTS</text>
+
+        <rect x="800" y="415" width="240" height="20" fill="#7d2e1a" rx="2" opacity="0.85"/>
+        <text x="810" y="429" fill="#fdfaf3" font-family="JetBrains Mono, monospace" font-size="9" letter-spacing="1">R18 · INDIAN SAAS ENTRY</text>
+
+        <!-- Caption -->
+        <text x="550" y="465" text-anchor="middle" font-family="Newsreader, serif" font-size="13" font-style="italic" fill="#8b7d6a">— Fig. 11.1 · Risk activation by company stage —</text>
+      </svg>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SECTION 12: MASTER PLAYBOOK ============ -->
+<section style="background: var(--ivory-deep);">
+  <div class="container">
+    <div class="section-num">§ 12 — Master Playbook</div>
+    <h2 class="section-title">Risk &amp; mitigation, <em>on one page.</em></h2>
+    <p class="section-deck">Print this. Pin it. Revisit it quarterly.</p>
+
+    <div class="playbook-wrapper">
+      <table class="playbook">
+        <thead>
+          <tr>
+            <th style="min-width: 80px;">ID</th>
+            <th>Risk</th>
+            <th>Severity</th>
+            <th>Top mitigation</th>
+            <th>Owner</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td><strong>R01</strong></td><td class="risk-name">Slow sales cycles</td><td><span class="severity-pill sev-existential">Existential</span></td><td>18-month runway minimum; light tier for off-cycle entry; sell add-ons.</td><td>CEO / Sales</td></tr>
+          <tr><td><strong>R02</strong></td><td class="risk-name">Payment delays</td><td><span class="severity-pill sev-high">High</span></td><td>Annual upfront billing with discount; gateway-mediated parent payments.</td><td>Finance / CEO</td></tr>
+          <tr><td><strong>R03</strong></td><td class="risk-name">Customer concentration</td><td><span class="severity-pill sev-high">High</span></td><td>No customer over 15% of revenue; long-tail self-serve product.</td><td>CEO / Sales</td></tr>
+          <tr><td><strong>R04</strong></td><td class="risk-name">Word-of-mouth fragility</td><td><span class="severity-pill sev-high">High</span></td><td>Over-invest in first 10 customers; named CSM ratio 1:5.</td><td>Customer Success</td></tr>
+          <tr><td><strong>R05</strong></td><td class="risk-name">Capital scarcity</td><td><span class="severity-pill sev-existential">Existential</span></td><td>Path to cashflow+ by mo. 24; services revenue layer; grants from INGOs.</td><td>CEO / CFO</td></tr>
+          <tr><td><strong>R06</strong></td><td class="risk-name">Implementation burn</td><td><span class="severity-pill sev-high">High</span></td><td>One-time setup fee; 14-day playbook; self-serve onboarding from day one.</td><td>COO / CSM</td></tr>
+          <tr><td><strong>R07</strong></td><td class="risk-name">Pricing pressure</td><td><span class="severity-pill sev-medium">Medium</span></td><td>Differentiate on outcomes / niche / AI feature; never compete on rupees alone.</td><td>CEO</td></tr>
+          <tr><td><strong>R08</strong></td><td class="risk-name">FX &amp; capital flow</td><td><span class="severity-pill sev-low">Low</span></td><td>NRB-experienced CA; foreign parent entity if scaling overseas.</td><td>CFO</td></tr>
+          <tr><td><strong>R09</strong></td><td class="risk-name">Child-data exposure</td><td><span class="severity-pill sev-existential">Existential</span></td><td>Data minimisation; encryption default; annual external audit; plain-Nepali privacy policy.</td><td>CTO / CISO</td></tr>
+          <tr><td><strong>R10</strong></td><td class="risk-name">VAT / IRD compliance</td><td><span class="severity-pill sev-medium">Medium</span></td><td>Nepal CA from incorporation; IRD-compliant invoicing built in.</td><td>CFO</td></tr>
+          <tr><td><strong>R11</strong></td><td class="risk-name">Tender lockout</td><td><span class="severity-pill sev-low">Low</span></td><td>Win private market first; subcontract to qualifying primes; ISO 27001/9001 by yr 4.</td><td>CEO / Sales</td></tr>
+          <tr><td><strong>R12</strong></td><td class="risk-name">IP weakness</td><td><span class="severity-pill sev-low">Low</span></td><td>Speed &amp; network effects as moat; trademark brand early; protect data, not features.</td><td>CTO / Legal</td></tr>
+          <tr><td><strong>R13</strong></td><td class="risk-name">Brain drain</td><td><span class="severity-pill sev-existential">Existential</span></td><td>Pay above local market; meaningful ESOP; hire outside Kathmandu; document everything.</td><td>CEO / Eng. Lead</td></tr>
+          <tr><td><strong>R14</strong></td><td class="risk-name">Founder burnout</td><td><span class="severity-pill sev-high">High</span></td><td>Have a co-founder; founder peer group monthly; non-negotiable annual holiday.</td><td>CEO (self)</td></tr>
+          <tr><td><strong>R15</strong></td><td class="risk-name">Co-founder conflict</td><td><span class="severity-pill sev-high">High</span></td><td>4-yr vest with 1-yr cliff; full shareholders' agreement; quarterly check-ins.</td><td>Co-founders</td></tr>
+          <tr><td><strong>R16</strong></td><td class="risk-name">Support black hole</td><td><span class="severity-pill sev-medium">Medium</span></td><td>Self-help in Nepali; non-engineer support hires; train customers proactively.</td><td>CSM Lead</td></tr>
+          <tr><td><strong>R17</strong></td><td class="risk-name">Free incumbents (Google etc.)</td><td><span class="severity-pill sev-high">High</span></td><td>Don't compete head-on at LMS layer; integrate, then differentiate on Nepal-specific value.</td><td>CEO / Product</td></tr>
+          <tr><td><strong>R18</strong></td><td class="risk-name">Indian SaaS expansion</td><td><span class="severity-pill sev-medium">Medium</span></td><td>Compliance + language moat; multi-year deals with marquee customers when threats appear.</td><td>CEO</td></tr>
+          <tr><td><strong>R19</strong></td><td class="risk-name">Adjacent (banks/telcos) entry</td><td><span class="severity-pill sev-medium">Medium</span></td><td>Wrap their layer in richer school workflow; partner rather than compete on payments.</td><td>CEO / BD</td></tr>
+          <tr><td><strong>R20</strong></td><td class="risk-name">Data breach</td><td><span class="severity-pill sev-existential">Existential</span></td><td>Named security owner; pen-tests 2×/yr; incident-response runbook; cyber insurance.</td><td>CTO / CISO</td></tr>
+          <tr><td><strong>R21</strong></td><td class="risk-name">Policy / political shift</td><td><span class="severity-pill sev-low">Low</span></td><td>Build for need not regulation; relationships across multiple stakeholders.</td><td>CEO</td></tr>
+          <tr><td><strong>R22</strong></td><td class="risk-name">Disasters / pandemics</td><td><span class="severity-pill sev-high">High</span></td><td>Cloud + offsite backup outside Nepal; remote-first culture; 6-month disaster runway.</td><td>CTO / CFO</td></tr>
+          <tr><td><strong>R23</strong></td><td class="risk-name">Economic downturn</td><td><span class="severity-pill sev-medium">Medium</span></td><td>Position as cost-saver; annual contracts auto-renew; diversify revenue streams.</td><td>CEO / CFO</td></tr>
+          <tr><td><strong>R24</strong></td><td class="risk-name">No school-network access</td><td><span class="severity-pill sev-medium">Medium</span></td><td>Recruit a connected co-founder/advisor; consistent industry-event presence; reference-school program.</td><td>CEO / Sales</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ============ COLOPHON ============ -->
+<footer class="colophon">
+  <div class="container">
+    <div class="colophon-grid">
+      <div>
+        <h4>Reading this Brief</h4>
+        <p>This is the third volume of the Nepal EdTech series. Vol. 01 catalogued the incumbents. Vol. 02 mapped the gaps. Vol. 03 names the hazards facing anyone who tries to fill those gaps. The three documents work as a system — read together, they produce a complete strategic view of the market for an entrepreneur preparing to enter.</p>
+        <p>Severities here are heuristic, not measured. A founder's actual risk profile depends on segment, capital, team, and timing — use the framework, but do the assessment for your specific case.</p>
+      </div>
+      <div>
+        <h4>Composition</h4>
+        <p>Set in <em style="color:var(--indigo);font-style:italic;">Fraunces</em> &amp; <em style="color:var(--indigo);font-style:italic;">Newsreader</em>, with metadata in JetBrains Mono.</p>
+        <p style="font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--ink-mute); letter-spacing: 0.1em; margin-top: 24px;">— END OF RISK BRIEF —</p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

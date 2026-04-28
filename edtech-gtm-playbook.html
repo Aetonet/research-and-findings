@@ -1,0 +1,1269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Vol. 04 — Go-to-Market Playbook · Nepal EdTech</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Newsreader:ital,opsz,wght@0,6..72,200..800;1,6..72,200..800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ivory:        #f5eedc;
+    --ivory-deep:   #ebe0c8;
+    --paper:        #fdf9f0;
+    --ink:          #18120a;
+    --ink-soft:     #48392a;
+    --ink-mute:     #8a7760;
+    --saffron:      #c98a1e;
+    --saffron-deep: #9e6910;
+    --amber:        #e0a028;
+    --terracotta:   #a8442a;
+    --teal:         #1d4e4a;
+    --indigo:       #2b3a67;
+    --pine:         #1a3a28;
+    --rule:         #c8b48c;
+    --rule-soft:    #ddd0b0;
+    --hot:          #c0392b;
+    --warm:         #c98a1e;
+    --cool:         #2b3a67;
+    --dead:         #8a7760;
+  }
+
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+
+  body{
+    background:var(--ivory);
+    color:var(--ink);
+    font-family:'Newsreader',Georgia,serif;
+    font-size:17px;
+    line-height:1.65;
+    overflow-x:hidden;
+  }
+  body::before{
+    content:'';
+    position:fixed;inset:0;pointer-events:none;z-index:100;
+    background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+    opacity:.04;mix-blend-mode:multiply;
+  }
+
+  .container{max-width:1180px;margin:0 auto;padding:0 32px;}
+
+  /* ── HERO ─────────────────────────────────────────── */
+  .hero{padding:80px 0 64px;border-bottom:1px solid var(--rule);}
+  .hero-meta{
+    display:flex;justify-content:space-between;align-items:baseline;
+    font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.18em;
+    text-transform:uppercase;color:var(--ink-mute);
+    margin-bottom:48px;padding-bottom:16px;border-bottom:1px solid var(--rule);
+  }
+  .hero-meta span:first-child::before{content:'◉ ';color:var(--saffron);}
+  .hero-title{
+    font-family:'Fraunces',serif;
+    font-size:clamp(52px,9vw,128px);
+    font-weight:300;line-height:.92;letter-spacing:-.04em;
+    margin-bottom:32px;
+    font-variation-settings:'opsz' 144,'SOFT' 30;
+  }
+  .hero-title em{font-style:italic;color:var(--saffron);font-weight:400;
+    font-variation-settings:'opsz' 144,'SOFT' 100;}
+  .hero-deck{
+    font-size:clamp(19px,2.4vw,27px);line-height:1.4;font-weight:300;
+    font-style:italic;color:var(--ink-soft);max-width:800px;margin-bottom:48px;
+  }
+  .hero-stats{
+    display:grid;grid-template-columns:repeat(5,1fr);gap:0;
+    border-top:1px solid var(--rule);border-bottom:1px solid var(--rule);padding:24px 0;
+  }
+  .hero-stats>div{padding:0 20px;border-right:1px solid var(--rule-soft);}
+  .hero-stats>div:first-child{padding-left:0;}
+  .hero-stats>div:last-child{border-right:none;}
+  .stat-num{font-family:'Fraunces',serif;font-size:42px;font-weight:400;
+    line-height:1;letter-spacing:-.02em;color:var(--saffron-deep);margin-bottom:6px;}
+  .stat-label{font-family:'JetBrains Mono',monospace;font-size:10px;
+    letter-spacing:.16em;text-transform:uppercase;color:var(--ink-mute);}
+
+  /* ── SECTION ──────────────────────────────────────── */
+  section{padding:80px 0;}
+  .section-num{font-family:'JetBrains Mono',monospace;font-size:11px;
+    letter-spacing:.2em;color:var(--saffron);margin-bottom:12px;text-transform:uppercase;}
+  .section-title{
+    font-family:'Fraunces',serif;font-size:clamp(34px,5vw,58px);
+    font-weight:400;line-height:1.0;letter-spacing:-.025em;margin-bottom:20px;
+    font-variation-settings:'opsz' 96,'SOFT' 50;
+  }
+  .section-title em{font-style:italic;color:var(--saffron);}
+  .section-title em.red{color:var(--terracotta);}
+  .section-deck{font-size:19px;color:var(--ink-soft);max-width:760px;
+    margin-bottom:52px;font-style:italic;font-weight:300;}
+
+  /* ── WRAPPER BOXES ────────────────────────────────── */
+  .diagram-box{background:var(--paper);border:1px solid var(--rule);
+    padding:40px;overflow-x:auto;}
+  .diagram-box svg{width:100%;height:auto;display:block;}
+
+  /* ── ICP CARDS ────────────────────────────────────── */
+  .icp-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+    gap:1px;background:var(--rule);border:1px solid var(--rule);}
+  .icp{background:var(--paper);padding:30px 26px;position:relative;}
+  .icp-letter{
+    font-family:'Fraunces',serif;font-style:italic;font-size:88px;
+    color:var(--saffron);line-height:.8;margin-bottom:12px;opacity:.85;
+  }
+  .icp-label{font-family:'JetBrains Mono',monospace;font-size:9px;
+    letter-spacing:.18em;color:var(--ink-mute);text-transform:uppercase;margin-bottom:8px;}
+  .icp-title{font-family:'Fraunces',serif;font-size:24px;font-weight:500;
+    line-height:1.15;letter-spacing:-.015em;margin-bottom:14px;}
+  .icp-body{font-size:14px;line-height:1.55;color:var(--ink-soft);margin-bottom:16px;}
+  .icp-attrs{display:grid;grid-template-columns:90px 1fr;gap:6px 12px;
+    font-size:12px;padding-top:14px;border-top:1px dashed var(--rule);}
+  .icp-attrs dt{font-family:'JetBrains Mono',monospace;font-size:9px;
+    letter-spacing:.12em;color:var(--ink-mute);text-transform:uppercase;padding-top:2px;}
+  .icp-attrs dd{color:var(--ink);font-size:13px;}
+
+  /* ── CHANNEL CARDS ────────────────────────────────── */
+  .channel-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));
+    gap:1px;background:var(--rule);border:1px solid var(--rule);}
+  .channel{background:var(--paper);padding:28px 24px;position:relative;}
+  .channel::before{content:'';position:absolute;top:0;left:0;
+    width:100%;height:4px;background:var(--saffron);}
+  .channel-type{font-family:'JetBrains Mono',monospace;font-size:9px;
+    letter-spacing:.18em;color:var(--saffron-deep);text-transform:uppercase;margin-bottom:10px;}
+  .channel-name{font-family:'Fraunces',serif;font-size:22px;font-weight:500;
+    line-height:1.15;margin-bottom:10px;}
+  .channel-body{font-size:13.5px;line-height:1.55;color:var(--ink-soft);margin-bottom:12px;}
+  .channel-list{list-style:none;padding:0;margin:0;}
+  .channel-list li{font-family:'JetBrains Mono',monospace;font-size:10px;
+    letter-spacing:.08em;padding:4px 0 4px 16px;position:relative;
+    border-bottom:1px dotted var(--rule-soft);color:var(--ink-soft);}
+  .channel-list li:last-child{border-bottom:none;}
+  .channel-list li::before{content:'↳';position:absolute;left:0;color:var(--saffron);
+    font-family:'JetBrains Mono',monospace;}
+
+  /* ── SALES TOUCH CARDS ────────────────────────────── */
+  .touch-timeline{display:flex;flex-direction:column;gap:0;
+    border:1px solid var(--rule);background:var(--rule);}
+  .touch{display:grid;grid-template-columns:80px 1fr 1fr;
+    gap:1px;background:var(--rule);}
+  .touch>div{background:var(--paper);padding:20px 22px;}
+  .touch-num{font-family:'Fraunces',serif;font-style:italic;
+    font-size:44px;color:var(--saffron);line-height:1;
+    display:flex;align-items:center;justify-content:center;}
+  .touch-stage h4{font-family:'Fraunces',serif;font-size:19px;font-weight:500;
+    margin-bottom:4px;}
+  .touch-stage .timing{font-family:'JetBrains Mono',monospace;font-size:9px;
+    letter-spacing:.12em;color:var(--saffron-deep);text-transform:uppercase;margin-bottom:8px;}
+  .touch-stage p{font-size:13.5px;line-height:1.5;color:var(--ink-soft);}
+  .touch-talk{border-left:2px solid var(--saffron);}
+  .touch-talk .talk-label{font-family:'JetBrains Mono',monospace;font-size:9px;
+    letter-spacing:.15em;color:var(--ink-mute);text-transform:uppercase;margin-bottom:8px;}
+  .touch-talk blockquote{font-family:'Newsreader',serif;font-style:italic;
+    font-size:14.5px;line-height:1.5;color:var(--ink);}
+
+  /* ── PRICING TABLE ────────────────────────────────── */
+  .pricing-grid{display:grid;grid-template-columns:repeat(4,1fr);
+    gap:1px;background:var(--rule);border:1px solid var(--rule);}
+  .price-tier{background:var(--paper);padding:28px 22px;position:relative;}
+  .price-tier.featured{background:var(--ink);color:var(--ivory);}
+  .price-tier.featured .tier-name,
+  .price-tier.featured .tier-price,
+  .price-tier.featured .tier-label{color:var(--ivory);}
+  .price-tier.featured .tier-price em{color:var(--saffron);}
+  .price-recommended{
+    font-family:'JetBrains Mono',monospace;font-size:9px;
+    letter-spacing:.15em;background:var(--saffron);color:var(--ink);
+    padding:4px 8px;text-transform:uppercase;position:absolute;top:-1px;left:0;right:0;
+    text-align:center;
+  }
+  .tier-label{font-family:'JetBrains Mono',monospace;font-size:9px;
+    letter-spacing:.15em;color:var(--ink-mute);text-transform:uppercase;margin-bottom:10px;}
+  .tier-name{font-family:'Fraunces',serif;font-size:26px;font-weight:500;
+    margin-bottom:4px;}
+  .tier-price{font-family:'Fraunces',serif;font-size:20px;margin-bottom:16px;
+    padding-bottom:14px;border-bottom:1px dashed var(--rule);}
+  .tier-price em{font-style:normal;font-size:30px;font-weight:500;color:var(--saffron-deep);}
+  .tier-feat{list-style:none;padding:0;margin:0;}
+  .tier-feat li{font-size:13px;padding:6px 0 6px 18px;position:relative;
+    border-bottom:1px dotted var(--rule-soft);line-height:1.4;}
+  .tier-feat li:last-child{border-bottom:none;}
+  .tier-feat li::before{content:'✓';position:absolute;left:0;
+    color:var(--saffron);font-weight:700;font-size:12px;}
+  .price-tier.featured .tier-feat li{border-bottom-color:rgba(200,180,140,.2);}
+  .price-tier.featured .tier-feat li::before{color:var(--amber);}
+
+  /* ── KPIS ─────────────────────────────────────────── */
+  .kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:20px;}
+  .kpi{background:var(--paper);border:1px solid var(--rule);padding:24px;}
+  .kpi-cat{font-family:'JetBrains Mono',monospace;font-size:9px;
+    letter-spacing:.16em;color:var(--saffron);text-transform:uppercase;margin-bottom:8px;}
+  .kpi-metric{font-family:'Fraunces',serif;font-size:20px;font-weight:500;
+    line-height:1.2;margin-bottom:6px;}
+  .kpi-target{font-family:'JetBrains Mono',monospace;font-size:12px;
+    color:var(--ink-soft);letter-spacing:.06em;}
+  .kpi-target strong{color:var(--saffron-deep);}
+  .kpi-why{font-size:13px;color:var(--ink-mute);margin-top:8px;font-style:italic;}
+
+  /* ── DO/DON'T ─────────────────────────────────────── */
+  .dodonts{display:grid;grid-template-columns:1fr 1fr;gap:1px;
+    background:var(--rule);border:1px solid var(--rule);}
+  .dos{background:var(--paper);padding:32px;}
+  .donts{background:var(--ivory-deep);padding:32px;}
+  .dd-head{font-family:'Fraunces',serif;font-size:28px;font-weight:500;
+    margin-bottom:24px;letter-spacing:-.015em;}
+  .dd-head em{font-style:italic;}
+  .dd-list{list-style:none;padding:0;margin:0;}
+  .dd-list li{padding:14px 0 14px 28px;position:relative;
+    border-bottom:1px solid var(--rule-soft);font-size:14.5px;line-height:1.5;}
+  .dd-list li:last-child{border-bottom:none;}
+  .dd-list li::before{position:absolute;left:0;font-weight:700;font-size:15px;}
+  .dos .dd-list li::before{content:'✓';color:var(--teal);}
+  .donts .dd-list li::before{content:'✗';color:var(--terracotta);}
+  .dd-list li span{color:var(--ink-mute);font-style:italic;font-size:13px;display:block;margin-top:3px;}
+
+  /* ── CALLOUT ──────────────────────────────────────── */
+  .callout{background:var(--ink);color:var(--ivory);padding:48px 40px;
+    margin:48px 0;position:relative;}
+  .callout::before{content:'';position:absolute;top:0;left:0;
+    width:6px;height:100%;background:var(--saffron);}
+  .callout-label{font-family:'JetBrains Mono',monospace;font-size:10px;
+    letter-spacing:.2em;color:var(--amber);text-transform:uppercase;
+    margin-bottom:16px;display:block;}
+  .callout-text{font-family:'Fraunces',serif;
+    font-size:clamp(20px,2.4vw,26px);font-weight:400;line-height:1.4;
+    font-style:italic;max-width:900px;}
+  .callout-text em{color:var(--amber);}
+
+  /* ── FOOTER ───────────────────────────────────────── */
+  .colophon{border-top:1px solid var(--rule);padding:60px 0 80px;margin-top:40px;}
+  .colophon-grid{display:grid;grid-template-columns:2fr 1fr;gap:60px;}
+  .colophon h4{font-family:'JetBrains Mono',monospace;font-size:10px;
+    letter-spacing:.18em;color:var(--saffron);text-transform:uppercase;margin-bottom:16px;}
+  .colophon p{font-size:14px;color:var(--ink-soft);line-height:1.6;margin-bottom:12px;}
+
+  @media(max-width:900px){
+    .hero-stats{grid-template-columns:repeat(3,1fr);}
+    .pricing-grid{grid-template-columns:repeat(2,1fr);}
+    .dodonts{grid-template-columns:1fr;}
+    .touch{grid-template-columns:60px 1fr;}
+    .touch-talk{display:none;}
+    .colophon-grid{grid-template-columns:1fr;gap:32px;}
+  }
+  @media(max-width:600px){
+    .container{padding:0 18px;}
+    .hero-stats{grid-template-columns:repeat(2,1fr);}
+    .pricing-grid{grid-template-columns:1fr;}
+  }
+</style>
+</head>
+<body>
+
+<!-- ═══════════════ HERO ═══════════════ -->
+<header class="hero">
+<div class="container">
+  <div class="hero-meta">
+    <span>GTM Playbook &nbsp;/&nbsp; Vol. 04 &nbsp;/&nbsp; Nepal EdTech Series</span>
+    <span>2026 Edition</span>
+  </div>
+  <h1 class="hero-title">How to<br><em>actually</em><br>sell.</h1>
+  <p class="hero-deck">The seasonal calendar, the channel map, the sales motion, the four customer archetypes, the pricing architecture, and the 90-day launch clock — for EdTech founders selling to Nepali schools.</p>
+  <div class="hero-stats">
+    <div><div class="stat-num">4–9</div><div class="stat-label">Months avg. sales cycle</div></div>
+    <div><div class="stat-num">2</div><div class="stat-label">Buying windows / year</div></div>
+    <div><div class="stat-num">6</div><div class="stat-label">Channel archetypes</div></div>
+    <div><div class="stat-num">4</div><div class="stat-label">ICP profiles</div></div>
+    <div><div class="stat-num">90</div><div class="stat-label">Days to first revenue</div></div>
+  </div>
+</div>
+</header>
+
+<!-- ═══════════════ §01 BUYING JOURNEY ═══════════════ -->
+<section>
+<div class="container">
+  <div class="section-num">§ 01 — The Buying Journey</div>
+  <h2 class="section-title">Who actually <em>decides</em> — and when.</h2>
+  <p class="section-deck">Nepali schools don't buy software the way SaaS companies assume. Five actors are involved, at different stages. Getting the sequence wrong wastes months.</p>
+  <div class="diagram-box">
+    <svg viewBox="0 0 1100 580" xmlns="http://www.w3.org/2000/svg">
+      <!-- Stage headers -->
+      <defs>
+        <marker id="arr" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+          <path d="M0,0 L0,6 L8,3 z" fill="#18120a"/>
+        </marker>
+      </defs>
+
+      <!-- Column backgrounds -->
+      <rect x="100" y="0" width="155" height="580" fill="#c98a1e" opacity=".07"/>
+      <rect x="265" y="0" width="155" height="580" fill="#c98a1e" opacity=".04"/>
+      <rect x="430" y="0" width="155" height="580" fill="#c98a1e" opacity=".07"/>
+      <rect x="595" y="0" width="155" height="580" fill="#c98a1e" opacity=".04"/>
+      <rect x="760" y="0" width="155" height="580" fill="#c98a1e" opacity=".07"/>
+      <rect x="925" y="0" width="170" height="580" fill="#c98a1e" opacity=".04"/>
+
+      <!-- Stage header row -->
+      <rect x="100" y="0" width="155" height="44" fill="#18120a"/>
+      <rect x="265" y="0" width="155" height="44" fill="#18120a"/>
+      <rect x="430" y="0" width="155" height="44" fill="#18120a"/>
+      <rect x="595" y="0" width="155" height="44" fill="#18120a"/>
+      <rect x="760" y="0" width="155" height="44" fill="#18120a"/>
+      <rect x="925" y="0" width="170" height="44" fill="#18120a"/>
+
+      <g font-family="JetBrains Mono, monospace" font-size="11" letter-spacing="1.5" fill="#f5eedc" text-anchor="middle">
+        <text x="177" y="27">AWARE</text>
+        <text x="342" y="27">INTERESTED</text>
+        <text x="507" y="27">EVALUATE</text>
+        <text x="672" y="27">DECIDE</text>
+        <text x="837" y="27">ONBOARD</text>
+        <text x="1010" y="27">RENEW</text>
+      </g>
+
+      <!-- Row labels (actors) -->
+      <g font-family="Fraunces, serif" font-size="13" font-weight="500" fill="#18120a">
+        <text x="90" y="100" text-anchor="end">Owner /</text>
+        <text x="90" y="115" text-anchor="end">Trust</text>
+        <text x="90" y="185" text-anchor="end">Principal</text>
+        <text x="90" y="265" text-anchor="end">Admin /</text>
+        <text x="90" y="280" text-anchor="end">Finance</text>
+        <text x="90" y="360" text-anchor="end">Teacher</text>
+        <text x="90" y="445" text-anchor="end">Parent</text>
+      </g>
+
+      <!-- Row lines -->
+      <line x1="100" y1="130" x2="1095" y2="130" stroke="#c8b48c" stroke-width=".8" stroke-dasharray="2 4"/>
+      <line x1="100" y1="215" x2="1095" y2="215" stroke="#c8b48c" stroke-width=".8" stroke-dasharray="2 4"/>
+      <line x1="100" y1="300" x2="1095" y2="300" stroke="#c8b48c" stroke-width=".8" stroke-dasharray="2 4"/>
+      <line x1="100" y1="385" x2="1095" y2="385" stroke="#c8b48c" stroke-width=".8" stroke-dasharray="2 4"/>
+      <line x1="100" y1="470" x2="1095" y2="470" stroke="#c8b48c" stroke-width=".8" stroke-dasharray="2 4"/>
+
+      <!-- Col lines -->
+      <line x1="100" y1="44" x2="100" y2="570" stroke="#c8b48c" stroke-width=".8"/>
+      <line x1="255" y1="44" x2="255" y2="570" stroke="#c8b48c" stroke-width=".8"/>
+      <line x1="420" y1="44" x2="420" y2="570" stroke="#c8b48c" stroke-width=".8"/>
+      <line x1="585" y1="44" x2="585" y2="570" stroke="#c8b48c" stroke-width=".8"/>
+      <line x1="750" y1="44" x2="750" y2="570" stroke="#c8b48c" stroke-width=".8"/>
+      <line x1="915" y1="44" x2="915" y2="570" stroke="#c8b48c" stroke-width=".8"/>
+      <line x1="1095" y1="44" x2="1095" y2="570" stroke="#c8b48c" stroke-width=".8"/>
+
+      <!-- TOUCHPOINTS as bubbles with text -->
+      <!-- Owner/Trust row (y≈90) -->
+      <!-- Aware: hears from peer network -->
+      <circle cx="177" cy="90" r="32" fill="#c98a1e" stroke="#fdf9f0" stroke-width="2.5"/>
+      <text x="177" y="87" text-anchor="middle" font-family="Newsreader, serif" font-size="10" font-style="italic" fill="#fdf9f0">Peer</text>
+      <text x="177" y="100" text-anchor="middle" font-family="Newsreader, serif" font-size="10" font-style="italic" fill="#fdf9f0">network</text>
+      <!-- Decide: budget approval -->
+      <circle cx="672" cy="90" r="32" fill="#9e6910" stroke="#fdf9f0" stroke-width="2.5"/>
+      <text x="672" y="87" text-anchor="middle" font-family="Newsreader, serif" font-size="10" font-style="italic" fill="#fdf9f0">Budget</text>
+      <text x="672" y="100" text-anchor="middle" font-family="Newsreader, serif" font-size="10" font-style="italic" fill="#fdf9f0">approval</text>
+      <!-- Renew: ROI review -->
+      <circle cx="1010" cy="90" r="32" fill="#1a3a28" stroke="#fdf9f0" stroke-width="2.5"/>
+      <text x="1010" y="87" text-anchor="middle" font-family="Newsreader, serif" font-size="10" font-style="italic" fill="#fdf9f0">ROI</text>
+      <text x="1010" y="100" text-anchor="middle" font-family="Newsreader, serif" font-size="10" font-style="italic" fill="#fdf9f0">review</text>
+
+      <!-- Principal row (y≈185) -->
+      <!-- Aware: PABSON event / conference -->
+      <circle cx="177" cy="175" r="32" fill="#c98a1e" stroke="#fdf9f0" stroke-width="2.5"/>
+      <text x="177" y="172" text-anchor="middle" font-family="Newsreader, serif" font-size="10" font-style="italic" fill="#fdf9f0">PABSON</text>
+      <text x="177" y="185" text-anchor="middle" font-family="Newsreader, serif" font-size="10" font-style="italic" fill="#fdf9f0">event</text>
+      <!-- Interested: demo request -->
+      <circle cx="342" cy="175" r="32" fill="#c98a1e" stroke="#fdf9f0" stroke-width="2.5"/>
+      <text x="342" y="172" text-anchor="middle" font-family="Newsreader, serif" font-size="10" font-style="italic" fill="#fdf9f0">Demo</text>
+      <text x="342" y="185" text-anchor="middle" font-family="Newsreader, serif" font-size="10" font-style="italic" fill="#fdf9f0">request</text>
+      <!-- Evaluate: reference call -->
+      <circle cx="507" cy="175" r="32" fill="#c98a1e" stroke="#fdf9f0" stroke-width="2.5"/>
+      <text x="507" y="172" text-anchor="middle" font-family="Newsreader, serif" font-size="10" font-style="italic" fill="#fdf9f0">Ref.</text>
+      <text x="507" y="185" text-anchor="middle" font-family="Newsreader, serif" font-size="10" font-style="italic" fill="#fdf9f0">check</text>
+      <!-- Decide: negotiation -->
+      <circle cx="672" cy="175" r="32" fill="#9e6910" stroke="#fdf9f0" stroke-width="2.5"/>
+      <text x="672" y="172" text-anchor="middle" font-family="Newsreader, serif" font-size="10" font-style="italic" fill="#fdf9f0">Price</text>
+      <text x="672" y="185" text-anchor="middle" font-family="Newsreader, serif" font-size="10" font-style="italic" fill="#fdf9f0">nego.</text>
+      <!-- Onboard: kickoff -->
+      <circle cx="837" cy="175" r="32" fill="#1a3a28" stroke="#fdf9f0" stroke-width="2.5"/>
+      <text x="837" y="172" text-anchor="middle" font-family="Newsreader, serif" font-size="10" font-style="italic" fill="#fdf9f0">Kick-</text>
+      <text x="837" y="185" text-anchor="middle" font-family="Newsreader, serif" font-size="10" font-style="italic" fill="#fdf9f0">off day</text>
+      <!-- Renew: renewal ask -->
+      <circle cx="1010" cy="175" r="32" fill="#1a3a28" stroke="#fdf9f0" stroke-width="2.5"/>
+      <text x="1010" y="172" text-anchor="middle" font-family="Newsreader, serif" font-size="10" font-style="italic" fill="#fdf9f0">Renewal</text>
+      <text x="1010" y="185" text-anchor="middle" font-family="Newsreader, serif" font-size="10" font-style="italic" fill="#fdf9f0">call</text>
+
+      <!-- Admin/Finance row (y≈270) -->
+      <circle cx="507" cy="258" r="30" fill="#c98a1e" stroke="#fdf9f0" stroke-width="2.5"/>
+      <text x="507" y="255" text-anchor="middle" font-family="Newsreader, serif" font-size="10" font-style="italic" fill="#fdf9f0">Trial</text>
+      <text x="507" y="267" text-anchor="middle" font-family="Newsreader, serif" font-size="10" font-style="italic" fill="#fdf9f0">pilot</text>
+      <circle cx="837" cy="258" r="30" fill="#9e6910" stroke="#fdf9f0" stroke-width="2.5"/>
+      <text x="837" y="255" text-anchor="middle" font-family="Newsreader, serif" font-size="10" font-style="italic" fill="#fdf9f0">Data</text>
+      <text x="837" y="267" text-anchor="middle" font-family="Newsreader, serif" font-size="10" font-style="italic" fill="#fdf9f0">migration</text>
+      <circle cx="1010" cy="258" r="30" fill="#1a3a28" stroke="#fdf9f0" stroke-width="2.5"/>
+      <text x="1010" y="255" text-anchor="middle" font-family="Newsreader, serif" font-size="10" font-style="italic" fill="#fdf9f0">Daily</text>
+      <text x="1010" y="267" text-anchor="middle" font-family="Newsreader, serif" font-size="10" font-style="italic" fill="#fdf9f0">user</text>
+
+      <!-- Teacher row (y≈355) -->
+      <circle cx="837" cy="345" r="28" fill="#9e6910" stroke="#fdf9f0" stroke-width="2.5"/>
+      <text x="837" y="342" text-anchor="middle" font-family="Newsreader, serif" font-size="10" font-style="italic" fill="#fdf9f0">Training</text>
+      <text x="837" y="355" text-anchor="middle" font-family="Newsreader, serif" font-size="10" font-style="italic" fill="#fdf9f0">day</text>
+      <circle cx="1010" cy="345" r="28" fill="#1a3a28" stroke="#fdf9f0" stroke-width="2.5"/>
+      <text x="1010" y="342" text-anchor="middle" font-family="Newsreader, serif" font-size="10" font-style="italic" fill="#fdf9f0">Marks</text>
+      <text x="1010" y="355" text-anchor="middle" font-family="Newsreader, serif" font-size="10" font-style="italic" fill="#fdf9f0">entry</text>
+
+      <!-- Parent row (y≈445) -->
+      <circle cx="837" cy="430" r="26" fill="#9e6910" stroke="#fdf9f0" stroke-width="2.5"/>
+      <text x="837" y="427" text-anchor="middle" font-family="Newsreader, serif" font-size="10" font-style="italic" fill="#fdf9f0">App</text>
+      <text x="837" y="439" text-anchor="middle" font-family="Newsreader, serif" font-size="10" font-style="italic" fill="#fdf9f0">download</text>
+      <circle cx="1010" cy="430" r="26" fill="#1a3a28" stroke="#fdf9f0" stroke-width="2.5"/>
+      <text x="1010" y="427" text-anchor="middle" font-family="Newsreader, serif" font-size="10" font-style="italic" fill="#fdf9f0">Fee</text>
+      <text x="1010" y="439" text-anchor="middle" font-family="Newsreader, serif" font-size="10" font-style="italic" fill="#fdf9f0">payment</text>
+
+      <!-- Arrows linking stages in Principal row -->
+      <line x1="209" y1="175" x2="306" y2="175" stroke="#18120a" stroke-width="1.2" marker-end="url(#arr)"/>
+      <line x1="374" y1="175" x2="471" y2="175" stroke="#18120a" stroke-width="1.2" marker-end="url(#arr)"/>
+      <line x1="539" y1="175" x2="636" y2="175" stroke="#18120a" stroke-width="1.2" marker-end="url(#arr)"/>
+      <line x1="704" y1="175" x2="801" y2="175" stroke="#18120a" stroke-width="1.2" marker-end="url(#arr)"/>
+      <line x1="869" y1="175" x2="974" y2="175" stroke="#18120a" stroke-width="1.2" marker-end="url(#arr)"/>
+
+      <!-- Insight row -->
+      <rect x="100" y="486" width="995" height="80" fill="#fdf9f0"/>
+      <line x1="100" y1="486" x2="1095" y2="486" stroke="#c8b48c" stroke-width="1"/>
+      <text x="120" y="510" font-family="JetBrains Mono, monospace" font-size="9" letter-spacing="1.5" fill="#9e6910">KEY INSIGHT PER STAGE</text>
+      <text x="177" y="540" text-anchor="middle" font-family="Newsreader, serif" font-size="11" font-style="italic" fill="#48392a">Peer intro or PABSON presence is almost always the entry</text>
+      <text x="507" y="540" text-anchor="middle" font-family="Newsreader, serif" font-size="11" font-style="italic" fill="#48392a">Reference school visit closes more than demos</text>
+      <text x="837" y="540" text-anchor="middle" font-family="Newsreader, serif" font-size="11" font-style="italic" fill="#48392a">Day-14 live = day-1 of real retention</text>
+
+      <text x="550" y="568" text-anchor="middle" font-family="Newsreader, serif" font-size="12" font-style="italic" fill="#8a7760">— Fig. 1.1 · Five-actor buying journey for Nepali schools —</text>
+    </svg>
+  </div>
+</div>
+</section>
+
+<!-- ═══════════════ §02 SEASONAL CALENDAR ═══════════════ -->
+<section style="background:var(--ivory-deep);">
+<div class="container">
+  <div class="section-num">§ 02 — The Sales Calendar</div>
+  <h2 class="section-title">When Nepal <em>buys.</em></h2>
+  <p class="section-deck">There are two real buying windows per year. Miss them and you wait another half-year. The calendar is not a metaphor — it is the single most important operational artefact for your sales team.</p>
+  <div class="diagram-box">
+    <svg viewBox="0 0 1100 420" xmlns="http://www.w3.org/2000/svg">
+      <!-- Month bars -->
+      <!-- Jan -->
+      <rect x="30" y="60" width="78" height="200" fill="#c98a1e" opacity=".35"/>
+      <!-- Feb -->
+      <rect x="120" y="60" width="78" height="200" fill="#c98a1e" opacity=".45"/>
+      <!-- Mar -->
+      <rect x="210" y="60" width="78" height="200" fill="#c98a1e" opacity=".7"/>
+      <!-- Apr (Baishakh) HOT -->
+      <rect x="300" y="20" width="78" height="240" fill="#c0392b"/>
+      <!-- May HOT -->
+      <rect x="390" y="20" width="78" height="240" fill="#c0392b"/>
+      <!-- Jun -->
+      <rect x="480" y="60" width="78" height="200" fill="#c98a1e" opacity=".30"/>
+      <!-- Jul -->
+      <rect x="570" y="60" width="78" height="200" fill="#c98a1e" opacity=".25"/>
+      <!-- Aug WARM -->
+      <rect x="660" y="40" width="78" height="220" fill="#c98a1e" opacity=".75"/>
+      <!-- Sep WARM -->
+      <rect x="750" y="40" width="78" height="220" fill="#c98a1e" opacity=".70"/>
+      <!-- Oct DEAD -->
+      <rect x="840" y="100" width="78" height="160" fill="#8a7760" opacity=".4"/>
+      <!-- Nov DEAD -->
+      <rect x="930" y="100" width="78" height="160" fill="#8a7760" opacity=".35"/>
+      <!-- Dec -->
+      <rect x="1020" y="70" width="70" height="190" fill="#c98a1e" opacity=".30"/>
+
+      <!-- Month labels -->
+      <g font-family="JetBrains Mono, monospace" font-size="11" letter-spacing="1" text-anchor="middle">
+        <text x="69" y="285" fill="#18120a">JAN</text>
+        <text x="159" y="285" fill="#18120a">FEB</text>
+        <text x="249" y="285" fill="#18120a">MAR</text>
+        <text x="339" y="285" fill="#fdf9f0" font-weight="700">APR</text>
+        <text x="429" y="285" fill="#fdf9f0" font-weight="700">MAY</text>
+        <text x="519" y="285" fill="#18120a">JUN</text>
+        <text x="609" y="285" fill="#18120a">JUL</text>
+        <text x="699" y="285" fill="#18120a">AUG</text>
+        <text x="789" y="285" fill="#18120a">SEP</text>
+        <text x="879" y="285" fill="#18120a">OCT</text>
+        <text x="969" y="285" fill="#18120a">NOV</text>
+        <text x="1055" y="285" fill="#18120a">DEC</text>
+      </g>
+
+      <!-- Nepali month labels -->
+      <g font-family="Newsreader, serif" font-size="10" font-style="italic" text-anchor="middle" fill="#8a7760">
+        <text x="69" y="300">Poush</text>
+        <text x="159" y="300">Magh</text>
+        <text x="249" y="300">Falgun</text>
+        <text x="339" y="300" fill="#c0392b" font-weight="500">Chaitra</text>
+        <text x="429" y="300" fill="#c0392b" font-weight="500">Baishakh</text>
+        <text x="519" y="300">Jestha</text>
+        <text x="609" y="300">Ashadh</text>
+        <text x="699" y="300">Shrawan</text>
+        <text x="789" y="300">Bhadra</text>
+        <text x="879" y="300">Ashwin</text>
+        <text x="969" y="300">Kartik</text>
+        <text x="1055" y="300">Mangsir</text>
+      </g>
+
+      <!-- Annotations -->
+      <!-- Hot zone brace -->
+      <line x1="300" y1="12" x2="468" y2="12" stroke="#c0392b" stroke-width="2"/>
+      <text x="384" y="8" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="10" letter-spacing="1.5" fill="#c0392b">▲ PEAK WINDOW</text>
+
+      <!-- Warm zone brace -->
+      <line x1="660" y1="32" x2="828" y2="32" stroke="#c98a1e" stroke-width="2"/>
+      <text x="744" y="28" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="10" letter-spacing="1.5" fill="#c98a1e">▲ SECOND WINDOW</text>
+
+      <!-- Dead zone brace -->
+      <line x1="840" y1="92" x2="1008" y2="92" stroke="#8a7760" stroke-width="1.5" stroke-dasharray="3 3"/>
+      <text x="924" y="88" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="10" letter-spacing="1" fill="#8a7760">Dashain / Tihar · DEAD ZONE</text>
+
+      <!-- Activity grid -->
+      <rect x="30" y="312" width="1060" height="92" fill="#fdf9f0"/>
+      <line x1="30" y1="312" x2="1090" y2="312" stroke="#c8b48c" stroke-width="1"/>
+      <line x1="30" y1="340" x2="1090" y2="340" stroke="#c8b48c" stroke-width=".5" stroke-dasharray="2 4"/>
+      <line x1="30" y1="368" x2="1090" y2="368" stroke="#c8b48c" stroke-width=".5" stroke-dasharray="2 4"/>
+
+      <text x="40" y="330" font-family="JetBrains Mono, monospace" font-size="9" letter-spacing="1" fill="#9e6910">ACTION</text>
+      <text x="40" y="358" font-family="JetBrains Mono, monospace" font-size="9" letter-spacing="1" fill="#9e6910">GOAL</text>
+      <text x="40" y="396" font-family="JetBrains Mono, monospace" font-size="9" letter-spacing="1" fill="#9e6910">AVOID</text>
+
+      <!-- Action row -->
+      <g font-family="Newsreader, serif" font-size="11" font-style="italic" fill="#18120a" text-anchor="middle">
+        <text x="159" y="330">Build pipeline</text>
+        <text x="384" y="330" font-weight="600" fill="#c0392b">Close &amp; sign</text>
+        <text x="609" y="330">Onboard</text>
+        <text x="744" y="330">Upsell / new</text>
+        <text x="924" y="330">Rest</text>
+        <text x="1055" y="330">Plan ahead</text>
+      </g>
+
+      <!-- Goal row -->
+      <g font-family="Newsreader, serif" font-size="11" font-style="italic" fill="#48392a" text-anchor="middle">
+        <text x="159" y="358">Demos, references</text>
+        <text x="384" y="358" fill="#c0392b">Signed before Baishakh 1</text>
+        <text x="609" y="358">Live before exams</text>
+        <text x="744" y="358">Mid-yr module adds</text>
+        <text x="924" y="358">—</text>
+        <text x="1055" y="358">Budget pipeline</text>
+      </g>
+
+      <!-- Avoid row -->
+      <g font-family="Newsreader, serif" font-size="11" font-style="italic" fill="#8a7760" text-anchor="middle">
+        <text x="159" y="396">Closing asks too early</text>
+        <text x="384" y="396">Long legal negotiations</text>
+        <text x="609" y="396">New sales calls</text>
+        <text x="744" y="396">Complex migrations</text>
+        <text x="924" y="396">ANY outreach</text>
+        <text x="1055" y="396">Premature asks</text>
+      </g>
+
+      <text x="550" y="412" text-anchor="middle" font-family="Newsreader, serif" font-size="12" font-style="italic" fill="#8a7760">— Fig. 2.1 · 12-month Nepali school sales calendar —</text>
+    </svg>
+  </div>
+</div>
+</section>
+
+<!-- ═══════════════ §03 ICPs ═══════════════ -->
+<section>
+<div class="container">
+  <div class="section-num">§ 03 — Ideal Customer Profiles</div>
+  <h2 class="section-title">Four archetypes, <em>four playbooks.</em></h2>
+  <p class="section-deck">Don't sell to everyone. Pick one ICP for the first 18 months and get it right before expanding. A school at ICP-A and a school at ICP-D need completely different conversations.</p>
+  <div class="icp-grid">
+
+    <div class="icp">
+      <div class="icp-letter">A</div>
+      <div class="icp-label">The Sweet Spot</div>
+      <h3 class="icp-title">Mid-large private boarding school, Kathmandu Valley</h3>
+      <p class="icp-body">500–1,500 students. English-medium. Owner-operated. Has tried paper-based systems, maybe attempted an earlier ERP that failed. 3–5 admin staff. Board of trustees approves annual spend. Principal has real influence but owner signs the cheque.</p>
+      <dl class="icp-attrs">
+        <dt>Size</dt><dd>500–1,500 students</dd>
+        <dt>Budget</dt><dd>₨ 2–8 lakh/year for software</dd>
+        <dt>Pain</dt><dd>Fee defaults, parent complaints, exam-mark chaos</dd>
+        <dt>Buyer</dt><dd>Owner → Principal → signs together</dd>
+        <dt>Cycle</dt><dd>3–5 months; closes pre-Baishakh</dd>
+        <dt>Channel</dt><dd>PABSON network, peer referral</dd>
+      </dl>
+    </div>
+
+    <div class="icp">
+      <div class="icp-letter">B</div>
+      <div class="icp-label">The Finance-First Buyer</div>
+      <h3 class="icp-title">Mid-size +2 college with IRD pressure</h3>
+      <p class="icp-body">300–800 students. HISSAN-affiliated. Annual fee collection in crores but managed in ledgers. Under pressure from IRD on invoicing and TDS. Academic coordinator struggling with marks and result publication. Pain is overwhelmingly financial compliance.</p>
+      <dl class="icp-attrs">
+        <dt>Size</dt><dd>300–800 students</dd>
+        <dt>Budget</dt><dd>₨ 1.5–5 lakh/year</dd>
+        <dt>Pain</dt><dd>IRD audit risk; fee-default tracking</dd>
+        <dt>Buyer</dt><dd>Principal or finance head</dd>
+        <dt>Cycle</dt><dd>2–4 months; responsive to compliance framing</dd>
+        <dt>Channel</dt><dd>HISSAN, CA/auditor referral</dd>
+      </dl>
+    </div>
+
+    <div class="icp">
+      <div class="icp-letter">C</div>
+      <div class="icp-label">The First-Timer</div>
+      <h3 class="icp-title">Small school, outside valley, first-time buyer</h3>
+      <p class="icp-body">100–300 students. Hill or Terai district. Nepali-medium or mixed. Headmaster is the sole decision-maker. No dedicated admin staff. Has never used software. Budget of ₨ 30–60K/year maximum. Trust is the only currency — they will buy from who a neighbouring school recommends.</p>
+      <dl class="icp-attrs">
+        <dt>Size</dt><dd>100–300 students</dd>
+        <dt>Budget</dt><dd>₨ 30–60K/year</dd>
+        <dt>Pain</dt><dd>Attendance records, report-card printing</dd>
+        <dt>Buyer</dt><dd>Headmaster alone</dd>
+        <dt>Cycle</dt><dd>1–2 months; reference-driven</dd>
+        <dt>Channel</dt><dd>DEO office, NGO, co-op model</dd>
+      </dl>
+    </div>
+
+    <div class="icp">
+      <div class="icp-letter">D</div>
+      <div class="icp-label">The Expansion Opportunity</div>
+      <h3 class="icp-title">Multi-campus school chain, centralised view needed</h3>
+      <p class="icp-body">3–10 campuses, 2,000+ students total. Chairman-level ownership. Wants a single dashboard across all campuses. Existing patchwork of ERPs per campus, or one ERP that doesn't aggregate. Sales cycle is long and committee-driven but ACV is 5–10× a single school.</p>
+      <dl class="icp-attrs">
+        <dt>Size</dt><dd>2,000–8,000 students total</dd>
+        <dt>Budget</dt><dd>₨ 10–40 lakh/year</dd>
+        <dt>Pain</dt><dd>No consolidated view; inconsistent data</dd>
+        <dt>Buyer</dt><dd>Chairman → committee → board</dd>
+        <dt>Cycle</dt><dd>6–12 months; enterprise motion</dd>
+        <dt>Channel</dt><dd>Direct; CFO/auditor warm intro</dd>
+      </dl>
+    </div>
+
+  </div>
+</div>
+</section>
+
+<!-- ═══════════════ §04 CHANNELS ═══════════════ -->
+<section style="background:var(--ivory-deep);">
+<div class="container">
+  <div class="section-num">§ 04 — Channel Partner Ecosystem</div>
+  <h2 class="section-title">You can't cold-call <em>your way in.</em></h2>
+  <p class="section-deck">Nepali school procurement is relationship-mediated. The fastest route to a deal is through a trusted intermediary the school already knows. Map your channels before you hire your first sales rep.</p>
+
+  <!-- Channel ecosystem SVG -->
+  <div class="diagram-box" style="margin-bottom:32px;">
+    <svg viewBox="0 0 1100 500" xmlns="http://www.w3.org/2000/svg">
+      <!-- Center -->
+      <circle cx="550" cy="250" r="75" fill="#18120a"/>
+      <text x="550" y="244" text-anchor="middle" fill="#f5eedc" font-family="JetBrains Mono, monospace" font-size="10" letter-spacing="2">YOUR</text>
+      <text x="550" y="262" text-anchor="middle" fill="#c98a1e" font-family="Fraunces, serif" font-size="18" font-style="italic">EdTech</text>
+
+      <!-- Spokes -->
+      <line x1="550" y1="175" x2="550" y2="100" stroke="#c98a1e" stroke-width="1.5"/>
+      <line x1="492" y1="198" x2="280" y2="120" stroke="#c98a1e" stroke-width="1.5"/>
+      <line x1="482" y1="268" x2="200" y2="320" stroke="#c98a1e" stroke-width="1.5"/>
+      <line x1="550" y1="325" x2="550" y2="395" stroke="#c98a1e" stroke-width="1.5"/>
+      <line x1="618" y1="268" x2="900" y2="320" stroke="#c98a1e" stroke-width="1.5"/>
+      <line x1="608" y1="198" x2="820" y2="120" stroke="#c98a1e" stroke-width="1.5"/>
+
+      <!-- Channel nodes -->
+      <!-- Top: Associations -->
+      <rect x="430" y="30" width="240" height="68" fill="#9e6910" rx="2"/>
+      <text x="550" y="56" text-anchor="middle" fill="#fdf9f0" font-family="JetBrains Mono, monospace" font-size="10" letter-spacing="1.5">ASSOCIATIONS</text>
+      <text x="550" y="76" text-anchor="middle" fill="#fdf9f0" font-family="Newsreader, serif" font-size="13" font-style="italic">PABSON · NPABSON · HISSAN · CTEVT</text>
+
+      <!-- Top-left: Professional advisors -->
+      <rect x="100" y="68" width="240" height="68" fill="#2b3a67" rx="2"/>
+      <text x="220" y="94" text-anchor="middle" fill="#fdf9f0" font-family="JetBrains Mono, monospace" font-size="10" letter-spacing="1.5">PROFESSIONAL</text>
+      <text x="220" y="112" text-anchor="middle" fill="#fdf9f0" font-family="Newsreader, serif" font-size="13" font-style="italic">CAs · Auditors · Tally resellers</text>
+
+      <!-- Left: Government/INGOs -->
+      <rect x="20" y="282" width="240" height="68" fill="#1a3a28" rx="2"/>
+      <text x="140" y="308" text-anchor="middle" fill="#fdf9f0" font-family="JetBrains Mono, monospace" font-size="10" letter-spacing="1.5">GOVT &amp; NGOS</text>
+      <text x="140" y="326" text-anchor="middle" fill="#fdf9f0" font-family="Newsreader, serif" font-size="13" font-style="italic">DEOs · USAID · Room to Read</text>
+
+      <!-- Bottom: Tech/ISP -->
+      <rect x="430" y="400" width="240" height="68" fill="#a8442a" rx="2"/>
+      <text x="550" y="426" text-anchor="middle" fill="#fdf9f0" font-family="JetBrains Mono, monospace" font-size="10" letter-spacing="1.5">TECH &amp; ISP</text>
+      <text x="550" y="444" text-anchor="middle" fill="#fdf9f0" font-family="Newsreader, serif" font-size="13" font-style="italic">Worldlink · Vianet · hardware vendors</text>
+
+      <!-- Right: Fintech/Banks -->
+      <rect x="840" y="282" width="240" height="68" fill="#1d4e4a" rx="2"/>
+      <text x="960" y="308" text-anchor="middle" fill="#fdf9f0" font-family="JetBrains Mono, monospace" font-size="10" letter-spacing="1.5">FINTECH</text>
+      <text x="960" y="326" text-anchor="middle" fill="#fdf9f0" font-family="Newsreader, serif" font-size="13" font-style="italic">eSewa · Khalti · NIC Asia · Nabil</text>
+
+      <!-- Top-right: Media/Influencers -->
+      <rect x="760" y="68" width="240" height="68" fill="#18120a" rx="2"/>
+      <text x="880" y="94" text-anchor="middle" fill="#fdf9f0" font-family="JetBrains Mono, monospace" font-size="10" letter-spacing="1.5">INFLUENCERS</text>
+      <text x="880" y="112" text-anchor="middle" fill="#fdf9f0" font-family="Newsreader, serif" font-size="13" font-style="italic">Principal blogs · EduSanjal · YouTube</text>
+
+      <text x="550" y="488" text-anchor="middle" font-family="Newsreader, serif" font-size="12" font-style="italic" fill="#8a7760">— Fig. 4.1 · Channel partner ecosystem —</text>
+    </svg>
+  </div>
+
+  <div class="channel-grid">
+
+    <div class="channel">
+      <div class="channel-type">Tier 1 · Most Important</div>
+      <h3 class="channel-name">School Associations — PABSON, NPABSON, HISSAN</h3>
+      <p class="channel-body">The fastest warm-intro machine in Nepali education. An endorsement from a PABSON district chapter opens doors no cold-call ever could. Attend their annual conventions. Sponsor one session. Get on the vendor list. This is where your first 20 customers come from.</p>
+      <ul class="channel-list">
+        <li>Annual national convention + district-level meetings</li>
+        <li>Vendor booths — ₨ 20–50K investment, 40+ principal conversations</li>
+        <li>Training session sponsorships (your product = the demo)</li>
+        <li>HISSAN chapter meetings for +2 college access</li>
+      </ul>
+    </div>
+
+    <div class="channel">
+      <div class="channel-type">Tier 1 · Most Trusted</div>
+      <h3 class="channel-name">CA & Auditor Referrals</h3>
+      <p class="channel-body">Every school has a CA. The CA sees the pain first — fee defaults, IRD notices, manual ledgers. A CA who recommends your platform carries far more authority than any sales rep. Build a formal referral program: 10–15% of first-year ARR for a signed customer.</p>
+      <ul class="channel-list">
+        <li>Formal reseller / referral agreement with quarterly payouts</li>
+        <li>Co-branded IRD-compliance pitch decks for their school clients</li>
+        <li>CA training workshop on your accounting module</li>
+        <li>Accountancy Institute partnerships for lead flow</li>
+      </ul>
+    </div>
+
+    <div class="channel">
+      <div class="channel-type">Tier 2 · Scale Channel</div>
+      <h3 class="channel-name">ISP & Hardware Vendors — Worldlink, Vianet</h3>
+      <p class="channel-body">ISPs already sell to schools and have trusted relationships for billing and support. A bundled offer ("₨ 3,000/month: broadband + school ERP") reduces your CAC to near zero. Hardware vendors (biometric device sellers) are the same — schools buying fingerprint scanners need software that works with them.</p>
+      <ul class="channel-list">
+        <li>ISP bundled offer — internet + ERP on one invoice</li>
+        <li>Biometric device reseller partner agreement</li>
+        <li>Laptop/tablet vendor co-sell for rural school device access</li>
+        <li>Revenue share: 8–12% of SaaS year-1 revenue</li>
+      </ul>
+    </div>
+
+    <div class="channel">
+      <div class="channel-type">Tier 2 · Rural Unlock</div>
+      <h3 class="channel-name">District Education Offices & INGOs</h3>
+      <p class="channel-body">For the thousands of community and public schools that Veda and e-School will never reach, INGOs (Room to Read, Save the Children, World Education, CARE Nepal) and District Education Offices are the distribution layer. They already have trust; you provide the product.</p>
+      <ul class="channel-list">
+        <li>DEO-endorsed pilot for one district → referral to all schools in district</li>
+        <li>Grant-funded deployment: INGO pays per-school cost, you build the install base</li>
+        <li>Matching-fund programs (school pays 30%, INGO covers 70%)</li>
+        <li>OLE Nepal as integration partner for offline-rural hybrid</li>
+      </ul>
+    </div>
+
+    <div class="channel">
+      <div class="channel-type">Tier 2 · Embedded Revenue</div>
+      <h3 class="channel-name">Payment Gateways — eSewa, Khalti, ConnectIPS</h3>
+      <p class="channel-body">eSewa and Khalti want more transactions. Schools are large, recurring transaction sources. A co-sell deal — "use our ERP, collect fees through eSewa at 0% school commission" — creates a zero-cost sales channel while letting the gateway subsidise your customer acquisition.</p>
+      <ul class="channel-list">
+        <li>eSewa / Khalti school programme: marketing + no-fee-collection deal</li>
+        <li>Gateway-funded implementation for high-volume schools</li>
+        <li>Data sharing on fee-default patterns (with privacy compliance)</li>
+        <li>Co-branded "digital school" campaign</li>
+      </ul>
+    </div>
+
+    <div class="channel">
+      <div class="channel-type">Tier 3 · Long-term Brand</div>
+      <h3 class="channel-name">EdTech Media — EduSanjal, Principal YouTube</h3>
+      <p class="channel-body">EduSanjal is the primary English-language education media platform in Nepal. Principal-educator YouTube channels (in Nepali) have meaningful reach in the school community. Sponsored case-study videos from satisfied principals function as both marketing and social proof.</p>
+      <ul class="channel-list">
+        <li>EduSanjal sponsored feature / product review</li>
+        <li>Principal testimonial videos in Nepali (YouTube + WhatsApp forwarded)</li>
+        <li>PABSON newsletter sponsored content (low cost, high trust)</li>
+        <li>Teaching-community Facebook groups (admin staff communities)</li>
+      </ul>
+    </div>
+
+  </div>
+</div>
+</section>
+
+<!-- ═══════════════ §05 SALES MOTION ═══════════════ -->
+<section>
+<div class="container">
+  <div class="section-num">§ 05 — The Sales Motion</div>
+  <h2 class="section-title">Seven touches, <em>seven weeks.</em></h2>
+  <p class="section-deck">Every deal follows roughly this sequence. The talk-tracks are real — these are the phrasings that actually work with Nepali school owners and principals. Never lead with product; always lead with pain.</p>
+
+  <div class="touch-timeline">
+
+    <div class="touch">
+      <div class="touch-num">1</div>
+      <div class="touch-stage">
+        <div class="timing">Week 1 &nbsp;·&nbsp; Warm Intro</div>
+        <h4>The peer introduction.</h4>
+        <p>You don't cold-call a principal in Nepal. Someone they know — a fellow principal, their CA, their PABSON chapter chair — introduces you at an event or over the phone. Your job at this stage is a single sentence that gets you a 20-minute tea meeting.</p>
+      </div>
+      <div class="touch-talk">
+        <div class="talk-label">What you say</div>
+        <blockquote>"Hajur ko school ma fee collection ra attendance ko kaam kasari hudchha? Hamro system le yesto school haru lai dhherai maddat gareko chha — ek palta heraun?"</blockquote>
+      </div>
+    </div>
+
+    <div class="touch">
+      <div class="touch-num">2</div>
+      <div class="touch-stage">
+        <div class="timing">Week 2 &nbsp;·&nbsp; Discovery Tea</div>
+        <h4>Ask about their pain. Don't demo.</h4>
+        <p>Sit down, drink tea, ask questions. What keeps them up at night? Fee defaults? Exam-mark entry? Parent complaints? Identify the single loudest pain. Only show that one module. Leave a one-page overview in Nepali and the name of a reference school they can call.</p>
+      </div>
+      <div class="touch-talk">
+        <div class="talk-label">Key questions</div>
+        <blockquote>"Last year ma fee default rate kati thiyo? … Exam result nikalne kati din lagchha? … Parent complaint kasto aauchha?" — never ask "what software do you use?"</blockquote>
+      </div>
+    </div>
+
+    <div class="touch">
+      <div class="touch-num">3</div>
+      <div class="touch-stage">
+        <div class="timing">Week 3 &nbsp;·&nbsp; The Demo</div>
+        <h4>Show only what hurts them.</h4>
+        <p>30-minute demo, in person, on a laptop. Show only the module that matched their pain. Use real school names (with permission). Show the parent app on your phone. Let the admin staff ask questions — they're the daily users. End with "What did you not see that you expected?"</p>
+      </div>
+      <div class="touch-talk">
+        <div class="talk-label">Demo rule</div>
+        <blockquote>"Aaja hami fees module matra herauchhaun — kinabhane hajurle bhannu bhaeko fee default nai sabai bhandha thulo samasya ho. Arko kehi herna parchha bhane aagaami pali heraulaun."</blockquote>
+      </div>
+    </div>
+
+    <div class="touch">
+      <div class="touch-num">4</div>
+      <div class="touch-stage">
+        <div class="timing">Week 4 &nbsp;·&nbsp; Reference Visit</div>
+        <h4>Let a happy principal close for you.</h4>
+        <p>Arrange a 30-minute call or visit between your prospect and your happiest similar-sized school. Don't attend. Let them talk freely. The questions they ask each other — "does it really reduce fee defaults?" "how long did setup take?" — are things no salesperson can answer credibly.</p>
+      </div>
+      <div class="touch-talk">
+        <div class="talk-label">Reference framing</div>
+        <blockquote>"Ek jana principal chhan — Kathmandu Valley maa, hajur ko school jasto size nai — unle phone ma 15 minute kura garnu huncha. Ma connect garauchu?"</blockquote>
+      </div>
+    </div>
+
+    <div class="touch">
+      <div class="touch-num">5</div>
+      <div class="touch-stage">
+        <div class="timing">Week 5–6 &nbsp;·&nbsp; Proposal</div>
+        <h4>One page. No feature list.</h4>
+        <p>A proposal is not a brochure. One page: the pain you discussed, how your platform solves it, the implementation timeline, and the annual investment. No per-feature pricing tables. No 30-item comparison matrix. A Nepali school owner should be able to read it in 3 minutes and decide.</p>
+      </div>
+      <div class="touch-talk">
+        <div class="talk-label">Proposal format</div>
+        <blockquote>Problem → Solution → Timeline → Investment. One side of A4. In Nepali if ICP-C/rural; bilingual for ICP-A/B. Never send as a PDF attachment — walk through it in person.</blockquote>
+      </div>
+    </div>
+
+    <div class="touch">
+      <div class="touch-num">6</div>
+      <div class="touch-stage">
+        <div class="timing">Week 6–7 &nbsp;·&nbsp; Negotiation</div>
+        <h4>They will ask for a discount. Have a plan.</h4>
+        <p>Nepali school owners negotiate everything. Expect a 20–30% ask. Never discount the subscription — discount the setup fee instead, or add a free module. This preserves your ARR while giving them a win. Offer 10% off for payment within 15 days of signing. 15% for 2-year commit.</p>
+      </div>
+      <div class="touch-talk">
+        <div class="talk-label">Negotiation anchor</div>
+        <blockquote>"Setup fee ma hami 50% discount dina sakchhaun — yedi hajurle Chaitra bhitra sign garnu bhayo bhane. Annual subscription ma chahi change garna sakdainau — arko school sanga same rate rakhnu parcha."</blockquote>
+      </div>
+    </div>
+
+    <div class="touch">
+      <div class="touch-num">7</div>
+      <div class="touch-stage">
+        <div class="timing">Day 1–14 &nbsp;·&nbsp; Onboarding</div>
+        <h4>Live in 14 days or it never gets done.</h4>
+        <p>The riskiest moment is between signing and going live. A school that takes 4 months to onboard churns at 3× the rate of one that goes live in 14 days. Send an implementation squad day one. Don't leave until admin staff can complete the three critical daily tasks without calling you.</p>
+      </div>
+      <div class="touch-talk">
+        <div class="talk-label">The 14-day promise</div>
+        <blockquote>"Sign gare ko 14 dina bhitra hajur ko school fully live hunchha — attendance, fees, ra parent app — natra 3 mahina free extension dinchhau. Yo hamro guarantee ho."</blockquote>
+      </div>
+    </div>
+
+  </div>
+</div>
+</section>
+
+<!-- ═══════════════ §06 PRICING ═══════════════ -->
+<section style="background:var(--ivory-deep);">
+<div class="container">
+  <div class="section-num">§ 06 — Pricing Architecture</div>
+  <h2 class="section-title">Price for the <em>market that exists</em>, not the one you wish for.</h2>
+  <p class="section-deck">Four tiers across the school-size spectrum. The "Standard" tier is your volume engine. The "Enterprise" tier funds the company. The "Seedling" tier builds the install base. Never lead with features — lead with school size and pain intensity.</p>
+
+  <div class="pricing-grid">
+
+    <div class="price-tier">
+      <div class="tier-label">Tier 0 · Up to 150 students</div>
+      <div class="tier-name">Seedling</div>
+      <div class="tier-price"><em>Free</em> forever</div>
+      <ul class="tier-feat">
+        <li>Student register &amp; attendance</li>
+        <li>Basic fee record (no gateway)</li>
+        <li>Exam marks entry &amp; report card</li>
+        <li>1 admin user account</li>
+        <li>Community support only</li>
+        <li style="color:#8a7760;">No parent app · No payroll</li>
+      </ul>
+    </div>
+
+    <div class="price-tier featured">
+      <div class="price-recommended">Most popular</div>
+      <div class="tier-label" style="margin-top:24px;">Tier 1 · 150–800 students</div>
+      <div class="tier-name">Standard</div>
+      <div class="tier-price">₨ <em>45</em> /student /yr</div>
+      <ul class="tier-feat">
+        <li>Full SIS + admissions CRM</li>
+        <li>Fee collection + eSewa/Khalti</li>
+        <li>Attendance + biometric ready</li>
+        <li>Exam, marks &amp; report cards</li>
+        <li>Parent app (Android + iOS)</li>
+        <li>SMS + in-app notifications</li>
+        <li>5 admin users</li>
+        <li>Phone + chat support</li>
+      </ul>
+    </div>
+
+    <div class="price-tier">
+      <div class="tier-label">Tier 2 · 800–2,000 students</div>
+      <div class="tier-name">Pro</div>
+      <div class="tier-price">₨ <em>38</em> /student /yr</div>
+      <ul class="tier-feat">
+        <li>Everything in Standard</li>
+        <li>IRD-certified accounting</li>
+        <li>Payroll &amp; HR module</li>
+        <li>Transport with GPS option</li>
+        <li>Library &amp; hostel</li>
+        <li>Analytics dashboard</li>
+        <li>Unlimited admin users</li>
+        <li>Dedicated CSM</li>
+      </ul>
+    </div>
+
+    <div class="price-tier">
+      <div class="tier-label">Tier 3 · 2,000+ / Multi-campus</div>
+      <div class="tier-name">Enterprise</div>
+      <div class="tier-price"><em>Custom</em> quote</div>
+      <ul class="tier-feat">
+        <li>Everything in Pro</li>
+        <li>Multi-campus consolidated view</li>
+        <li>Custom integrations + API</li>
+        <li>White-label parent app option</li>
+        <li>SLA: 99.9% uptime guarantee</li>
+        <li>On-site implementation team</li>
+        <li>Named account manager</li>
+        <li>Quarterly strategic review</li>
+      </ul>
+    </div>
+
+  </div>
+
+  <!-- Pricing notes -->
+  <div style="background:var(--paper);border:1px solid var(--rule);padding:28px 32px;margin-top:1px;display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:24px;">
+    <div>
+      <div style="font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.15em;color:var(--saffron);text-transform:uppercase;margin-bottom:8px;">Setup Fee (all tiers)</div>
+      <div style="font-family:'Fraunces',serif;font-size:16px;font-weight:500;margin-bottom:4px;">₨ 25K – ₨ 80K one-time</div>
+      <p style="font-size:13px;color:var(--ink-soft);">Covers data migration, staff training, parent-app onboarding, and 14-day implementation guarantee. Non-negotiable — but can be discounted as a closing lever (not the subscription).</p>
+    </div>
+    <div>
+      <div style="font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.15em;color:var(--saffron);text-transform:uppercase;margin-bottom:8px;">Discount Policy</div>
+      <div style="font-family:'Fraunces',serif;font-size:16px;font-weight:500;margin-bottom:4px;">10% / 15% / never on subscription</div>
+      <p style="font-size:13px;color:var(--ink-soft);">10% off for annual upfront payment within 15 days. 15% off setup fee for Chaitra closing. 15% for 2-year commit. Never discount the per-student rate — it spreads and erodes your entire ARR.</p>
+    </div>
+    <div>
+      <div style="font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.15em;color:var(--saffron);text-transform:uppercase;margin-bottom:8px;">Co-op / INGO Pricing</div>
+      <div style="font-family:'Fraunces',serif;font-size:16px;font-weight:500;margin-bottom:4px;">5-school cluster: ₨ 20/student/yr</div>
+      <p style="font-size:13px;color:var(--ink-soft);">A cluster of 5 small schools (avg 200 students each) shares one licence + one part-time CSM, billed as a co-op. INGO can subsidise 50–70%. Opens the bottom-of-market without destroying pricing integrity.</p>
+    </div>
+    <div>
+      <div style="font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.15em;color:var(--saffron);text-transform:uppercase;margin-bottom:8px;">Billing Timing</div>
+      <div style="font-family:'Fraunces',serif;font-size:16px;font-weight:500;margin-bottom:4px;">Annual upfront, Baishakh invoicing</div>
+      <p style="font-size:13px;color:var(--ink-soft);">Invoice in Chaitra (March/April) before the new academic year. Schools have budget at this point. Monthly billing creates collection problems. Annual upfront gives you the working capital to fund operations.</p>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- ═══════════════ §07 90-DAY CLOCK ═══════════════ -->
+<section>
+<div class="container">
+  <div class="section-num">§ 07 — The First 90 Days</div>
+  <h2 class="section-title">Ninety days from <em>zero to first revenue.</em></h2>
+  <p class="section-deck">Assume you're launching a Kathmandu-based EdTech targeting ICP-A schools in the Baishakh buying window. The clock starts January 1. Here's the week-by-week operational plan.</p>
+
+  <div class="diagram-box">
+    <svg viewBox="0 0 1100 540" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <marker id="arr2" markerWidth="7" markerHeight="7" refX="5" refY="3" orient="auto">
+          <path d="M0,0 L0,6 L7,3 z" fill="#18120a"/>
+        </marker>
+      </defs>
+
+      <!-- Month bands -->
+      <rect x="60" y="60" width="310" height="400" fill="#c98a1e" opacity=".06"/>
+      <rect x="380" y="60" width="310" height="400" fill="#c98a1e" opacity=".03"/>
+      <rect x="700" y="60" width="380" height="400" fill="#c0392b" opacity=".06"/>
+
+      <text x="215" y="45" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="11" letter-spacing="2" fill="#18120a">JANUARY</text>
+      <text x="535" y="45" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="11" letter-spacing="2" fill="#18120a">FEBRUARY</text>
+      <text x="890" y="45" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="11" letter-spacing="2" fill="#c0392b">MARCH → BAISHAKH</text>
+
+      <!-- Week lines -->
+      <line x1="60" y1="60" x2="60" y2="460" stroke="#c8b48c" stroke-width="1"/>
+      <line x1="135" y1="60" x2="135" y2="460" stroke="#c8b48c" stroke-width=".5" stroke-dasharray="2 3"/>
+      <line x1="215" y1="60" x2="215" y2="460" stroke="#c8b48c" stroke-width=".5" stroke-dasharray="2 3"/>
+      <line x1="295" y1="60" x2="295" y2="460" stroke="#c8b48c" stroke-width=".5" stroke-dasharray="2 3"/>
+      <line x1="370" y1="60" x2="370" y2="460" stroke="#c8b48c" stroke-width="1"/>
+      <line x1="450" y1="60" x2="450" y2="460" stroke="#c8b48c" stroke-width=".5" stroke-dasharray="2 3"/>
+      <line x1="530" y1="60" x2="530" y2="460" stroke="#c8b48c" stroke-width=".5" stroke-dasharray="2 3"/>
+      <line x1="610" y1="60" x2="610" y2="460" stroke="#c8b48c" stroke-width=".5" stroke-dasharray="2 3"/>
+      <line x1="690" y1="60" x2="690" y2="460" stroke="#c8b48c" stroke-width="1"/>
+      <line x1="775" y1="60" x2="775" y2="460" stroke="#c8b48c" stroke-width=".5" stroke-dasharray="2 3"/>
+      <line x1="860" y1="60" x2="860" y2="460" stroke="#c8b48c" stroke-width=".5" stroke-dasharray="2 3"/>
+      <line x1="940" y1="60" x2="940" y2="460" stroke="#c8b48c" stroke-width=".5" stroke-dasharray="2 3"/>
+      <line x1="1080" y1="60" x2="1080" y2="460" stroke="#c8b48c" stroke-width="1"/>
+
+      <!-- Week labels -->
+      <g font-family="JetBrains Mono, monospace" font-size="9" fill="#8a7760" text-anchor="middle">
+        <text x="97" y="74">W1</text><text x="175" y="74">W2</text>
+        <text x="255" y="74">W3</text><text x="332" y="74">W4</text>
+        <text x="410" y="74">W5</text><text x="490" y="74">W6</text>
+        <text x="570" y="74">W7</text><text x="650" y="74">W8</text>
+        <text x="735" y="74">W9</text><text x="820" y="74">W10</text>
+        <text x="900" y="74">W11</text><text x="1010" y="74">W12–13</text>
+      </g>
+
+      <!-- Swim lanes -->
+      <!-- Lane 1: Product -->
+      <rect x="60" y="82" width="10" height="370" fill="#c98a1e"/>
+      <text x="75" y="200" font-family="JetBrains Mono, monospace" font-size="9" letter-spacing="1.5" fill="#9e6910" transform="rotate(90 75 200)">PRODUCT</text>
+
+      <!-- Lane 2: Sales -->
+      <rect x="60" y="82" width="10" height="370" fill="#c98a1e" x="60"/>
+
+      <!-- Task bars: Product lane (y=90–190) -->
+      <rect x="70" y="90" width="295" height="26" fill="#18120a" rx="2"/>
+      <text x="218" y="107" text-anchor="middle" fill="#fdf9f0" font-family="JetBrains Mono, monospace" font-size="9" letter-spacing="1">FINALIZE MVP — core: SIS + fees + attendance</text>
+
+      <rect x="375" y="90" width="225" height="26" fill="#18120a" rx="2"/>
+      <text x="488" y="107" text-anchor="middle" fill="#fdf9f0" font-family="JetBrains Mono, monospace" font-size="9" letter-spacing="1">PARENT APP BETA — internal test</text>
+
+      <rect x="610" y="90" width="460" height="26" fill="#c0392b" rx="2"/>
+      <text x="840" y="107" text-anchor="middle" fill="#fdf9f0" font-family="JetBrains Mono, monospace" font-size="9" letter-spacing="1">BUG FIXES · FIRST CUSTOMER ONBOARDING</text>
+
+      <!-- Task bars: GTM lane (y=125–225) -->
+      <rect x="70" y="126" width="65" height="26" fill="#9e6910" rx="2"/>
+      <text x="103" y="143" text-anchor="middle" fill="#fdf9f0" font-family="JetBrains Mono, monospace" font-size="9" letter-spacing="1">PABSON pitch</text>
+
+      <rect x="145" y="126" width="220" height="26" fill="#9e6910" rx="2"/>
+      <text x="255" y="143" text-anchor="middle" fill="#fdf9f0" font-family="JetBrains Mono, monospace" font-size="9" letter-spacing="1">WARM INTROS — 20 target schools via PABSON / CA</text>
+
+      <rect x="375" y="126" width="305" height="26" fill="#9e6910" rx="2"/>
+      <text x="528" y="143" text-anchor="middle" fill="#fdf9f0" font-family="JetBrains Mono, monospace" font-size="9" letter-spacing="1">DISCOVERY MEETINGS + DEMOS (10+ scheduled)</text>
+
+      <rect x="690" y="126" width="380" height="26" fill="#c0392b" rx="2"/>
+      <text x="880" y="143" text-anchor="middle" fill="#fdf9f0" font-family="JetBrains Mono, monospace" font-size="9" letter-spacing="1">PROPOSALS OUT · NEGOTIATE · SIGN BEFORE CHAITRA</text>
+
+      <!-- Task bars: Reference lane (y=162–262) -->
+      <rect x="220" y="162" width="155" height="26" fill="#2b3a67" rx="2"/>
+      <text x="298" y="179" text-anchor="middle" fill="#fdf9f0" font-family="JetBrains Mono, monospace" font-size="9" letter-spacing="1">REFERENCE SCHOOL LIVE</text>
+
+      <rect x="375" y="162" width="155" height="26" fill="#2b3a67" rx="2"/>
+      <text x="453" y="179" text-anchor="middle" fill="#fdf9f0" font-family="JetBrains Mono, monospace" font-size="9" letter-spacing="1">PROSPECT VISITS REF SCHOOL</text>
+
+      <!-- Task bars: Content/channel lane -->
+      <rect x="70" y="198" width="145" height="26" fill="#1d4e4a" rx="2"/>
+      <text x="143" y="215" text-anchor="middle" fill="#fdf9f0" font-family="JetBrains Mono, monospace" font-size="9" letter-spacing="1">BUILD NEPALI DEMO VIDEO</text>
+
+      <rect x="225" y="198" width="225" height="26" fill="#1d4e4a" rx="2"/>
+      <text x="338" y="215" text-anchor="middle" fill="#fdf9f0" font-family="JetBrains Mono, monospace" font-size="9" letter-spacing="1">CASE STUDY #1 — SIGNED SCHOOL</text>
+
+      <rect x="460" y="198" width="230" height="26" fill="#1d4e4a" rx="2"/>
+      <text x="575" y="215" text-anchor="middle" fill="#fdf9f0" font-family="JetBrains Mono, monospace" font-size="9" letter-spacing="1">EDUSANJAL FEATURE · PABSON NEWSLETTER</text>
+
+      <!-- Target row -->
+      <rect x="60" y="248" width="1020" height="44" fill="#fdf9f0"/>
+      <line x1="60" y1="248" x2="1080" y2="248" stroke="#c8b48c" stroke-width="1"/>
+      <text x="75" y="268" font-family="JetBrains Mono, monospace" font-size="9" letter-spacing="1.5" fill="#9e6910">MILESTONE</text>
+      <text x="97" y="285" text-anchor="middle" font-family="Newsreader, serif" font-size="11" font-style="italic" fill="#18120a">20 warm intros</text>
+      <text x="298" y="285" text-anchor="middle" font-family="Newsreader, serif" font-size="11" font-style="italic" fill="#18120a">1 school live (ref.)</text>
+      <text x="535" y="285" text-anchor="middle" font-family="Newsreader, serif" font-size="11" font-style="italic" fill="#18120a">10 demos done</text>
+      <text x="880" y="285" text-anchor="middle" font-family="Newsreader, serif" font-size="11" font-style="italic" fill="#c0392b" font-weight="500">3–5 signed schools · ₨ 3–8 lakh ARR</text>
+
+      <!-- Baseline -->
+      <line x1="60" y1="294" x2="1080" y2="294" stroke="#c8b48c" stroke-width=".8"/>
+
+      <!-- Funnel progress visual -->
+      <text x="75" y="320" font-family="JetBrains Mono, monospace" font-size="9" letter-spacing="1.5" fill="#9e6910">PIPELINE</text>
+
+      <!-- Funnel bars -->
+      <rect x="70" y="326" width="100" height="18" fill="#c98a1e" opacity=".9" rx="2"/>
+      <text x="175" y="338" font-family="Newsreader, serif" font-size="11" fill="#18120a">20 intros (100%)</text>
+
+      <rect x="70" y="352" width="60" height="18" fill="#c98a1e" opacity=".75" rx="2"/>
+      <text x="135" y="364" font-family="Newsreader, serif" font-size="11" fill="#18120a">12 demos (60%)</text>
+
+      <rect x="70" y="378" width="40" height="18" fill="#c98a1e" opacity=".60" rx="2"/>
+      <text x="115" y="390" font-family="Newsreader, serif" font-size="11" fill="#18120a">7 proposals (35%)</text>
+
+      <rect x="70" y="404" width="20" height="18" fill="#c0392b" rx="2"/>
+      <text x="95" y="416" font-family="Newsreader, serif" font-size="11" fill="#c0392b" font-weight="600">4 closed (20%)</text>
+
+      <text x="550" y="450" text-anchor="middle" font-family="Newsreader, serif" font-size="12" font-style="italic" fill="#8a7760">— Fig. 7.1 · 90-day operational plan targeting Baishakh buying window · Jan 1 start —</text>
+    </svg>
+  </div>
+</div>
+</section>
+
+<!-- ═══════════════ §08 KPIS ═══════════════ -->
+<section style="background:var(--ivory-deep);">
+<div class="container">
+  <div class="section-num">§ 08 — The Numbers That Matter</div>
+  <h2 class="section-title">Twelve KPIs, <em>no vanity metrics.</em></h2>
+  <p class="section-deck">Track only what tells you whether the business is healthy or dying. Three categories: Sales Engine, Product Health, Financial. Review weekly for Sales Engine; monthly for the rest.</p>
+
+  <div class="kpi-grid">
+
+    <div class="kpi">
+      <div class="kpi-cat">Sales Engine</div>
+      <div class="kpi-metric">Sales cycle length by ICP</div>
+      <div class="kpi-target">Target: ICP-A <strong>≤ 90 days</strong></div>
+      <p class="kpi-why">The only number that tells you if your sales motion is working. If ICP-A takes 180 days, the intro quality is wrong or the demo isn't landing.</p>
+    </div>
+
+    <div class="kpi">
+      <div class="kpi-cat">Sales Engine</div>
+      <div class="kpi-metric">Demo-to-proposal conversion</div>
+      <div class="kpi-target">Target: <strong>≥ 60%</strong></div>
+      <p class="kpi-why">Below 60% means your discovery is weak — you're demoing the wrong thing to the wrong pain. Stop demoing more. Ask better discovery questions.</p>
+    </div>
+
+    <div class="kpi">
+      <div class="kpi-cat">Sales Engine</div>
+      <div class="kpi-metric">Proposal-to-close rate</div>
+      <div class="kpi-target">Target: <strong>≥ 35%</strong></div>
+      <p class="kpi-why">Below 35% means the proposal doesn't match what the principal actually cares about, or the reference check is missing. Not a negotiation problem.</p>
+    </div>
+
+    <div class="kpi">
+      <div class="kpi-cat">Sales Engine</div>
+      <div class="kpi-metric">Customer acquisition cost (CAC)</div>
+      <div class="kpi-target">Target: <strong>≤ 1× first-year ACV</strong></div>
+      <p class="kpi-why">Anything above 1× ACV means you're buying customers, not acquiring them. Push channel partnerships — they drop CAC dramatically vs. direct sales.</p>
+    </div>
+
+    <div class="kpi">
+      <div class="kpi-cat">Product Health</div>
+      <div class="kpi-metric">Day-14 activation rate</div>
+      <div class="kpi-target">Target: <strong>≥ 80%</strong> of schools fully live</div>
+      <p class="kpi-why">The best predictor of renewal. A school that isn't live in 14 days has a 3× churn risk versus one that is. Track this for every new customer.</p>
+    </div>
+
+    <div class="kpi">
+      <div class="kpi-cat">Product Health</div>
+      <div class="kpi-metric">Daily active admin rate</div>
+      <div class="kpi-target">Target: <strong>≥ 5 days/week</strong> per school</div>
+      <p class="kpi-why">If an admin logs in only on report-card day, you're a report-card printer, not a platform. Daily use = switching cost = retention.</p>
+    </div>
+
+    <div class="kpi">
+      <div class="kpi-cat">Product Health</div>
+      <div class="kpi-metric">Parent app activation</div>
+      <div class="kpi-target">Target: <strong>≥ 60%</strong> of parents within 30 days</div>
+      <p class="kpi-why">Parent app adoption is your virality and your renewal lever. If parents love the app, the principal gets pressure to keep the subscription from parents — not just from you.</p>
+    </div>
+
+    <div class="kpi">
+      <div class="kpi-cat">Product Health</div>
+      <div class="kpi-metric">Support ticket volume per school</div>
+      <div class="kpi-target">Target: <strong>≤ 3 tickets/month</strong> by month 3</div>
+      <p class="kpi-why">More than 3 tickets/month in month 3+ means onboarding failed. Don't hire more support. Fix the onboarding.</p>
+    </div>
+
+    <div class="kpi">
+      <div class="kpi-cat">Financial</div>
+      <div class="kpi-metric">Annual recurring revenue (ARR)</div>
+      <div class="kpi-target">Target: <strong>₨ 50L by month 18</strong></div>
+      <p class="kpi-why">This maps to ~100 Standard-tier schools at avg 200 students. The benchmark for Series A conversations with local funds (rough, as ecosystem is thin).</p>
+    </div>
+
+    <div class="kpi">
+      <div class="kpi-cat">Financial</div>
+      <div class="kpi-metric">Net revenue retention (NRR)</div>
+      <div class="kpi-target">Target: <strong>≥ 110%</strong></div>
+      <p class="kpi-why">NRR over 100% means your existing customers grow faster than they churn. You hit 110% by upselling modules — payroll, transport, library — to already-live schools.</p>
+    </div>
+
+    <div class="kpi">
+      <div class="kpi-cat">Financial</div>
+      <div class="kpi-metric">Gross margin per school</div>
+      <div class="kpi-target">Target: <strong>≥ 55%</strong> by year 2</div>
+      <p class="kpi-why">Year 1 margin will be negative or near zero due to implementation costs. Year 2 should be 55%+ as schools self-operate and support volume drops. Below 55% = pricing or ops problem.</p>
+    </div>
+
+    <div class="kpi">
+      <div class="kpi-cat">Financial</div>
+      <div class="kpi-metric">Accounts receivable age</div>
+      <div class="kpi-target">Target: <strong>≤ 30 days</strong> avg.</div>
+      <p class="kpi-why">The most under-tracked number in Nepali SaaS. If your receivables age past 90 days, you're lending, not selling. Annual upfront billing and auto-throttling solve this before it becomes a crisis.</p>
+    </div>
+
+  </div>
+</div>
+</section>
+
+<!-- ═══════════════ CALLOUT ═══════════════ -->
+<div class="container">
+  <div class="callout">
+    <span class="callout-label">Field Rule · § 05–08</span>
+    <p class="callout-text">In Nepal, a demo closes a meeting. A reference school closes a deal. <em>A delighted admin staff at an existing school closes your next ten deals.</em> Invest your best people in the schools you already have.</p>
+  </div>
+</div>
+
+<!-- ═══════════════ §09 DO / DON'T ═══════════════ -->
+<section>
+<div class="container">
+  <div class="section-num">§ 09 — Field Rules</div>
+  <h2 class="section-title">The <em>cheat sheet.</em></h2>
+  <p class="section-deck">Compressed from conversations with school owners, principals, and the few EdTech founders who have navigated this market and survived. Follow these exactly.</p>
+
+  <div class="dodonts">
+
+    <div class="dos">
+      <h3 class="dd-head">Do <em>this.</em></h3>
+      <ul class="dd-list">
+        <li>Lead with pain, not product. <span>Open every meeting with "Tell me how you currently handle [X]." Don't touch the laptop for the first 20 minutes.</span></li>
+        <li>Show up at PABSON/HISSAN events every year, without fail. <span>Presence at two events creates more pipeline than six months of cold outreach.</span></li>
+        <li>Give one school free for a year in exchange for a reference. <span>Your reference school is your most valuable marketing asset. Invest in it.</span></li>
+        <li>Guarantee Day-14 go-live in writing. <span>This differentiates you from every competitor who has burned schools with 4-month rollouts.</span></li>
+        <li>Send your Nepali-language collateral via WhatsApp. <span>Principals don't open email attachments. They open WhatsApp forwards from trusted contacts.</span></li>
+        <li>Keep the proposal to one page. <span>A 12-page RFP-style document signals you don't understand the buyer.</span></li>
+        <li>Build with your first five customers, not for them. <span>Their feedback is your product roadmap. Put them on a weekly call.</span></li>
+        <li>Discount setup fee, never subscription. <span>Protect ARR integrity from day one; you can't undo per-student pricing erosion.</span></li>
+      </ul>
+    </div>
+
+    <div class="donts">
+      <h3 class="dd-head">Don't do <em>this.</em></h3>
+      <ul class="dd-list">
+        <li>Cold-call a principal's mobile directly. <span>It works 5% of the time and ruins your reputation in the 95%. Get an intro first, always.</span></li>
+        <li>Reach out during Dashain or Tihar. <span>Even if you need the deal. A message sent during festivals communicates disrespect and gets ignored.</span></li>
+        <li>Do a full-platform demo before you understand their pain. <span>Showing everything confuses and overwhelms. Show the one thing that hurts them most.</span></li>
+        <li>Compete on price against incumbents. <span>Veda will match any discount you offer and win on trust. Beat them on something they can't copy.</span></li>
+        <li>Promise custom features to close deals. <span>Every custom commitment becomes a support debt. Close on the standard product or don't close at all.</span></li>
+        <li>Leave onboarding to the school itself. <span>Schools that onboard themselves fail. Send someone. Your retention rate depends on it.</span></li>
+        <li>Target government schools as your first customer. <span>Long procurement cycles and approval chains will drain a new company's runway before a PO appears.</span></li>
+        <li>Build for the Kathmandu Valley alone. <span>Valley competition is intense; your lowest-CAC and highest-retention schools are often outside the valley.</span></li>
+      </ul>
+    </div>
+
+  </div>
+</div>
+</section>
+
+<!-- ═══════════════ FOOTER ═══════════════ -->
+<footer class="colophon">
+<div class="container">
+  <div class="colophon-grid">
+    <div>
+      <h4>Vol. 04 of Four</h4>
+      <p>This closes the Nepal EdTech series: <em style="color:var(--saffron);">Vol. 01 — What exists</em> · <em style="color:var(--saffron);">Vol. 02 — What's missing</em> · <em style="color:var(--saffron);">Vol. 03 — What will try to kill you</em> · <em style="color:var(--saffron);">Vol. 04 — How to actually sell.</em> Read end-to-end, they constitute a full founder brief for a Nepali EdTech startup: market map, opportunity map, risk register, and go-to-market playbook.</p>
+      <p>The talk-tracks in §05 are illustrative. Adapt them to your product and your ICP. The calendar in §02 is structural to the Nepali academic system and unlikely to change; treat it as fixed. The KPIs in §08 are directional benchmarks, not guaranteed outcomes — every market has its own baseline.</p>
+    </div>
+    <div>
+      <h4>Composition</h4>
+      <p>Set in <em style="color:var(--saffron);font-style:italic;">Fraunces</em> &amp; <em style="color:var(--saffron);font-style:italic;">Newsreader</em>, metadata in JetBrains Mono.</p>
+      <p style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--ink-mute);letter-spacing:.1em;margin-top:24px;">— END OF GTM PLAYBOOK —</p>
+    </div>
+  </div>
+</div>
+</footer>
+
+</body>
+</html>
