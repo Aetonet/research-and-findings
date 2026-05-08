@@ -1,0 +1,3276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Veda — Strategic &amp; Technical Design Document</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT,WONK@9..144,300..900,0..100,0..1&family=Source+Serif+4:opsz,wght@8..60,300..700&family=IBM+Plex+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10.9.1/dist/mermaid.min.js"></script>
+<style>
+:root {
+  --bg: #FAF6EF;
+  --bg-soft: #F3ECDF;
+  --paper: #FFFCF7;
+  --ink: #1C1814;
+  --ink-soft: #4A4339;
+  --ink-muted: #7A6F60;
+  --rule: #E5DBC8;
+  --rule-strong: #C9BCA0;
+  --accent: #8B2635;        /* oxblood */
+  --accent-soft: #B45462;
+  --forest: #2D5F4E;
+  --amber: #B8860B;
+  --indigo: #2A3D66;
+  --code-bg: #F5EFE3;
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: "Source Serif 4", "Iowan Old Style", Georgia, serif;
+  font-size: 17px;
+  line-height: 1.62;
+  font-feature-settings: "kern", "liga", "onum";
+}
+
+/* === Cover === */
+.cover {
+  min-height: 88vh;
+  padding: 6rem 7vw 5rem;
+  background:
+    radial-gradient(ellipse at 80% 10%, rgba(139,38,53,0.06), transparent 55%),
+    radial-gradient(ellipse at 10% 90%, rgba(45,95,78,0.05), transparent 55%),
+    var(--bg);
+  border-bottom: 1px solid var(--rule);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: relative;
+  overflow: hidden;
+}
+.cover::before {
+  content: "";
+  position: absolute; inset: 0;
+  background-image:
+    repeating-linear-gradient(0deg, transparent 0 39px, rgba(28,24,20,0.025) 39px 40px);
+  pointer-events: none;
+}
+.cover-eyebrow {
+  font-family: "IBM Plex Sans", sans-serif;
+  font-size: 0.78rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--accent);
+  font-weight: 500;
+  margin-bottom: 2rem;
+}
+.cover-eyebrow::before {
+  content: "—— ";
+  color: var(--ink-muted);
+  letter-spacing: 0;
+}
+.cover h1 {
+  font-family: "Fraunces", "Times New Roman", serif;
+  font-weight: 300;
+  font-variation-settings: "opsz" 144, "SOFT" 30, "WONK" 1;
+  font-size: clamp(4rem, 13vw, 12rem);
+  line-height: 0.88;
+  letter-spacing: -0.04em;
+  margin: 0 0 2rem;
+  color: var(--ink);
+}
+.cover h1 em {
+  font-style: italic;
+  font-variation-settings: "opsz" 144, "SOFT" 100, "WONK" 1;
+  color: var(--accent);
+}
+.cover-tagline {
+  font-family: "Fraunces", serif;
+  font-weight: 300;
+  font-style: italic;
+  font-size: clamp(1.3rem, 2.2vw, 1.8rem);
+  max-width: 38ch;
+  color: var(--ink-soft);
+  line-height: 1.4;
+  margin-bottom: 3rem;
+}
+.cover-meta {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 2rem;
+  border-top: 1px solid var(--rule-strong);
+  padding-top: 2rem;
+  font-family: "IBM Plex Sans", sans-serif;
+  font-size: 0.85rem;
+}
+.cover-meta dt {
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  font-size: 0.7rem;
+  color: var(--ink-muted);
+  margin-bottom: 0.4rem;
+}
+.cover-meta dd {
+  margin: 0;
+  color: var(--ink);
+  font-weight: 500;
+}
+
+/* === Layout === */
+.layout {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  max-width: 1480px;
+  margin: 0 auto;
+  gap: 0;
+}
+@media (max-width: 980px) {
+  .layout { grid-template-columns: 1fr; }
+}
+
+/* === TOC === */
+.toc {
+  position: sticky;
+  top: 0;
+  align-self: start;
+  height: 100vh;
+  overflow-y: auto;
+  padding: 4rem 1.5rem 4rem 2rem;
+  border-right: 1px solid var(--rule);
+  background: var(--bg);
+  font-family: "IBM Plex Sans", sans-serif;
+}
+@media (max-width: 980px) {
+  .toc { position: static; height: auto; border-right: none; border-bottom: 1px solid var(--rule); padding: 2rem; }
+}
+.toc-title {
+  font-family: "Fraunces", serif;
+  font-weight: 400;
+  font-style: italic;
+  font-size: 0.9rem;
+  letter-spacing: 0.05em;
+  color: var(--ink-muted);
+  text-transform: uppercase;
+  margin: 0 0 1.5rem;
+}
+.toc ol {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  counter-reset: toc;
+}
+.toc li {
+  margin-bottom: 0.05rem;
+}
+.toc a {
+  display: flex;
+  gap: 0.9rem;
+  align-items: baseline;
+  padding: 0.55rem 0;
+  text-decoration: none;
+  color: var(--ink-soft);
+  font-size: 0.83rem;
+  line-height: 1.35;
+  border-bottom: 1px dotted transparent;
+  transition: color 0.15s, border-color 0.15s;
+}
+.toc a:hover {
+  color: var(--accent);
+  border-bottom-color: var(--accent);
+}
+.toc-num {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.7rem;
+  color: var(--ink-muted);
+  letter-spacing: 0.05em;
+  min-width: 1.7rem;
+}
+.toc a:hover .toc-num { color: var(--accent); }
+.toc-label { flex: 1; }
+
+/* === Article === */
+article {
+  padding: 5rem 6rem 8rem;
+  max-width: 920px;
+  background: var(--paper);
+  box-shadow: 0 0 0 1px var(--rule), 0 30px 80px -40px rgba(28,24,20,0.18);
+}
+@media (max-width: 1200px) { article { padding: 4rem 4rem 6rem; } }
+@media (max-width: 720px)  { article { padding: 2.5rem 1.5rem 4rem; box-shadow: none; } }
+
+/* === Typography === */
+article h1 {
+  font-family: "Fraunces", serif;
+  font-weight: 400;
+  font-variation-settings: "opsz" 144, "SOFT" 50;
+  font-size: 2.6rem;
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  margin: 0 0 0.6rem;
+  display: none; /* Title shown in cover */
+}
+article h2 {
+  font-family: "Fraunces", serif;
+  font-weight: 400;
+  font-variation-settings: "opsz" 90, "SOFT" 30;
+  font-size: 2.3rem;
+  line-height: 1.1;
+  letter-spacing: -0.022em;
+  margin: 5rem 0 1.5rem;
+  padding-top: 3rem;
+  border-top: 2px solid var(--ink);
+  position: relative;
+  color: var(--ink);
+}
+article h2::before {
+  content: "";
+  position: absolute;
+  top: -2px; left: 0;
+  width: 60px; height: 2px;
+  background: var(--accent);
+}
+article h2:first-of-type { margin-top: 1rem; }
+article h3 {
+  font-family: "Fraunces", serif;
+  font-weight: 500;
+  font-variation-settings: "opsz" 36;
+  font-size: 1.5rem;
+  line-height: 1.25;
+  letter-spacing: -0.012em;
+  margin: 3rem 0 1rem;
+  color: var(--ink);
+}
+article h4 {
+  font-family: "IBM Plex Sans", sans-serif;
+  font-weight: 600;
+  font-size: 0.95rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--accent);
+  margin: 2.2rem 0 0.8rem;
+}
+article p {
+  margin: 0 0 1.1rem;
+  hyphens: auto;
+}
+article p + p {
+  text-indent: 0;
+}
+
+/* Drop cap on first paragraph after first h2 */
+article h2:first-of-type + p::first-letter {
+  font-family: "Fraunces", serif;
+  font-weight: 500;
+  font-variation-settings: "opsz" 144, "SOFT" 80;
+  font-size: 4.4em;
+  float: left;
+  line-height: 0.85;
+  margin: 0.08em 0.08em 0 -0.04em;
+  color: var(--accent);
+}
+
+article a {
+  color: var(--accent);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+  text-decoration-color: var(--accent-soft);
+}
+article a:hover { text-decoration-thickness: 2px; }
+
+article strong {
+  color: var(--ink);
+  font-weight: 600;
+}
+
+article ul, article ol {
+  padding-left: 1.4rem;
+  margin: 0 0 1.2rem;
+}
+article li {
+  margin-bottom: 0.35rem;
+}
+article ul li::marker { color: var(--accent); }
+
+article hr {
+  border: none;
+  height: 1px;
+  background: linear-gradient(to right, transparent, var(--rule-strong), transparent);
+  margin: 4rem 0;
+}
+
+/* === Inline tags === */
+.tag {
+  display: inline-block;
+  font-family: "IBM Plex Sans", sans-serif;
+  font-size: 0.66rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  padding: 0.18em 0.6em;
+  border-radius: 2px;
+  vertical-align: 0.12em;
+  margin-right: 0.35em;
+}
+.tag-fact   { background: rgba(45,95,78,0.12);   color: var(--forest); border: 1px solid rgba(45,95,78,0.3); }
+.tag-assume { background: rgba(184,134,11,0.13); color: var(--amber);  border: 1px solid rgba(184,134,11,0.3); }
+.tag-rec    { background: rgba(139,38,53,0.10);  color: var(--accent); border: 1px solid rgba(139,38,53,0.28); }
+
+/* === Tables === */
+.table-wrap {
+  margin: 1.8rem 0 2.4rem;
+  overflow-x: auto;
+  border-top: 2px solid var(--ink);
+  border-bottom: 2px solid var(--ink);
+  background: var(--paper);
+}
+article table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: "IBM Plex Sans", sans-serif;
+  font-size: 0.86rem;
+  line-height: 1.45;
+}
+article th {
+  text-align: left;
+  font-family: "Fraunces", serif;
+  font-style: italic;
+  font-weight: 500;
+  font-size: 0.85rem;
+  color: var(--ink);
+  padding: 0.85rem 1rem;
+  border-bottom: 1px solid var(--ink);
+  background: var(--bg-soft);
+  vertical-align: bottom;
+}
+article td {
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid var(--rule);
+  vertical-align: top;
+  color: var(--ink-soft);
+}
+article tr:last-child td { border-bottom: none; }
+article tr:hover td { background: rgba(139,38,53,0.025); }
+article td strong { color: var(--ink); }
+
+/* === Code === */
+article code {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.84em;
+  background: var(--code-bg);
+  padding: 0.1em 0.38em;
+  border-radius: 2px;
+  color: var(--ink);
+  border: 1px solid var(--rule);
+}
+article pre {
+  font-family: "JetBrains Mono", monospace;
+  background: var(--code-bg);
+  border: 1px solid var(--rule-strong);
+  border-left: 3px solid var(--accent);
+  padding: 1.2rem 1.4rem;
+  border-radius: 2px;
+  font-size: 0.82rem;
+  line-height: 1.55;
+  overflow-x: auto;
+  margin: 1.6rem 0;
+  color: var(--ink);
+}
+article pre code {
+  background: transparent;
+  border: none;
+  padding: 0;
+  font-size: inherit;
+}
+
+/* === Blockquote === */
+article blockquote {
+  margin: 2rem 0;
+  padding: 1.4rem 1.8rem;
+  border-left: 3px solid var(--accent);
+  background: linear-gradient(to right, rgba(139,38,53,0.06), transparent);
+  font-family: "Fraunces", serif;
+  font-style: italic;
+  font-size: 1.15rem;
+  line-height: 1.5;
+  color: var(--ink);
+}
+article blockquote p { margin: 0; }
+article blockquote strong { font-style: normal; }
+
+/* === Mermaid === */
+.mermaid-wrap {
+  margin: 2rem -1rem;
+  padding: 2rem 1rem;
+  background: var(--paper);
+  border: 1px solid var(--rule);
+  border-radius: 2px;
+  overflow-x: auto;
+  text-align: center;
+}
+.mermaid {
+  font-family: "IBM Plex Sans", sans-serif !important;
+  background: transparent !important;
+  border: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  text-align: center;
+  display: inline-block;
+  min-width: 100%;
+}
+
+/* === Closing flourish === */
+article > p:last-child {
+  margin-top: 3rem;
+  padding-top: 2rem;
+  border-top: 1px solid var(--rule);
+  font-family: "Fraunces", serif;
+  font-style: italic;
+  text-align: center;
+  color: var(--ink-muted);
+}
+
+/* === Footer === */
+footer {
+  text-align: center;
+  padding: 3rem 2rem;
+  font-family: "IBM Plex Sans", sans-serif;
+  font-size: 0.78rem;
+  letter-spacing: 0.1em;
+  color: var(--ink-muted);
+  text-transform: uppercase;
+  background: var(--bg);
+  border-top: 1px solid var(--rule);
+}
+footer span {
+  color: var(--accent);
+}
+
+/* === Print === */
+@media print {
+  .toc, footer, .cover { display: none; }
+  body { background: white; font-size: 11pt; }
+  article { box-shadow: none; padding: 0; }
+  article h2 { page-break-before: always; }
+  article h2:first-of-type { page-break-before: auto; }
+  .table-wrap, .mermaid-wrap, pre { page-break-inside: avoid; }
+}
+
+/* Scrollbar styling for the TOC */
+.toc::-webkit-scrollbar { width: 6px; }
+.toc::-webkit-scrollbar-track { background: transparent; }
+.toc::-webkit-scrollbar-thumb { background: var(--rule-strong); border-radius: 3px; }
+.toc::-webkit-scrollbar-thumb:hover { background: var(--ink-muted); }
+</style>
+</head>
+<body>
+
+<header class="cover">
+  <div>
+    <div class="cover-eyebrow">Strategic &amp; Technical Design Brief</div>
+    <h1>Ve<em>d</em>a</h1>
+    <p class="cover-tagline">A multi-disciplinary architecture for a global, AI-native education platform &mdash; designed from the learner's evolving knowledge state, not the course.</p>
+  </div>
+  <dl class="cover-meta">
+    <div><dt>Document</dt><dd>v1.0 &middot; Comprehensive Brief</dd></div>
+    <div><dt>Disciplines</dt><dd>11 &middot; Engineering, Strategy, Design</dd></div>
+    <div><dt>Sections</dt><dd>14 &middot; Executive to Final Recommendation</dd></div>
+    <div><dt>Posture</dt><dd>Opinionated &middot; Falsifiable &middot; Phased</dd></div>
+  </dl>
+</header>
+
+<div class="layout">
+  <nav class="toc" aria-label="Document sections"><div class="toc-inner"><h3 class="toc-title">Contents</h3><ol><li><a href="#1-executive-summary"><span class="toc-num">01</span><span class="toc-label">Executive Summary</span></a></li><li><a href="#2-educational-technology-scope"><span class="toc-num">02</span><span class="toc-label">Educational Technology</span></a></li><li><a href="#3-complete-technology-stack"><span class="toc-num">03</span><span class="toc-label">Complete Technology Stack</span></a></li><li><a href="#4-database-architecture--polyglot-persistence"><span class="toc-num">04</span><span class="toc-label">Database</span></a></li><li><a href="#5-cloud-architecture"><span class="toc-num">05</span><span class="toc-label">Cloud Architecture</span></a></li><li><a href="#6-system-architecture"><span class="toc-num">06</span><span class="toc-label">System Architecture</span></a></li><li><a href="#7-ai-powered-educational-features"><span class="toc-num">07</span><span class="toc-label">AI-Powered Educational</span></a></li><li><a href="#8-business-model--economics"><span class="toc-num">08</span><span class="toc-label">Business Model &amp;</span></a></li><li><a href="#9-security-architecture"><span class="toc-num">09</span><span class="toc-label">Security Architecture</span></a></li><li><a href="#10-scalability--performance"><span class="toc-num">10</span><span class="toc-label">Scalability &amp;</span></a></li><li><a href="#11-competitive-market-analysis"><span class="toc-num">11</span><span class="toc-label">Competitive Market</span></a></li><li><a href="#12-product-roadmap"><span class="toc-num">12</span><span class="toc-label">Product Roadmap</span></a></li><li><a href="#13-ux--service-design"><span class="toc-num">13</span><span class="toc-label">UX &amp; Service Design</span></a></li><li><a href="#14-final-recommendations"><span class="toc-num">14</span><span class="toc-label">Final Recommendations</span></a></li><li><a href="#closing-note">Closing Note</a></li></ol></div></nav>
+  <article>
+    <blockquote>
+<p><strong>A multi-disciplinary architecture brief for a global,
+AI-native education platform.</strong> Authored from the combined
+perspective of: Service Design • Business Architecture • Software/Cloud
+Engineering • AI/ML • Economics • Market Strategy • Data • Security.</p>
+</blockquote>
+<p><strong>Document conventions used throughout</strong></p>
+<ul>
+<li><span class="tag tag-fact">Fact</span> — drawn from generally
+established industry knowledge.</li>
+<li><span class="tag tag-assume">Assumption</span> — explicitly modeled
+estimate; replace with measured data before commitment.</li>
+<li><span class="tag tag-rec">Recommendation</span> — the team's
+prescriptive call.</li>
+<li>All financial figures are illustrative scenarios, not
+predictions.</li>
+</ul>
+<hr />
+<h2 id="1-executive-summary">1. Executive Summary</h2>
+<h3 id="11-vision">1.1 Vision</h3>
+<p>Veda is an <strong>AI-native, multi-stakeholder learning operating
+system</strong> built to make personalized, mastery-based education
+accessible from a primary school in rural Nepal to an enterprise
+reskilling program in Berlin — on the same platform, with the same
+underlying intelligence layer.</p>
+<h3 id="12-mission">1.2 Mission</h3>
+<p>Eliminate the three structural failures of mainstream edtech:</p>
+<ol type="1">
+<li><strong>One-size content</strong> that ignores learner state, pace,
+and language.</li>
+<li><strong>Disconnected stacks</strong> — LMS, assessment, analytics,
+communication living in separate silos.</li>
+<li><strong>Outcome blindness</strong> — platforms that measure logins
+instead of learning.</li>
+</ol>
+<p>Veda unifies content, pedagogy, assessment, and intelligence into a
+single graph-backed system whose core unit is <strong>the learner's
+evolving knowledge state</strong>, not the course.</p>
+<h3 id="13-core-value-proposition">1.3 Core Value Proposition</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr class="header">
+<th>Stakeholder</th>
+<th>What Veda Delivers</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Students</td>
+<td>Adaptive, multilingual learning paths with an always-available AI
+tutor grounded in their curriculum.</td>
+</tr>
+<tr class="even">
+<td>Teachers</td>
+<td>Automated grading, plagiarism/AI-content detection, classroom
+analytics, and lesson-plan co-authoring.</td>
+</tr>
+<tr class="odd">
+<td>Institutions</td>
+<td>A single multi-tenant platform replacing 4–6 vendors (LMS,
+proctoring, analytics, comms, content).</td>
+</tr>
+<tr class="even">
+<td>Parents</td>
+<td>Transparent, jargon-free progress with concrete next-step
+suggestions.</td>
+</tr>
+<tr class="odd">
+<td>Governments</td>
+<td>Population-level learning analytics, equity dashboards, and
+curriculum alignment tooling.</td>
+</tr>
+<tr class="even">
+<td>Enterprises</td>
+<td>Skill-graph-based reskilling with measurable proficiency rather than
+completion certificates.</td>
+</tr>
+<tr class="odd">
+<td>Researchers</td>
+<td>Anonymized, consented learning datasets and an experimentation
+API.</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="14-unique-competitive-advantages">1.4 Unique Competitive
+Advantages</h3>
+<ol type="1">
+<li><strong>Knowledge-graph-first architecture.</strong> Every concept,
+prerequisite, and assessment item is a node — enabling true mastery
+tracking instead of percentage-based grading.</li>
+<li><strong>Composable AI tutor</strong> that uses RAG over the
+institution's <em>own</em> curriculum, not generic web data.</li>
+<li><strong>Offline-first mobile core.</strong> Critical for emerging
+markets where most growth in edtech demand exists.</li>
+<li><strong>Multi-tenant by design</strong> — same code path serves a
+single school, a state government, and an enterprise L&amp;D org.</li>
+<li><strong>Open data exports &amp; LTI 1.3 compliance</strong> — escape
+velocity from vendor lock-in becomes a marketing asset.</li>
+</ol>
+<h3 id="15-target-audience-tiered">1.5 Target Audience (Tiered)</h3>
+<ul>
+<li><strong>Tier 1 (Wedge):</strong> Mid-sized K-12 schools and
+universities in South Asia, Southeast Asia, and Africa — currently
+underserved by Canvas/Blackboard, overserved by Google Classroom (which
+lacks pedagogy depth).</li>
+<li><strong>Tier 2 (Expansion):</strong> Test-prep &amp; vocational
+training institutes; corporate L&amp;D for SMBs.</li>
+<li><strong>Tier 3 (Strategic):</strong> Government education
+ministries; large enterprise reskilling.</li>
+</ul>
+<h3 id="16-key-business-opportunities">1.6 Key Business
+Opportunities</h3>
+<p><span class="tag tag-fact">Fact</span> The global edtech market is
+large and fragmented; mature players dominate Western higher-ed but
+emerging-market K-12 and enterprise upskilling remain structurally
+underserved. <span class="tag tag-assume">Assumption</span> Specific
+TAM/SAM figures vary widely between analyst firms; we therefore frame
+opportunity in terms of <strong>wedge, beachhead, and expansion</strong>
+rather than a fabricated TAM number.</p>
+<h3 id="17-long-term-scalability-potential">1.7 Long-Term Scalability
+Potential</h3>
+<p>Because the core data structure is a knowledge graph, Veda can extend
+horizontally into adjacent verticals — medical CME, legal CLE,
+professional certifications — without re-architecting. The same
+recommendation engine that suggests the next algebra concept can suggest
+the next surgical technique module.</p>
+<hr />
+<h2 id="2-educational-technology-scope">2. Educational Technology
+Scope</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr class="header">
+<th>Domain</th>
+<th>Description</th>
+<th>Veda Differentiation</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>LMS</strong></td>
+<td>Course delivery, enrollment, grading, calendars.</td>
+<td>Graph-native; courses are <em>views</em> over the concept
+graph.</td>
+</tr>
+<tr class="even">
+<td><strong>AI Tutor</strong></td>
+<td>Personalized assistant per learner.</td>
+<td>Curriculum-grounded RAG; refuses to answer outside scoped
+knowledge.</td>
+</tr>
+<tr class="odd">
+<td><strong>Assessment Engine</strong></td>
+<td>Quizzes, exams, proctoring, item analysis.</td>
+<td>Adaptive item selection via Bayesian Knowledge Tracing.</td>
+</tr>
+<tr class="even">
+<td><strong>Analytics</strong></td>
+<td>Performance &amp; engagement intelligence.</td>
+<td>Outcome-based (mastery delta) not vanity metrics.</td>
+</tr>
+<tr class="odd">
+<td><strong>Collaboration</strong></td>
+<td>Messaging, classrooms, threaded discussion.</td>
+<td>Discussions auto-link to concept nodes for retrieval.</td>
+</tr>
+<tr class="even">
+<td><strong>Content System</strong></td>
+<td>Video, PDF, interactive, SCORM/xAPI.</td>
+<td>Auto-segmented video w/ concept-level chapter index.</td>
+</tr>
+<tr class="odd">
+<td><strong>Gamification</strong></td>
+<td>XP, badges, streaks, leaderboards.</td>
+<td>Mastery-pegged (cannot be farmed via grinding).</td>
+</tr>
+<tr class="even">
+<td><strong>Mobile Learning</strong></td>
+<td>Offline-first Android/iOS.</td>
+<td>CRDT-based offline sync; works on 2G.</td>
+</tr>
+<tr class="odd">
+<td><strong>Enterprise Learning</strong></td>
+<td>Corporate L&amp;D modules.</td>
+<td>Skill graph maps to job roles, not courses.</td>
+</tr>
+<tr class="even">
+<td><strong>Research Platform</strong></td>
+<td>De-identified learning analytics.</td>
+<td>Differential-privacy-protected exports; ethics board gating.</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2 id="3-complete-technology-stack">3. Complete Technology Stack</h2>
+<h3 id="31-programming-languages--selection-matrix">3.1 Programming
+Languages — Selection Matrix</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr class="header">
+<th>Language</th>
+<th>Where Used</th>
+<th>Why Chosen</th>
+<th>Tradeoffs</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>TypeScript</strong></td>
+<td>Frontend (web, mobile-RN, Node services)</td>
+<td>Strong types catch entire bug classes; massive ecosystem; full-stack
+reuse.</td>
+<td>Build complexity; runtime is still JS.</td>
+</tr>
+<tr class="even">
+<td><strong>Python</strong></td>
+<td>AI/ML, data pipelines, internal tooling</td>
+<td>Default lingua franca of ML; richest library ecosystem.</td>
+<td>GIL limits CPU concurrency; slower than Go/Rust for hot paths.</td>
+</tr>
+<tr class="odd">
+<td><strong>Go</strong></td>
+<td>High-throughput services (API gateway, real-time, ingestion)</td>
+<td>Predictable latency, low memory, simple deploy, great concurrency
+primitives.</td>
+<td>Verbose error handling; less expressive than Rust for complex
+types.</td>
+</tr>
+<tr class="even">
+<td><strong>Rust</strong></td>
+<td>Performance-critical components (assessment proctoring agent, video
+transcode orchestration)</td>
+<td>Memory safety + C-class speed; ideal where reliability is
+non-negotiable.</td>
+<td>Steep learning curve; slower iteration.</td>
+</tr>
+<tr class="odd">
+<td><strong>Kotlin</strong></td>
+<td>Android native modules</td>
+<td>First-class Android support; coroutines for offline sync.</td>
+<td>Adds platform-specific build complexity.</td>
+</tr>
+<tr class="even">
+<td><strong>Swift</strong></td>
+<td>iOS native modules</td>
+<td>Required for high-quality iOS UX, ARKit integration.</td>
+<td>Apple-ecosystem lock-in.</td>
+</tr>
+</tbody>
+</table></div>
+<p><span class="tag tag-rec">Recommendation</span>
+<strong>Recommendation:</strong> TypeScript + Python + Go is the
+<strong>80/20 stack</strong>. Reach for Rust only when profiling proves
+it. Reach for Kotlin/Swift only for native modules wrapping React Native
+or Flutter.</p>
+<h3 id="32-frontend-frameworks">3.2 Frontend Frameworks</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr class="header">
+<th>Framework</th>
+<th>Advantages</th>
+<th>Disadvantages</th>
+<th>Best Use in Veda</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>React + Next.js</strong></td>
+<td>Mature, huge talent pool, RSC for performance, ISR for marketing
+pages.</td>
+<td>Bundle size if undisciplined; hydration complexity.</td>
+<td><strong>Primary web application</strong> + marketing site.</td>
+</tr>
+<tr class="even">
+<td><strong>Vue / Nuxt</strong></td>
+<td>Gentler learning curve, excellent DX.</td>
+<td>Smaller enterprise talent pool than React.</td>
+<td>Internal admin tools (faster build).</td>
+</tr>
+<tr class="odd">
+<td><strong>Angular</strong></td>
+<td>Opinionated, batteries-included, strong for huge teams.</td>
+<td>Heavyweight; verbose.</td>
+<td>Not recommended — too rigid for our pace.</td>
+</tr>
+<tr class="even">
+<td><strong>Svelte / SvelteKit</strong></td>
+<td>Tiny bundles, excellent runtime perf.</td>
+<td>Smaller ecosystem, fewer hires.</td>
+<td>Embeddable widgets (e.g., quiz embeds).</td>
+</tr>
+</tbody>
+</table></div>
+<p><span class="tag tag-rec">Recommendation</span>
+<strong>Recommendation:</strong> <strong>Next.js (App Router)</strong>
+for the primary web product. Tailwind CSS + Radix primitives + a small
+in-house design system. Server components for content-heavy pages,
+client components for interactive learning canvas.</p>
+<h3 id="33-backend-frameworks">3.3 Backend Frameworks</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr class="header">
+<th>Framework</th>
+<th>Language</th>
+<th>Strengths</th>
+<th>Weaknesses</th>
+<th>Where in Veda</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>FastAPI</strong></td>
+<td>Python</td>
+<td>Async, Pydantic validation, OpenAPI auto-gen, ML-friendly.</td>
+<td>GIL; not ideal for CPU-bound.</td>
+<td>AI services, ML inference orchestration.</td>
+</tr>
+<tr class="even">
+<td><strong>NestJS</strong></td>
+<td>TypeScript</td>
+<td>Modular, DI, enterprise-grade, shares types with frontend.</td>
+<td>Heavier than Express.</td>
+<td>Core domain services (courses, users).</td>
+</tr>
+<tr class="odd">
+<td><strong>Django</strong></td>
+<td>Python</td>
+<td>Mature, batteries-included, admin panel, ORM.</td>
+<td>Sync-first; less suited for real-time.</td>
+<td>Internal admin/back-office app.</td>
+</tr>
+<tr class="even">
+<td><strong>Spring Boot</strong></td>
+<td>Java</td>
+<td>Enterprise standard, mature, robust.</td>
+<td>Verbose, heavy startup.</td>
+<td>Not chosen — overkill for our team velocity.</td>
+</tr>
+<tr class="odd">
+<td><strong>Express.js</strong></td>
+<td>Node</td>
+<td>Minimal, flexible.</td>
+<td>Too unopinionated for large teams.</td>
+<td>Niche internal scripts only.</td>
+</tr>
+<tr class="even">
+<td><strong>Go Fiber / Chi</strong></td>
+<td>Go</td>
+<td>Extreme throughput, low memory.</td>
+<td>Less ergonomic for business logic.</td>
+<td>API gateway, real-time messaging, ingestion.</td>
+</tr>
+</tbody>
+</table></div>
+<p><span class="tag tag-rec">Recommendation</span>
+<strong>Recommendation (polyglot, not chaotic):</strong></p>
+<ul>
+<li><strong>NestJS</strong> for domain services (course, enrollment,
+billing).</li>
+<li><strong>FastAPI</strong> for AI / ML services.</li>
+<li><strong>Go (Chi or Fiber)</strong> for the edge gateway and
+websocket fan-out.</li>
+</ul>
+<p>This is three runtimes — the discipline limit. More than three
+becomes operational debt.</p>
+<h3 id="34-mobile-technologies">3.4 Mobile Technologies</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr class="header">
+<th>Approach</th>
+<th>Dev Speed</th>
+<th>Performance</th>
+<th>Cost (relative)</th>
+<th>UX Quality</th>
+<th>Verdict</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Flutter</strong></td>
+<td>High</td>
+<td>Near-native</td>
+<td>1.0×</td>
+<td>Excellent, custom-painted UI</td>
+<td>Strong contender, esp. for emerging markets.</td>
+</tr>
+<tr class="even">
+<td><strong>React Native</strong></td>
+<td>High</td>
+<td>Good (worse for graphics-heavy)</td>
+<td>1.0×</td>
+<td>Good, but less control</td>
+<td>Strong contender, esp. given TS reuse.</td>
+</tr>
+<tr class="odd">
+<td><strong>Native Android (Kotlin)</strong></td>
+<td>Medium</td>
+<td>Best</td>
+<td>1.8× (separate codebase)</td>
+<td>Best</td>
+<td>Only for performance-critical paths.</td>
+</tr>
+<tr class="even">
+<td><strong>Native iOS (Swift)</strong></td>
+<td>Medium</td>
+<td>Best</td>
+<td>1.8×</td>
+<td>Best</td>
+<td>Only for performance-critical paths.</td>
+</tr>
+</tbody>
+</table></div>
+<p><span class="tag tag-rec">Recommendation</span>
+<strong>Recommendation:</strong> <strong>Flutter</strong> for the
+primary mobile app. <strong>Reasoning:</strong> (a) Single codebase for
+both platforms with truly identical UI — important for brand consistency
+in emerging markets where Android dominates; (b) Better offline-first
+story via Isar/Hive; (c) Predictable performance for
+video/animation-heavy lessons; (d) Lower mobile binary size than RN,
+which matters on 16–32 GB low-end Android devices.</p>
+<h3 id="35-aiml-stack">3.5 AI/ML Stack</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr class="header">
+<th>Component</th>
+<th>Choice</th>
+<th>Why</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Model training framework</strong></td>
+<td>PyTorch</td>
+<td>De-facto research standard; superior debugging; HF ecosystem.</td>
+</tr>
+<tr class="even">
+<td><strong>Inference serving</strong></td>
+<td>vLLM (LLMs) + Triton (classical ML)</td>
+<td>vLLM's paged-attention dramatically improves $/token at scale;
+Triton handles mixed-model serving.</td>
+</tr>
+<tr class="odd">
+<td><strong>Embeddings</strong></td>
+<td>bge-m3 / e5-multilingual / OpenAI text-embedding-3 (fallback)</td>
+<td>Multilingual is non-negotiable; bge-m3 supports 100+ languages with
+strong recall.</td>
+</tr>
+<tr class="even">
+<td><strong>LLM Orchestration</strong></td>
+<td>LangGraph (preferred over LangChain for production)</td>
+<td>Explicit state machines beat opaque agent chains for
+reliability.</td>
+</tr>
+<tr class="odd">
+<td><strong>RAG Index</strong></td>
+<td>Qdrant or Weaviate</td>
+<td>Hybrid (sparse + dense) search; on-disk indexes for cost; mature
+filtering.</td>
+</tr>
+<tr class="even">
+<td><strong>Recommendation engine</strong></td>
+<td>Custom: collaborative filtering + content embeddings + BKT
+signal</td>
+<td>Single-model approaches underperform in education's cold-start
+regime.</td>
+</tr>
+<tr class="odd">
+<td><strong>NLP pipelines</strong></td>
+<td>spaCy + Hugging Face Transformers</td>
+<td>spaCy for fast preprocessing; HF for task-specific fine-tunes.</td>
+</tr>
+<tr class="even">
+<td><strong>Speech</strong></td>
+<td>Whisper-large-v3 (server) / Whisper-tiny (on-device for
+low-bandwidth users)</td>
+<td>Multilingual, robust to accents.</td>
+</tr>
+<tr class="odd">
+<td><strong>Foundation LLMs</strong></td>
+<td>Multi-provider (Claude, GPT, Gemini) via abstraction + open-weights
+fallback (Llama / Qwen via vLLM)</td>
+<td>Avoid single-vendor risk; fall back to self-hosted for
+cost-sensitive workloads.</td>
+</tr>
+</tbody>
+</table></div>
+<h4
+id="educational-personalization-algorithm--composite-design">Educational
+Personalization Algorithm — composite design</h4>
+<pre><code>mastery_score(student, concept) =
+    0.4 × BKT_posterior(student, concept)          # probabilistic mastery
+  + 0.3 × IRT_ability_estimate(student, item_bank) # item response theory
+  + 0.2 × spaced_repetition_recall(student, concept)
+  + 0.1 × engagement_proxy(student, concept)
+
+next_recommendation =
+    argmax over candidate_concepts of
+        learning_gain(student, concept)
+        − cognitive_load(student, current_session)
+    subject to: prerequisites_met(student, concept)</code></pre>
+<p><span class="tag tag-fact">Fact</span> BKT (Bayesian Knowledge
+Tracing), IRT (Item Response Theory), and spaced repetition are
+well-established, peer-reviewed pedagogy. Their <em>composition</em> is
+Veda's IP.</p>
+<h3 id="36-devops--infrastructure">3.6 DevOps &amp; Infrastructure</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr class="header">
+<th>Tool</th>
+<th>Role</th>
+<th>Why</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Docker</strong></td>
+<td>Container runtime</td>
+<td>Universal packaging.</td>
+</tr>
+<tr class="even">
+<td><strong>Kubernetes (EKS/GKE)</strong></td>
+<td>Orchestration</td>
+<td>Required for horizontal scale + multi-tenancy isolation.</td>
+</tr>
+<tr class="odd">
+<td><strong>Helm + Argo CD</strong></td>
+<td>GitOps deployment</td>
+<td>Declarative, auditable rollouts.</td>
+</tr>
+<tr class="even">
+<td><strong>Terraform</strong></td>
+<td>IaC</td>
+<td>Cloud-portable infrastructure.</td>
+</tr>
+<tr class="odd">
+<td><strong>GitHub Actions</strong></td>
+<td>CI</td>
+<td>Tightest GitHub integration; matrix builds.</td>
+</tr>
+<tr class="even">
+<td><strong>Argo Workflows</strong></td>
+<td>ML pipelines</td>
+<td>DAG-native; better than Airflow for ML retraining.</td>
+</tr>
+<tr class="odd">
+<td><strong>NGINX / Envoy</strong></td>
+<td>Ingress / service mesh</td>
+<td>Envoy for east-west; NGINX for north-south.</td>
+</tr>
+<tr class="even">
+<td><strong>Kong / AWS API Gateway</strong></td>
+<td>API gateway</td>
+<td>Rate limiting, key mgmt, tenant routing.</td>
+</tr>
+<tr class="odd">
+<td><strong>Prometheus + Grafana + Loki + Tempo</strong></td>
+<td>Observability stack</td>
+<td>Open standards; OTel-native.</td>
+</tr>
+<tr class="even">
+<td><strong>PagerDuty</strong></td>
+<td>Incident response</td>
+<td>Industry standard.</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="37-educationally-relevant-algorithms">3.7 Educationally Relevant
+Algorithms</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr class="header">
+<th>Algorithm</th>
+<th>Purpose</th>
+<th>Complexity</th>
+<th>Scaling Note</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Collaborative Filtering (ALS)</strong></td>
+<td>"Students like you took..."</td>
+<td>O(k·(users + items)) per iteration</td>
+<td>Distributed via Spark MLlib.</td>
+</tr>
+<tr class="even">
+<td><strong>Content-based Filtering</strong></td>
+<td>Cold-start recommendations</td>
+<td>O(d) per query (d = embedding dim)</td>
+<td>ANN index (HNSW); sub-linear.</td>
+</tr>
+<tr class="odd">
+<td><strong>Bayesian Knowledge Tracing</strong></td>
+<td>Mastery probability per concept</td>
+<td>O(1) update</td>
+<td>Per-student state in Redis.</td>
+</tr>
+<tr class="even">
+<td><strong>Item Response Theory (2PL/3PL)</strong></td>
+<td>Adaptive testing item selection</td>
+<td>O(items) per question</td>
+<td>Cache item parameters.</td>
+</tr>
+<tr class="odd">
+<td><strong>Spaced Repetition (FSRS / SM-2)</strong></td>
+<td>Long-term retention scheduling</td>
+<td>O(1) per review</td>
+<td>FSRS preferred — lower review load for same retention.</td>
+</tr>
+<tr class="even">
+<td><strong>Reinforcement Learning (contextual bandits)</strong></td>
+<td>Exploration in path selection</td>
+<td>O(arms) per decision</td>
+<td>LinUCB; updates via batch.</td>
+</tr>
+<tr class="odd">
+<td><strong>Knowledge Graph Embeddings (TransE/RotatE)</strong></td>
+<td>Concept similarity</td>
+<td>Train: hours; query: ms</td>
+<td>GPU-accelerated training.</td>
+</tr>
+<tr class="even">
+<td><strong>NLP Classification (BERT-family fine-tunes)</strong></td>
+<td>Auto-grading short answers</td>
+<td>Inference: 10–100ms</td>
+<td>Distill to smaller models.</td>
+</tr>
+<tr class="odd">
+<td><strong>Sequence Models (Transformer-based DKT)</strong></td>
+<td>Deep knowledge tracing</td>
+<td>Inference: 50–200ms</td>
+<td>Batched inference.</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="38-data-structures--where-each-earns-its-place">3.8 Data
+Structures — Where Each Earns Its Place</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr class="header">
+<th>Structure</th>
+<th>Used For</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Directed Acyclic Graph</strong></td>
+<td>Concept prerequisite graph; course dependency.</td>
+</tr>
+<tr class="even">
+<td><strong>Trie</strong></td>
+<td>Autocomplete in search; curriculum tag hierarchies.</td>
+</tr>
+<tr class="odd">
+<td><strong>Hash maps</strong></td>
+<td>Session state, feature flags, per-tenant config caches.</td>
+</tr>
+<tr class="even">
+<td><strong>Min-heap / priority queue</strong></td>
+<td>Spaced repetition due-queue; assessment item selection.</td>
+</tr>
+<tr class="odd">
+<td><strong>B+ trees</strong></td>
+<td>Underlying PG/Mongo indexes (operationally relevant for query
+planning).</td>
+</tr>
+<tr class="even">
+<td><strong>Bloom filters</strong></td>
+<td>"Has this user seen this content?" before hitting DB; CDN cache
+filters.</td>
+</tr>
+<tr class="odd">
+<td><strong>HyperLogLog</strong></td>
+<td>Approximate distinct counts for analytics dashboards.</td>
+</tr>
+<tr class="even">
+<td><strong>Sparse matrices</strong></td>
+<td>User × Item interaction matrix for collaborative filtering.</td>
+</tr>
+<tr class="odd">
+<td><strong>HNSW graphs</strong></td>
+<td>Vector index structure for embeddings retrieval.</td>
+</tr>
+<tr class="even">
+<td><strong>CRDTs (RGA, LWW-Map)</strong></td>
+<td>Offline-first mobile sync without conflicts.</td>
+</tr>
+<tr class="odd">
+<td><strong>Skip lists</strong></td>
+<td>Real-time leaderboards in Redis.</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2 id="4-database-architecture--polyglot-persistence">4. Database
+Architecture — Polyglot Persistence</h2>
+<p><span class="tag tag-rec">Recommendation</span> <strong>Guiding
+principle:</strong> <em>Right tool for the data shape.</em> A
+single-database stack is wrong at this scale; a 12-database stack is
+operational suicide. We choose <strong>6 databases</strong>, each with a
+non-negotiable use case.</p>
+<div class="table-wrap"><table>
+<thead>
+<tr class="header">
+<th>Database</th>
+<th>Type</th>
+<th>Purpose in Veda</th>
+<th>Why Chosen</th>
+<th>Alternatives Considered</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>PostgreSQL</strong></td>
+<td>Relational (OLTP)</td>
+<td>Users, courses, enrollments, billing, all transactional state.</td>
+<td>ACID, JSONB hybrid flexibility, mature replication, pgvector for
+hybrid embeddings.</td>
+<td>MySQL (weaker JSON &amp; types); CockroachDB (overkill until truly
+global write).</td>
+</tr>
+<tr class="even">
+<td><strong>MongoDB</strong></td>
+<td>Document</td>
+<td>Lesson content, question banks, flexible learning materials.</td>
+<td>Schema fluidity for varied content shapes; aggregation
+pipeline.</td>
+<td>PostgreSQL JSONB (viable; chosen Mongo where shape varies
+extremely).</td>
+</tr>
+<tr class="odd">
+<td><strong>Redis</strong></td>
+<td>In-memory KV</td>
+<td>Sessions, rate-limit buckets, real-time leaderboards, BKT state
+cache, queue backing.</td>
+<td>Sub-ms latency; rich data structures; Streams for lightweight
+queues.</td>
+<td>Memcached (no data structures); KeyDB (smaller community).</td>
+</tr>
+<tr class="even">
+<td><strong>Qdrant</strong></td>
+<td>Vector</td>
+<td>Embeddings for AI tutor RAG, semantic course search, content
+similarity.</td>
+<td>Rust core, payload filtering, on-disk indexes, mature.</td>
+<td>Weaviate, Milvus, pgvector (good for small scale).</td>
+</tr>
+<tr class="odd">
+<td><strong>Neo4j</strong></td>
+<td>Graph</td>
+<td>Concept/prerequisite graph; skill graph; learning pathways.</td>
+<td>Native graph traversal; Cypher is mature; appropriate for
+traversal-heavy queries.</td>
+<td>ArangoDB (multi-model); Amazon Neptune (vendor-locked).</td>
+</tr>
+<tr class="even">
+<td><strong>ClickHouse</strong></td>
+<td>Columnar (OLAP)</td>
+<td>Event analytics, learning telemetry, dashboards.</td>
+<td>10–100× faster than PG on aggregations at scale; cheap on commodity
+disk.</td>
+<td>BigQuery (great but vendor-locked &amp; costs balloon); Druid
+(operationally heavy).</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="41-why-not-cassandra--elasticsearch-as-primary">4.1 Why
+<em>Not</em> Cassandra / Elasticsearch as primary?</h3>
+<ul>
+<li><strong>Cassandra:</strong> considered for write-heavy telemetry,
+but <strong>ClickHouse already handles this</strong> with better query
+semantics. Adding Cassandra would mean two write paths for similar data.
+Re-evaluate at &gt;1B events/day.</li>
+<li><strong>Elasticsearch / OpenSearch:</strong> considered for
+full-text search, but <strong>PostgreSQL FTS + Qdrant hybrid
+search</strong> suffices for v1. Add OpenSearch when log search and
+complex relevance tuning become real bottlenecks. Premature adoption
+pays a 6-figure annual ops tax.</li>
+</ul>
+<h3 id="42-per-database-detail">4.2 Per-Database Detail</h3>
+<h4 id="postgresql--system-of-record">PostgreSQL — System of Record</h4>
+<ul>
+<li><strong>Tables:</strong> <code>users</code>, <code>tenants</code>,
+<code>courses</code>, <code>enrollments</code>,
+<code>assessments</code>, <code>attempts</code>,
+<code>subscriptions</code>, <code>payments</code>.</li>
+<li><strong>Scaling:</strong> Single primary + read replicas (1–3
+initially). Move to <strong>Citus / partitioning</strong> by
+<code>tenant_id</code> once a single primary becomes hot. Logical
+replication to ClickHouse for analytics ingest.</li>
+<li><strong>CAP positioning:</strong> CP — we trade availability for
+consistency on transactional state. Correct tradeoff for billing.</li>
+</ul>
+<h4 id="mongodb--content-store">MongoDB — Content Store</h4>
+<ul>
+<li><strong>Collections:</strong> <code>lessons</code>,
+<code>question_bank</code>, <code>media_metadata</code>,
+<code>interactive_widgets</code>.</li>
+<li><strong>Scaling:</strong> Sharded by <code>tenant_id</code> once
+cluster crosses ~1 TB.</li>
+<li><strong>CAP positioning:</strong> AP-leaning (tunable consistency);
+content reads should never block on a primary failover.</li>
+</ul>
+<h4 id="redis--hot-state">Redis — Hot State</h4>
+<ul>
+<li><strong>Structures used:</strong> Strings (session), Hashes
+(per-user feature flags), Sorted Sets (leaderboards, due-queues),
+Streams (lightweight pub/sub), HyperLogLog (analytics
+approximations).</li>
+<li><strong>Topology:</strong> Cluster mode with replicas; AOF + RDB
+persistence; <strong>Redis is not a database of record</strong>, only
+cache/state.</li>
+</ul>
+<h4 id="qdrant--vector-index">Qdrant — Vector Index</h4>
+<ul>
+<li><strong>Indexes per tenant</strong> to prevent cross-tenant
+retrieval bleed.</li>
+<li><strong>HNSW</strong> for in-memory speed; product quantization for
+cost reduction at scale.</li>
+<li><strong>Re-embedding pipeline</strong> triggered on content updates
+via Argo Workflows.</li>
+</ul>
+<h4 id="neo4j--knowledge-graph">Neo4j — Knowledge Graph</h4>
+<ul>
+<li><strong>Nodes:</strong> Concept, Skill, Course, LearningObjective,
+Standard (e.g., Common Core, NCERT).</li>
+<li><strong>Edges:</strong> PREREQUISITE_OF, TEACHES, ASSESSES,
+ALIGNS_WITH.</li>
+<li><strong>Why graph DB and not PG recursive CTE?</strong> Traversals
+5+ hops deep with mixed edge types — recursive CTEs become O(n²) and
+unmaintainable at 100k+ concepts.</li>
+</ul>
+<h4 id="clickhouse--analytics-warehouse">ClickHouse — Analytics
+Warehouse</h4>
+<ul>
+<li><strong>Tables:</strong> <code>events_raw</code>,
+<code>events_enriched</code>, <code>daily_user_rollups</code>,
+<code>cohort_metrics</code>.</li>
+<li><strong>Ingestion:</strong> Kafka → ClickHouse Kafka Engine →
+MaterializedView rollups.</li>
+<li><strong>Query pattern:</strong> Sub-second dashboards over billions
+of events.</li>
+</ul>
+<h3 id="43-cap-theorem-implications--honest-map">4.3 CAP Theorem
+Implications — Honest Map</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr class="header">
+<th>Capability</th>
+<th>Required Consistency</th>
+<th>Required Availability</th>
+<th>Choice</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Login / billing</td>
+<td>Strong</td>
+<td>High</td>
+<td>PG (CP); accept brief unavailability over double-charge.</td>
+</tr>
+<tr class="even">
+<td>Course content read</td>
+<td>Eventual</td>
+<td>Very high</td>
+<td>Mongo + CDN (AP).</td>
+</tr>
+<tr class="odd">
+<td>Session state</td>
+<td>Strong-per-key</td>
+<td>High</td>
+<td>Redis (effectively CP per shard).</td>
+</tr>
+<tr class="even">
+<td>Learning telemetry</td>
+<td>Eventual</td>
+<td>Very high</td>
+<td>Kafka → ClickHouse (AP).</td>
+</tr>
+<tr class="odd">
+<td>Knowledge graph reads</td>
+<td>Eventual</td>
+<td>High</td>
+<td>Neo4j read replicas.</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2 id="5-cloud-architecture">5. Cloud Architecture</h2>
+<h3 id="51-provider-comparison">5.1 Provider Comparison</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr class="header">
+<th>Capability</th>
+<th>AWS</th>
+<th>GCP</th>
+<th>Azure</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Maturity &amp; breadth</strong></td>
+<td>Highest</td>
+<td>High</td>
+<td>High</td>
+</tr>
+<tr class="even">
+<td><strong>AI/ML ecosystem</strong></td>
+<td>Bedrock, SageMaker</td>
+<td><strong>Vertex AI, TPUs, Gemini</strong></td>
+<td>Azure OpenAI, ML Studio</td>
+</tr>
+<tr class="odd">
+<td><strong>Data warehousing native</strong></td>
+<td>Redshift</td>
+<td><strong>BigQuery (best-in-class)</strong></td>
+<td>Synapse</td>
+</tr>
+<tr class="even">
+<td><strong>Kubernetes ergonomics</strong></td>
+<td>EKS (most flexible, more setup)</td>
+<td><strong>GKE (most polished)</strong></td>
+<td>AKS (improving)</td>
+</tr>
+<tr class="odd">
+<td><strong>Edge / CDN</strong></td>
+<td>CloudFront (mature)</td>
+<td>Cloud CDN</td>
+<td>Azure Front Door</td>
+</tr>
+<tr class="even">
+<td><strong>Education sector pricing</strong></td>
+<td>AWS Educate</td>
+<td>Google for Education credits</td>
+<td>Azure for Education</td>
+</tr>
+<tr class="odd">
+<td><strong>Emerging-markets latency</strong></td>
+<td>Strong (most regions)</td>
+<td>Strong</td>
+<td>Strong, esp. EU/ME</td>
+</tr>
+<tr class="even">
+<td><strong>Cost predictability</strong></td>
+<td>Lowest at scale w/ commitments</td>
+<td>Mid</td>
+<td>Mid</td>
+</tr>
+<tr class="odd">
+<td><strong>Vendor lock-in risk</strong></td>
+<td>High (proprietary services)</td>
+<td>Mid (more open-source-aligned)</td>
+<td>High</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="52-recommendation-multi-cloud-with-a-primary">5.2
+Recommendation: Multi-Cloud with a Primary</h3>
+<p><span class="tag tag-rec">Recommendation</span> <strong>Primary:
+AWS.</strong> Maximum breadth, deepest market for ops talent, most
+mature EKS/RDS. <span class="tag tag-rec">Recommendation</span>
+<strong>Secondary: GCP</strong> for AI workloads where TPU economics or
+Gemini access dominate. <span class="tag tag-rec">Recommendation</span>
+<strong>Avoid Azure as primary</strong> unless you sell into the
+Microsoft enterprise channel — then it's mandatory.</p>
+<p>The architecture must remain <strong>Kubernetes + Terraform
+native</strong> so the substrate is portable. Vendor-specific services
+(RDS, S3) are acceptable; vendor-specific orchestration (Step Functions,
+Lambda-only logic) is not.</p>
+<h3 id="53-service-mapping">5.3 Service Mapping</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr class="header">
+<th>Need</th>
+<th>AWS</th>
+<th>GCP</th>
+<th>Reasoning</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Compute (containers)</td>
+<td>EKS</td>
+<td>GKE</td>
+<td>Standard.</td>
+</tr>
+<tr class="even">
+<td>Object storage</td>
+<td>S3</td>
+<td>GCS</td>
+<td>Standard.</td>
+</tr>
+<tr class="odd">
+<td>CDN</td>
+<td>CloudFront</td>
+<td>Cloud CDN</td>
+<td>CloudFront's edge breadth wins.</td>
+</tr>
+<tr class="even">
+<td>Block storage</td>
+<td>EBS gp3</td>
+<td>Persistent Disk</td>
+<td>Standard.</td>
+</tr>
+<tr class="odd">
+<td>Managed PostgreSQL</td>
+<td>RDS / Aurora</td>
+<td>Cloud SQL</td>
+<td>Aurora for HA + read scale.</td>
+</tr>
+<tr class="even">
+<td>Managed Redis</td>
+<td>ElastiCache</td>
+<td>Memorystore</td>
+<td>Standard.</td>
+</tr>
+<tr class="odd">
+<td>Managed Kafka</td>
+<td>MSK</td>
+<td>Pub/Sub or Confluent</td>
+<td>MSK for Kafka-API compatibility.</td>
+</tr>
+<tr class="even">
+<td>Object/video transcoding</td>
+<td>MediaConvert</td>
+<td>Transcoder API</td>
+<td>MediaConvert mature; expensive at scale → consider self-hosted
+Transcoder w/ FFmpeg on GPU spot.</td>
+</tr>
+<tr class="odd">
+<td>AI inference (foundation)</td>
+<td>Bedrock</td>
+<td>Vertex AI</td>
+<td>Vendor flexibility via abstraction layer.</td>
+</tr>
+<tr class="even">
+<td>AI inference (custom)</td>
+<td>EKS w/ GPU nodes + vLLM</td>
+<td>GKE + TPU</td>
+<td>Self-host saves 60–80% per token vs API at sustained load.</td>
+</tr>
+<tr class="odd">
+<td>Authentication</td>
+<td>Cognito <em>or</em> self-hosted Ory</td>
+<td>Identity Platform</td>
+<td>Self-hosted Ory for portability + cost.</td>
+</tr>
+<tr class="even">
+<td>Monitoring</td>
+<td>Managed Prometheus + Grafana Cloud</td>
+<td>Cloud Monitoring</td>
+<td>OTel-native, portable.</td>
+</tr>
+<tr class="odd">
+<td>Secrets</td>
+<td>AWS Secrets Manager + SOPS</td>
+<td>Secret Manager</td>
+<td>SOPS in git for IaC, manager for runtime.</td>
+</tr>
+<tr class="even">
+<td>Queue</td>
+<td>SQS + Kafka (MSK)</td>
+<td>Pub/Sub</td>
+<td>SQS for fire-and-forget; Kafka for event sourcing.</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="54-disaster-recovery">5.4 Disaster Recovery</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr class="header">
+<th>Tier</th>
+<th>RTO</th>
+<th>RPO</th>
+<th>Strategy</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Critical (auth, billing)</td>
+<td>15 min</td>
+<td>1 min</td>
+<td>Multi-AZ Aurora; cross-region replicas; tested monthly
+failover.</td>
+</tr>
+<tr class="even">
+<td>Important (LMS, content)</td>
+<td>1 hr</td>
+<td>15 min</td>
+<td>Cross-region S3 replication; DB snapshots.</td>
+</tr>
+<tr class="odd">
+<td>Analytics</td>
+<td>24 hr</td>
+<td>1 hr</td>
+<td>Reprocess from event log.</td>
+</tr>
+</tbody>
+</table></div>
+<p><span class="tag tag-rec">Recommendation</span>
+<strong>Mandatory:</strong> quarterly DR drills with full executive
+write-up. DR plans never tested are DR plans that don't exist.</p>
+<hr />
+<h2 id="6-system-architecture">6. System Architecture</h2>
+<h3 id="61-high-level-architecture">6.1 High-Level Architecture</h3>
+<div class="mermaid-wrap"><pre class="mermaid">graph TB
+    subgraph Clients
+        WEB[Web App - Next.js]
+        IOS[iOS App - Flutter]
+        AND[Android App - Flutter]
+        LTI[LTI Embed - Schools]
+    end
+
+    subgraph Edge
+        CDN[CloudFront CDN]
+        WAF[WAF + DDoS]
+        APIGW[API Gateway - Kong]
+    end
+
+    subgraph CoreServices
+        AUTH[Auth Service - Ory]
+        USER[User &amp; Tenant Service]
+        COURSE[Course Service]
+        ENROLL[Enrollment Service]
+        ASSESS[Assessment Service]
+        CONTENT[Content Service]
+        NOTIF[Notification Service]
+        BILL[Billing Service]
+    end
+
+    subgraph AILayer
+        TUTOR[AI Tutor Orchestrator]
+        RAG[RAG Pipeline]
+        REC[Recommendation Engine]
+        GRADE[Auto-Grader]
+        PROCTOR[Proctoring AI]
+    end
+
+    subgraph DataLayer
+        PG[(PostgreSQL)]
+        MONGO[(MongoDB)]
+        REDIS[(Redis)]
+        QDRANT[(Qdrant)]
+        NEO[(Neo4j)]
+        CH[(ClickHouse)]
+        S3[(S3)]
+    end
+
+    subgraph EventBackbone
+        KAFKA[Kafka / MSK]
+    end
+
+    WEB --&gt; CDN
+    IOS --&gt; CDN
+    AND --&gt; CDN
+    LTI --&gt; CDN
+    CDN --&gt; WAF --&gt; APIGW
+
+    APIGW --&gt; AUTH
+    APIGW --&gt; USER
+    APIGW --&gt; COURSE
+    APIGW --&gt; ENROLL
+    APIGW --&gt; ASSESS
+    APIGW --&gt; CONTENT
+    APIGW --&gt; TUTOR
+    APIGW --&gt; REC
+
+    USER --&gt; PG
+    COURSE --&gt; PG
+    COURSE --&gt; NEO
+    ENROLL --&gt; PG
+    BILL --&gt; PG
+    CONTENT --&gt; MONGO
+    CONTENT --&gt; S3
+    ASSESS --&gt; PG
+    ASSESS --&gt; MONGO
+
+    TUTOR --&gt; RAG
+    RAG --&gt; QDRANT
+    RAG --&gt; MONGO
+    REC --&gt; NEO
+    REC --&gt; QDRANT
+    REC --&gt; REDIS
+    GRADE --&gt; PG
+
+    AUTH --&gt; REDIS
+    NOTIF --&gt; KAFKA
+
+    USER --&gt; KAFKA
+    ENROLL --&gt; KAFKA
+    ASSESS --&gt; KAFKA
+    KAFKA --&gt; CH
+</pre></div>
+
+<h3 id="62-microservices-bounded-contexts">6.2 Microservices Bounded
+Contexts</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr class="header">
+<th>Service</th>
+<th>Owns</th>
+<th>Avoids</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Identity</td>
+<td>Users, tenants, RBAC, sessions</td>
+<td>Domain logic</td>
+</tr>
+<tr class="even">
+<td>Course</td>
+<td>Course metadata, syllabi, scheduling</td>
+<td>Content blob storage</td>
+</tr>
+<tr class="odd">
+<td>Content</td>
+<td>Lesson content, media references</td>
+<td>Course structure</td>
+</tr>
+<tr class="even">
+<td>Enrollment</td>
+<td>Roster, access grants, cohorts</td>
+<td>Payments</td>
+</tr>
+<tr class="odd">
+<td>Assessment</td>
+<td>Items, attempts, scoring</td>
+<td>Grading rubrics for essay (delegated to Auto-Grader)</td>
+</tr>
+<tr class="even">
+<td>Tutor</td>
+<td>AI conversation orchestration</td>
+<td>Model hosting (delegated)</td>
+</tr>
+<tr class="odd">
+<td>Recommendation</td>
+<td>Next-best-action</td>
+<td>UI rendering</td>
+</tr>
+<tr class="even">
+<td>Notifications</td>
+<td>Email/push/SMS fan-out</td>
+<td>Subscription preferences (delegated to Identity)</td>
+</tr>
+<tr class="odd">
+<td>Billing</td>
+<td>Subscriptions, invoices</td>
+<td>Tax (delegated to Stripe Tax / Avalara)</td>
+</tr>
+<tr class="even">
+<td>Analytics</td>
+<td>Read-only over warehouse</td>
+<td>Source-of-truth state</td>
+</tr>
+</tbody>
+</table></div>
+<p><span class="tag tag-fact">Fact</span> Conway's Law guides this: each
+service ≈ one team. Don't create services without owners.</p>
+<h3 id="63-event-driven-architecture">6.3 Event-Driven Architecture</h3>
+<pre><code>Producer Service ──► Kafka Topic ──► [Consumer A: Analytics]
+                                  ├─► [Consumer B: Notifications]
+                                  ├─► [Consumer C: ML Feature Store]
+                                  └─► [Consumer D: Audit Log]</code></pre>
+<p><strong>Key event topics:</strong></p>
+<ul>
+<li><code>user.lifecycle</code> (created, verified, deleted)</li>
+<li><code>enrollment.lifecycle</code> (enrolled, dropped,
+completed)</li>
+<li><code>assessment.events</code> (started, submitted, graded)</li>
+<li><code>content.interaction</code> (viewed, paused, resumed)</li>
+<li><code>learning.mastery_updated</code></li>
+</ul>
+<p>Schemas managed via <strong>Confluent Schema Registry /
+Apicurio</strong> with <strong>Protobuf</strong> (smaller, faster,
+evolution-safe vs JSON).</p>
+<h3 id="64-ai-workflow-architecture">6.4 AI Workflow Architecture</h3>
+<div class="mermaid-wrap"><pre class="mermaid">sequenceDiagram
+    participant Student
+    participant App
+    participant Gateway
+    participant TutorOrch
+    participant Retriever
+    participant Qdrant
+    participant Mongo
+    participant LLM
+    participant Telemetry
+
+    Student-&gt;&gt;App: &quot;Explain mitosis vs meiosis&quot;
+    App-&gt;&gt;Gateway: POST /tutor/chat
+    Gateway-&gt;&gt;TutorOrch: Authed request
+    TutorOrch-&gt;&gt;TutorOrch: Detect tenant, course, learner state
+    TutorOrch-&gt;&gt;Retriever: Query (text + filters)
+    Retriever-&gt;&gt;Qdrant: Hybrid search (sparse+dense)
+    Qdrant--&gt;&gt;Retriever: Top-k chunks
+    Retriever-&gt;&gt;Mongo: Hydrate full content
+    Mongo--&gt;&gt;Retriever: Source passages
+    Retriever--&gt;&gt;TutorOrch: Grounded context
+    TutorOrch-&gt;&gt;LLM: Prompt(system, context, query)
+    LLM--&gt;&gt;TutorOrch: Response w/ citations
+    TutorOrch-&gt;&gt;TutorOrch: Citation verification + safety filter
+    TutorOrch-&gt;&gt;Telemetry: Log (anonymized)
+    TutorOrch--&gt;&gt;App: Response + citations
+    App--&gt;&gt;Student: Rendered answer
+</pre></div>
+
+<h3 id="65-data-pipeline">6.5 Data Pipeline</h3>
+<pre><code>[Service Events] → Kafka → Flink (enrichment) → ClickHouse (warehouse)
+                                              → Feature Store (Feast)
+                                              → Iceberg on S3 (data lake)
+                  → CDC from PG via Debezium → Same downstream paths</code></pre>
+<h3 id="66-authentication-flow-oauth2--oidc">6.6 Authentication Flow
+(OAuth2 + OIDC)</h3>
+<div class="mermaid-wrap"><pre class="mermaid">sequenceDiagram
+    participant User
+    participant App
+    participant Gateway
+    participant Ory_Hydra
+    participant Ory_Kratos
+    participant API
+
+    User-&gt;&gt;App: Click &quot;Sign in&quot;
+    App-&gt;&gt;Ory_Hydra: /oauth2/auth (PKCE)
+    Ory_Hydra-&gt;&gt;Ory_Kratos: Identity check
+    Ory_Kratos-&gt;&gt;User: Login UI
+    User-&gt;&gt;Ory_Kratos: Credentials / SSO
+    Ory_Kratos--&gt;&gt;Ory_Hydra: Identity confirmed
+    Ory_Hydra--&gt;&gt;App: Auth code
+    App-&gt;&gt;Ory_Hydra: Exchange for tokens
+    Ory_Hydra--&gt;&gt;App: Access JWT + Refresh
+    App-&gt;&gt;Gateway: API call w/ JWT
+    Gateway-&gt;&gt;Gateway: Verify sig, claims, tenant
+    Gateway-&gt;&gt;API: Forward + injected user/tenant context
+    API--&gt;&gt;App: Response
+</pre></div>
+
+<h3 id="67-multi-tenancy">6.7 Multi-Tenancy</h3>
+<p>Three patterns supported:</p>
+<div class="table-wrap"><table>
+<thead>
+<tr class="header">
+<th>Pattern</th>
+<th>When</th>
+<th>Cost</th>
+<th>Isolation</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Shared DB, shared schema, <code>tenant_id</code>
+column</strong></td>
+<td>SMB / individual tier</td>
+<td>Lowest</td>
+<td>App-level RLS via PostgreSQL Row-Level Security.</td>
+</tr>
+<tr class="even">
+<td><strong>Shared DB, schema-per-tenant</strong></td>
+<td>Mid-market institutions</td>
+<td>Medium</td>
+<td>Schema isolation; backups per-tenant.</td>
+</tr>
+<tr class="odd">
+<td><strong>Dedicated DB / dedicated cluster</strong></td>
+<td>Enterprise / government</td>
+<td>Highest</td>
+<td>Full isolation; sometimes regulator-required.</td>
+</tr>
+</tbody>
+</table></div>
+<p><span class="tag tag-rec">Recommendation</span> PG <strong>Row-Level
+Security</strong> is mandatory on every table that has
+<code>tenant_id</code>. <em>Don't</em> trust application code alone —
+defense in depth.</p>
+<hr />
+<h2 id="7-ai-powered-educational-features">7. AI-Powered Educational
+Features</h2>
+<h3 id="71-personalized-learning-engine">7.1 Personalized Learning
+Engine</h3>
+<p><strong>Inputs:</strong></p>
+<ul>
+<li>Knowledge state (BKT posteriors per concept)</li>
+<li>Engagement signals (time-on-task, drop-off points, retry
+counts)</li>
+<li>Stated goals (exam prep, skill acquisition, curiosity)</li>
+<li>Affective signals (sentiment from tutor chats — used
+cautiously)</li>
+</ul>
+<p><strong>Output:</strong> an ordered queue of learning activities
+(study, practice, review, assess) with predicted learning gain.</p>
+<p><strong>Pipeline:</strong></p>
+<pre><code>Signals → Feature Store (Feast) → Ranker (LightGBM + LLM rerank) → Constraints → UI</code></pre>
+<p><span class="tag tag-rec">Recommendation</span>
+<strong>LightGBM</strong> for the ranker, not a big neural network.
+Reasoning: tabular features, interpretability for teachers, fast
+inference. Use the LLM only to <em>rerank top-N</em> with pedagogical
+reasoning ("this student keeps making the same algebra error → schedule
+a remediation cluster").</p>
+<h3 id="72-ai-tutor--design-constraints">7.2 AI Tutor — Design
+Constraints</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr class="header">
+<th>Constraint</th>
+<th>Implementation</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Curriculum-grounded</strong></td>
+<td>RAG over institution's content; refuses out-of-scope questions for
+K-12.</td>
+</tr>
+<tr class="even">
+<td><strong>Citation-required</strong></td>
+<td>Every factual claim links to a source content chunk. Unsourced
+answers blocked by guard.</td>
+</tr>
+<tr class="odd">
+<td><strong>Pedagogically Socratic</strong></td>
+<td>System prompt biases toward asking back, scaffolding, hint-laddering
+— not direct answers.</td>
+</tr>
+<tr class="even">
+<td><strong>Age-appropriate</strong></td>
+<td>Per-tenant content moderation profile; stricter for K-12.</td>
+</tr>
+<tr class="odd">
+<td><strong>Multilingual</strong></td>
+<td>Detect input language; respond in same language unless
+overridden.</td>
+</tr>
+<tr class="even">
+<td><strong>Bounded context</strong></td>
+<td>Hard token budget; older turns summarized.</td>
+</tr>
+<tr class="odd">
+<td><strong>Refusal patterns</strong></td>
+<td>Cannot do graded assessments for the student; will not produce
+answers to active exams.</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="73-automated-assessment">7.3 Automated Assessment</h3>
+<p><strong>Multiple-choice / short answer:</strong> deterministic; ~0
+cost. <strong>Free-response:</strong> Hybrid pipeline:</p>
+<ol type="1">
+<li><strong>Rubric extraction</strong> from teacher's rubric →
+structured criteria.</li>
+<li><strong>LLM grading</strong> against rubric, producing per-criterion
+score + justification.</li>
+<li><strong>Confidence threshold:</strong> below threshold →
+human-in-the-loop teacher review.</li>
+<li><strong>Bias audit:</strong> weekly statistical comparison of LLM
+grades vs teacher grades by demographic; flag drift.</li>
+</ol>
+<p><span class="tag tag-rec">Recommendation</span>
+<strong>Critical:</strong> LLM grades are <strong>never final without
+teacher acceptance</strong> for high-stakes assessments. Marketing claim
+is <em>"grade 80% faster"</em>, not <em>"grade autonomously"</em>.</p>
+<h3 id="74-speech-to-text-learning">7.4 Speech-to-Text Learning</h3>
+<ul>
+<li><strong>Pronunciation feedback</strong> (language learning): Whisper
++ alignment + scoring. On-device tiny model for offline.</li>
+<li><strong>Lecture transcription</strong>: server-side Whisper-large;
+chunked timestamps.</li>
+<li><strong>Voice-driven tutor</strong> for accessibility (visual
+impairment, low-literacy parents).</li>
+</ul>
+<h3 id="75-multilingual-education">7.5 Multilingual Education</h3>
+<ul>
+<li><strong>Content authoring once, served many.</strong> Authoring UI
+allows teacher to mark canonical language; translation to target locales
+via NMT (NLLB-200 or vendor) with <strong>teacher review queue</strong>
+before publish.</li>
+<li><strong>Translation memory</strong> at the segment level — paid
+edits propagate.</li>
+<li><strong>Right-to-left support</strong> mandatory (Arabic, Hebrew,
+Urdu).</li>
+</ul>
+<h3 id="76-adaptive-testing-cat">7.6 Adaptive Testing (CAT)</h3>
+<p>Computerized Adaptive Testing using <strong>2PL IRT
+model</strong>:</p>
+<ul>
+<li>After each item, update ability estimate θ.</li>
+<li>Select next item to maximize Fisher information at current θ.</li>
+<li>Stop when SE(θ) &lt; threshold or item budget hit.</li>
+</ul>
+<p>Result: ~50% fewer items for same measurement precision vs fixed-form
+tests.</p>
+<h3 id="77-learning-analytics">7.7 Learning Analytics</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr class="header">
+<th>Metric</th>
+<th>What It Reveals</th>
+<th>Anti-Pattern Warning</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Mastery delta</strong></td>
+<td>True learning gain</td>
+<td>Don't replace with "lessons completed"</td>
+</tr>
+<tr class="even">
+<td><strong>Time-to-mastery</strong></td>
+<td>Efficiency of learning path</td>
+<td>Sensitive to confounders; report distribution not mean</td>
+</tr>
+<tr class="odd">
+<td><strong>Concept gap heatmap</strong></td>
+<td>Where students stall</td>
+<td>Action: trigger intervention</td>
+</tr>
+<tr class="even">
+<td><strong>Engagement</strong></td>
+<td>Logins, time-on-platform</td>
+<td>Vanity metric — track but don't optimize</td>
+</tr>
+<tr class="odd">
+<td><strong>Equity gap</strong></td>
+<td>Mastery delta by demographic</td>
+<td>Critical to surface; never hide</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="78-ethical-ai-considerations">7.8 Ethical AI Considerations</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr class="header">
+<th>Risk</th>
+<th>Mitigation</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Algorithmic tracking entrenching inequity</td>
+<td>Bias audits per cohort; explainable recommendations; teacher
+override always possible.</td>
+</tr>
+<tr class="even">
+<td>Student surveillance creep</td>
+<td>Data minimization; opt-in granular telemetry; published transparency
+report.</td>
+</tr>
+<tr class="odd">
+<td>Hallucination in academic content</td>
+<td>Citation-or-refuse; teacher-in-the-loop for novel content;
+closed-domain RAG.</td>
+</tr>
+<tr class="even">
+<td>Cheating via AI</td>
+<td>AI-content detection on submissions; oral defense for high-stakes;
+assessment redesign over arms race.</td>
+</tr>
+<tr class="odd">
+<td>Cultural / linguistic bias in models</td>
+<td>Localized eval suites per market; reject deployments below
+threshold.</td>
+</tr>
+<tr class="even">
+<td>Data leakage to model providers</td>
+<td>No PII in prompts; PII redaction layer; option for self-hosted-only
+mode.</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2 id="8-business-model--economics">8. Business Model &amp;
+Economics</h2>
+<h3 id="81-revenue-models">8.1 Revenue Models</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr class="header">
+<th>Model</th>
+<th>Pros</th>
+<th>Cons</th>
+<th>Fit for Veda</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>B2C Subscription</strong></td>
+<td>Predictable ARR, low CAC payback</td>
+<td>Saturation, churn</td>
+<td>Tier 2 (test prep, individual learners)</td>
+</tr>
+<tr class="even">
+<td><strong>Freemium</strong></td>
+<td>Massive funnel</td>
+<td>Heavy infra cost from non-payers</td>
+<td>Acquisition channel only</td>
+</tr>
+<tr class="odd">
+<td><strong>Institutional Licensing (B2B)</strong></td>
+<td>High ACV, sticky</td>
+<td>Long sales cycles</td>
+<td><strong>Primary revenue driver</strong></td>
+</tr>
+<tr class="even">
+<td><strong>Government Partnerships</strong></td>
+<td>Massive scale, mission alignment</td>
+<td>Procurement friction, payment delays</td>
+<td>Strategic, slow</td>
+</tr>
+<tr class="odd">
+<td><strong>Enterprise L&amp;D</strong></td>
+<td>High margin, high ACV</td>
+<td>Competitive (Cornerstone, Docebo)</td>
+<td>Tier 3 expansion</td>
+</tr>
+<tr class="even">
+<td><strong>Marketplace (creator commission)</strong></td>
+<td>Scales with content</td>
+<td>Quality control, takes years to build supply</td>
+<td>Phase 3+ only</td>
+</tr>
+<tr class="odd">
+<td><strong>AI Tutor add-on</strong></td>
+<td>Differentiated value, usage-based</td>
+<td>Compute cost volatility</td>
+<td>Bundled into higher tiers</td>
+</tr>
+</tbody>
+</table></div>
+<p><span class="tag tag-rec">Recommendation</span> <strong>Recommended
+portfolio (year 3 mix, illustrative):</strong> ~60% institutional
+licensing, ~20% enterprise L&amp;D, ~15% B2C subscription, ~5%
+other.</p>
+<h3 id="82-unit-economics-illustrative">8.2 Unit Economics
+(Illustrative)</h3>
+<p><span class="tag tag-assume">Assumption</span> <strong>Assumptions
+disclosed.</strong> All figures below are modeling scenarios derived
+from publicly observable SaaS edtech ranges. They are <strong>not
+predictions</strong>. Replace with measured data once we have a real
+funnel.</p>
+<h4 id="institutional-per-schoolyear">Institutional (per
+school/year)</h4>
+<div class="table-wrap"><table>
+<thead>
+<tr class="header">
+<th>Metric</th>
+<th>Assumption</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>ACV</td>
+<td>$8,000</td>
+<td>School of ~500 students at $16/student/year.</td>
+</tr>
+<tr class="even">
+<td>Sales &amp; marketing CAC</td>
+<td>$4,000</td>
+<td>Field sales heavy in early years.</td>
+</tr>
+<tr class="odd">
+<td>Gross margin</td>
+<td>70%</td>
+<td>After cloud, AI inference, payment fees, support.</td>
+</tr>
+<tr class="even">
+<td>Net revenue retention</td>
+<td>105%</td>
+<td>Modest expansion via add-ons.</td>
+</tr>
+<tr class="odd">
+<td>Payback</td>
+<td>~10 months</td>
+<td>CAC / (ACV × GM).</td>
+</tr>
+<tr class="even">
+<td>LTV (5-yr)</td>
+<td>~$28,000</td>
+<td>Conservative discount and churn.</td>
+</tr>
+<tr class="odd">
+<td>LTV:CAC</td>
+<td>~7×</td>
+<td>Healthy if achieved.</td>
+</tr>
+</tbody>
+</table></div>
+<h4 id="b2c-per-learneryear">B2C (per learner/year)</h4>
+<div class="table-wrap"><table>
+<thead>
+<tr class="header">
+<th>Metric</th>
+<th>Assumption</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>ARPU</td>
+<td>$60</td>
+<td>Mid-market test-prep range.</td>
+</tr>
+<tr class="even">
+<td>CAC</td>
+<td>$40</td>
+<td>Performance marketing, content SEO.</td>
+</tr>
+<tr class="odd">
+<td>Gross margin</td>
+<td>75%</td>
+<td></td>
+</tr>
+<tr class="even">
+<td>Annual churn</td>
+<td>35%</td>
+<td>Higher than B2B (typical for B2C edu).</td>
+</tr>
+<tr class="odd">
+<td>LTV (3-yr horizon)</td>
+<td>~$120</td>
+<td></td>
+</tr>
+<tr class="even">
+<td>LTV:CAC</td>
+<td>~3×</td>
+<td>Acceptable, not exceptional.</td>
+</tr>
+</tbody>
+</table></div>
+<h4 id="cost-drivers-worth-watching">Cost Drivers Worth Watching</h4>
+<ul>
+<li><strong>AI inference</strong> can dominate variable cost. A heavy
+AI-tutor user can cost <span class="math inline">2–</span>8/month at API
+rates; self-hosted brings this to <span
+class="math inline">0.30–</span>1.50.</li>
+<li><strong>Video bandwidth</strong> at scale is the second-largest
+line. CDN negotiations matter.</li>
+<li><strong>Customer success staffing</strong> — for institutions,
+undersized CS is the #1 cause of churn.</li>
+</ul>
+<h3 id="83-financial-modeling-illustrative-scenarios">8.3 Financial
+Modeling (Illustrative Scenarios)</h3>
+<p><span class="tag tag-assume">Assumption</span> <strong>All numbers
+are scenario assumptions, not forecasts.</strong> Designed to test
+viability of the business shape.</p>
+<h4 id="year-1--build--beachhead">Year 1 — Build &amp; Beachhead</h4>
+<div class="table-wrap"><table>
+<thead>
+<tr class="header">
+<th>Line</th>
+<th>Amount (USD)</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Revenue</td>
+<td>$0.4M</td>
+<td>50 schools × $8K</td>
+</tr>
+<tr class="even">
+<td>Cloud infra</td>
+<td>$0.20M</td>
+<td>Pre-optimization</td>
+</tr>
+<tr class="odd">
+<td>AI inference</td>
+<td>$0.10M</td>
+<td>API-heavy</td>
+</tr>
+<tr class="even">
+<td>Engineering team (15 FTE)</td>
+<td>$1.8M</td>
+<td>Mix of US/EU/India avg</td>
+</tr>
+<tr class="odd">
+<td>Sales &amp; marketing</td>
+<td>$0.6M</td>
+<td>Founding sales team</td>
+</tr>
+<tr class="even">
+<td>G&amp;A</td>
+<td>$0.3M</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td><strong>Total spend</strong></td>
+<td><strong>$3.0M</strong></td>
+<td></td>
+</tr>
+<tr class="even">
+<td><strong>Net</strong></td>
+<td><strong>−$2.6M</strong></td>
+<td>Funded by seed/Series A</td>
+</tr>
+</tbody>
+</table></div>
+<h4 id="year-3--scaling">Year 3 — Scaling</h4>
+<div class="table-wrap"><table>
+<thead>
+<tr class="header">
+<th>Line</th>
+<th>Amount (USD)</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Revenue</td>
+<td>$12M ARR</td>
+<td>1,000 schools + 200K B2C</td>
+</tr>
+<tr class="even">
+<td>Gross margin</td>
+<td>68%</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td>Cloud + AI</td>
+<td>$2.5M</td>
+<td>Self-hosted inference cost-down</td>
+</tr>
+<tr class="even">
+<td>Team (60 FTE)</td>
+<td>$7M</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td>S&amp;M</td>
+<td>$4M</td>
+<td></td>
+</tr>
+<tr class="even">
+<td>G&amp;A</td>
+<td>$1.2M</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td><strong>Net</strong></td>
+<td><strong>−$0.5M</strong></td>
+<td>Approaching break-even</td>
+</tr>
+</tbody>
+</table></div>
+<h4 id="year-5--mature">Year 5 — Mature</h4>
+<div class="table-wrap"><table>
+<thead>
+<tr class="header">
+<th>Line</th>
+<th>Amount (USD)</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Revenue</td>
+<td>$60M ARR</td>
+<td>Multi-region, gov contracts</td>
+</tr>
+<tr class="even">
+<td>Gross margin</td>
+<td>72%</td>
+<td>Scale economies</td>
+</tr>
+<tr class="odd">
+<td>Total opex</td>
+<td>$48M</td>
+<td></td>
+</tr>
+<tr class="even">
+<td><strong>Net margin</strong></td>
+<td><strong>~12–15%</strong></td>
+<td>Healthy for category</td>
+</tr>
+</tbody>
+</table></div>
+<p><span class="tag tag-rec">Recommendation</span> <strong>Sensitivity
+to flag:</strong> if AI inference costs cannot be brought below
+~$2/student/month, the institutional pricing assumption breaks.
+Self-hosting plan is therefore not optional — it's existential.</p>
+<h3 id="84-profitability-pathway">8.4 Profitability Pathway</h3>
+<ol type="1">
+<li><strong>Year 0–2:</strong> Subsidize compute; learn what drives
+mastery (the moat).</li>
+<li><strong>Year 2–3:</strong> Migrate AI inference to self-hosted.
+Cloud cost as % of revenue should fall from ~15–25% → 6–10%.</li>
+<li><strong>Year 3–5:</strong> Negotiate enterprise discounts, regional
+cloud arbitrage, multi-year prepaid commits.</li>
+<li><strong>Year 4+:</strong> Marketplace and certification revenue
+(high gross margin) supplements core SaaS.</li>
+</ol>
+<hr />
+<h2 id="9-security-architecture">9. Security Architecture</h2>
+<h3 id="91-zero-trust-foundation">9.1 Zero-Trust Foundation</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr class="header">
+<th>Principle</th>
+<th>Implementation</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Never trust, always verify</td>
+<td>Every request — inter-service included — carries JWT + mTLS.</td>
+</tr>
+<tr class="even">
+<td>Least privilege</td>
+<td>RBAC + ABAC; default-deny; reviewed quarterly.</td>
+</tr>
+<tr class="odd">
+<td>Assume breach</td>
+<td>Honeytokens, behavioral anomaly detection, isolated blast radius per
+tenant.</td>
+</tr>
+<tr class="even">
+<td>Continuous verification</td>
+<td>Short-lived tokens (15 min access, 7 day refresh w/ rotation).</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="92-identity--access">9.2 Identity &amp; Access</h3>
+<ul>
+<li><strong>End users:</strong> OAuth2 / OIDC via Ory Hydra +
+Kratos.</li>
+<li><strong>Workforce:</strong> Okta / Google Workspace SSO + SCIM
+provisioning.</li>
+<li><strong>Service-to-service:</strong> SPIFFE/SPIRE workload
+identities; mTLS enforced by Envoy/Istio.</li>
+<li><strong>Break-glass admin:</strong> hardware key (YubiKey) required;
+all sessions recorded.</li>
+</ul>
+<h3 id="93-encryption">9.3 Encryption</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr class="header">
+<th>Data State</th>
+<th>Mechanism</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>In transit (external)</td>
+<td>TLS 1.3, HSTS, perfect forward secrecy.</td>
+</tr>
+<tr class="even">
+<td>In transit (internal)</td>
+<td>mTLS via service mesh.</td>
+</tr>
+<tr class="odd">
+<td>At rest (DB)</td>
+<td>AES-256 disk + column-level encryption for PII.</td>
+</tr>
+<tr class="even">
+<td>At rest (S3)</td>
+<td>SSE-KMS with per-tenant keys for enterprise tier.</td>
+</tr>
+<tr class="odd">
+<td>Backups</td>
+<td>Encrypted; restores tested.</td>
+</tr>
+<tr class="even">
+<td>Secrets</td>
+<td>Vault / AWS Secrets Manager; never in code, never in env vars in
+images.</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="94-application-security">9.4 Application Security</h3>
+<ul>
+<li><strong>OWASP Top 10</strong> coverage as a baseline, not a
+goal.</li>
+<li><strong>SAST</strong> (Semgrep), <strong>DAST</strong> (ZAP) and
+<strong>SCA</strong> (Dependabot, Snyk) gating CI.</li>
+<li><strong>WAF</strong> at edge (CloudFront + AWS WAF or
+Cloudflare).</li>
+<li><strong>Rate limiting</strong> per IP, per user, per tenant — three
+layers.</li>
+<li><strong>Input validation</strong> at gateway (Pydantic / Zod
+schemas).</li>
+</ul>
+<h3 id="95-ai-specific-security">9.5 AI-Specific Security</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr class="header">
+<th>Threat</th>
+<th>Mitigation</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Prompt injection</td>
+<td>Strict separation of system / user / retrieved content; output
+guardrails.</td>
+</tr>
+<tr class="even">
+<td>Data leakage via LLM</td>
+<td>PII redaction before any external API call; no training on customer
+data.</td>
+</tr>
+<tr class="odd">
+<td>Model poisoning</td>
+<td>Dataset provenance tracking; sandboxed retraining; canary
+evals.</td>
+</tr>
+<tr class="even">
+<td>Jailbreak abuse</td>
+<td>Multi-layer moderation; per-tenant policy enforcement; audit
+logs.</td>
+</tr>
+<tr class="odd">
+<td>Membership inference</td>
+<td>Differential privacy on cohort analytics.</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="96-compliance">9.6 Compliance</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr class="header">
+<th>Regime</th>
+<th>Applies When</th>
+<th>Key Demands</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>FERPA</strong> (US)</td>
+<td>K-12, higher-ed in US</td>
+<td>Education record privacy, parental rights.</td>
+</tr>
+<tr class="even">
+<td><strong>COPPA</strong> (US)</td>
+<td>Users under 13</td>
+<td>Verifiable parental consent.</td>
+</tr>
+<tr class="odd">
+<td><strong>GDPR</strong> (EU)</td>
+<td>Any EU user</td>
+<td>Lawful basis, DPA, DSARs, breach notice ≤72h.</td>
+</tr>
+<tr class="even">
+<td><strong>SOC 2 Type II</strong></td>
+<td>Enterprise sales gate</td>
+<td>Annual audit; required for most B2B procurement.</td>
+</tr>
+<tr class="odd">
+<td><strong>ISO 27001</strong></td>
+<td>International procurement</td>
+<td>Information security management system.</td>
+</tr>
+<tr class="even">
+<td><strong>DPDP Act</strong> (India)</td>
+<td>Indian users</td>
+<td>Data localization options, consent manager integration.</td>
+</tr>
+<tr class="odd">
+<td><strong>PIPL</strong> (China)</td>
+<td>If we enter China</td>
+<td>Onshore data, separate corporate vehicle (decision deferred).</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="97-threat-model--top-risks">9.7 Threat Model — Top Risks</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr class="header">
+<th>Threat</th>
+<th>Likelihood</th>
+<th>Impact</th>
+<th>Mitigation</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Credential stuffing on student accounts</td>
+<td>High</td>
+<td>Medium</td>
+<td>Rate limiting, MFA option, breach-list checks.</td>
+</tr>
+<tr class="even">
+<td>Tenant data leak via shared cache</td>
+<td>Medium</td>
+<td>High</td>
+<td>Tenant-scoped Redis namespaces; per-tenant Qdrant collections.</td>
+</tr>
+<tr class="odd">
+<td>Insider misuse (employee snoops on minors' data)</td>
+<td>Low</td>
+<td>Severe</td>
+<td>Need-to-know access; query audit; data masking in non-prod.</td>
+</tr>
+<tr class="even">
+<td>Ransomware on backups</td>
+<td>Low</td>
+<td>Severe</td>
+<td>Immutable / object-locked backups; offline copy.</td>
+</tr>
+<tr class="odd">
+<td>Exam cheating ring</td>
+<td>High</td>
+<td>Medium</td>
+<td>Proctoring AI; assessment redesign; honor code workflows.</td>
+</tr>
+<tr class="even">
+<td>Subprocessor breach (LLM provider)</td>
+<td>Medium</td>
+<td>High</td>
+<td>PII redaction; multi-vendor abstraction; contractual liability.</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2 id="10-scalability--performance">10. Scalability &amp;
+Performance</h2>
+<h3 id="101-scaling-strategies">10.1 Scaling Strategies</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr class="header">
+<th>Layer</th>
+<th>Strategy</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Stateless services</td>
+<td>Horizontal: HPA on CPU + custom (req/sec, queue depth).</td>
+</tr>
+<tr class="even">
+<td>PostgreSQL</td>
+<td>Vertical first → read replicas → partitioning by tenant →
+Citus.</td>
+</tr>
+<tr class="odd">
+<td>MongoDB</td>
+<td>Replica sets → sharding by tenant.</td>
+</tr>
+<tr class="even">
+<td>Redis</td>
+<td>Cluster mode; consistent hashing.</td>
+</tr>
+<tr class="odd">
+<td>Kafka</td>
+<td>Add partitions; rebalance carefully.</td>
+</tr>
+<tr class="even">
+<td>AI inference</td>
+<td>GPU node pools w/ Karpenter; vLLM continuous batching; spot for
+batch jobs.</td>
+</tr>
+<tr class="odd">
+<td>CDN</td>
+<td>Multi-CDN strategy (CloudFront + Cloudflare) for resilience and
+price.</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="102-edge-strategy">10.2 Edge Strategy</h3>
+<ul>
+<li><strong>Static content &amp; media:</strong> CDN edge.</li>
+<li><strong>Read-mostly API:</strong> edge caching with Cache-Control +
+ETag; per-tenant cache keys.</li>
+<li><strong>AI inference at edge:</strong> evaluate Cloudflare Workers
+AI for tutor-lite use cases; primary inference remains regional.</li>
+</ul>
+<h3 id="103-bottleneck-analysis">10.3 Bottleneck Analysis</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr class="header">
+<th>Likely Bottleneck</th>
+<th>Symptom</th>
+<th>Resolution</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>PG primary write IOPS</td>
+<td>Latency on enrollment surges</td>
+<td>Move telemetry off PG; partition by tenant.</td>
+</tr>
+<tr class="even">
+<td>Hot keys in Redis</td>
+<td>Skewed shard</td>
+<td>Tag-based key sharding; client-side sharding for leaderboards.</td>
+</tr>
+<tr class="odd">
+<td>LLM API rate limits</td>
+<td>Tutor 429s during exam season</td>
+<td>Multi-vendor failover; self-hosted overflow capacity.</td>
+</tr>
+<tr class="even">
+<td>Video transcoding queue</td>
+<td>Upload-to-publish lag</td>
+<td>Pre-warm GPU spot pool; staged quality (low-res first, hi-res
+async).</td>
+</tr>
+<tr class="odd">
+<td>Mobile sync conflicts</td>
+<td>User confusion</td>
+<td>CRDTs at content level; explicit conflict UI as last resort.</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="104-failure-scenarios--designed-behaviors">10.4 Failure
+Scenarios — Designed Behaviors</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr class="header">
+<th>Scenario</th>
+<th>Behavior</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>LLM provider outage</td>
+<td>Auto-failover to secondary provider; degraded notice in UI; no hard
+error.</td>
+</tr>
+<tr class="even">
+<td>Primary DB failover</td>
+<td>&lt;30s read-only; queued writes; replay from buffer.</td>
+</tr>
+<tr class="odd">
+<td>AZ outage</td>
+<td>Multi-AZ stateless services unaffected; DB failover automatic.</td>
+</tr>
+<tr class="even">
+<td>Region outage</td>
+<td>Cross-region read replica promoted; RTO &lt;1h critical, &lt;4h
+overall.</td>
+</tr>
+<tr class="odd">
+<td>CDN provider outage</td>
+<td>DNS failover to secondary CDN within 5 min.</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="105-performance-targets-slos">10.5 Performance Targets
+(SLOs)</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr class="header">
+<th>Surface</th>
+<th>P50</th>
+<th>P95</th>
+<th>P99</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Static content</td>
+<td>50ms</td>
+<td>200ms</td>
+<td>500ms</td>
+</tr>
+<tr class="even">
+<td>API reads</td>
+<td>80ms</td>
+<td>300ms</td>
+<td>800ms</td>
+</tr>
+<tr class="odd">
+<td>API writes</td>
+<td>150ms</td>
+<td>500ms</td>
+<td>1.2s</td>
+</tr>
+<tr class="even">
+<td>Tutor first-token</td>
+<td>1.0s</td>
+<td>2.5s</td>
+<td>5.0s</td>
+</tr>
+<tr class="odd">
+<td>Tutor full response</td>
+<td>4s</td>
+<td>10s</td>
+<td>20s</td>
+</tr>
+<tr class="even">
+<td>Video start</td>
+<td>1.5s</td>
+<td>3s</td>
+<td>6s</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2 id="11-competitive-market-analysis">11. Competitive Market
+Analysis</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr class="header">
+<th>Platform</th>
+<th>Strength</th>
+<th>Weakness</th>
+<th>Veda's Wedge</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Coursera</strong></td>
+<td>Brand, university partnerships, breadth.</td>
+<td>Rigid course model; weak K-12; limited personalization.</td>
+<td>Mastery-based, multi-segment (K-12 + higher-ed + enterprise).</td>
+</tr>
+<tr class="even">
+<td><strong>Udemy</strong></td>
+<td>Vast catalog, low prices.</td>
+<td>Quality variance; weak pedagogy; no institutional fit.</td>
+<td>Curated + institution-grounded; not a marketplace at first.</td>
+</tr>
+<tr class="odd">
+<td><strong>Khan Academy</strong></td>
+<td>Free, mission-driven, excellent K-12 math.</td>
+<td>Limited subjects deep; not a platform for institutions.</td>
+<td>Platform for institutions + AI tutor that <em>uses your</em>
+curriculum.</td>
+</tr>
+<tr class="even">
+<td><strong>Google Classroom</strong></td>
+<td>Ubiquitous, free, light.</td>
+<td>No real LMS depth; no AI personalization; assessment is
+primitive.</td>
+<td>Same simplicity, but with depth — paid tier when institutions
+outgrow Classroom.</td>
+</tr>
+<tr class="odd">
+<td><strong>Moodle</strong></td>
+<td>Open source, customizable.</td>
+<td>Dated UX, ops burden, slow to evolve.</td>
+<td>Modern UX + cloud + AI native, with Moodle data import.</td>
+</tr>
+<tr class="even">
+<td><strong>Canvas (Instructure)</strong></td>
+<td>Higher-ed market leader; LTI ecosystem.</td>
+<td>Expensive; weaker outside Western higher-ed; limited K-12.</td>
+<td>Aggressive pricing for emerging-market institutions; stronger
+K-12.</td>
+</tr>
+<tr class="odd">
+<td><strong>BYJU's / Toppr / Vedantu</strong></td>
+<td>Strong APAC consumer brand (variable health).</td>
+<td>Consumer focus; institution play weak.</td>
+<td>Institutional B2B with APAC localization.</td>
+</tr>
+<tr class="even">
+<td><strong>Cornerstone / Docebo</strong></td>
+<td>Strong enterprise L&amp;D.</td>
+<td>Old-school UX; slow AI adoption.</td>
+<td>Modern AI L&amp;D layer for SMB-to-mid enterprise.</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Competitive moat for Veda (in priority order):</strong></p>
+<ol type="1">
+<li><strong>Knowledge graph + mastery model</strong> is structurally
+different from course-centric competitors.</li>
+<li><strong>Multi-stakeholder unified platform</strong> (student +
+teacher + parent + admin) is rare.</li>
+<li><strong>Emerging-market mobile-first economics</strong> that Western
+incumbents cannot match without re-architecture.</li>
+<li><strong>Curriculum-grounded AI tutor</strong> with citation
+guarantees — distinct from generic chatbots.</li>
+</ol>
+<hr />
+<h2 id="12-product-roadmap">12. Product Roadmap</h2>
+<h3 id="121-phased-plan">12.1 Phased Plan</h3>
+<h4 id="phase-1--months-03-mvp">Phase 1 — Months 0–3 (MVP)</h4>
+<ul>
+<li>Core LMS: courses, lessons, enrollments.</li>
+<li>Basic assessment (MCQ, short answer).</li>
+<li>Web app + Flutter mobile (Android-first).</li>
+<li>PostgreSQL + Redis + S3 + a single-region EKS.</li>
+<li>Auth, billing (Stripe), basic admin.</li>
+<li><strong>Goal:</strong> 5 design-partner schools live.</li>
+</ul>
+<h4 id="phase-2--months-36-differentiation">Phase 2 — Months 3–6
+(Differentiation)</h4>
+<ul>
+<li>AI Tutor v1 (RAG over institution content).</li>
+<li>Knowledge graph v1 (concepts + prerequisites; manual + LLM-assisted
+authoring).</li>
+<li>Recommendations v1 (collaborative filtering).</li>
+<li>Auto-grading for short answers.</li>
+<li>iOS app reaches parity.</li>
+<li>ClickHouse + Kafka stood up; first analytics dashboards.</li>
+<li><strong>Goal:</strong> 50 paying schools; first published case
+study.</li>
+</ul>
+<h4 id="phase-3--months-612-scale--ai-maturity">Phase 3 — Months 6–12
+(Scale &amp; AI Maturity)</h4>
+<ul>
+<li>Adaptive testing (IRT/CAT).</li>
+<li>BKT integrated into recommendations.</li>
+<li>Self-hosted LLM inference for top tenants.</li>
+<li>Multilingual launch (5 languages).</li>
+<li>LTI 1.3 compliance for SSO into university stacks.</li>
+<li>SOC 2 Type I.</li>
+<li><strong>Goal:</strong> 500 institutions, $5M ARR, two new
+countries.</li>
+</ul>
+<h4 id="phase-4--months-1224-expansion--enterprise">Phase 4 — Months
+12–24 (Expansion &amp; Enterprise)</h4>
+<ul>
+<li>Enterprise L&amp;D module (skill graph mapped to job roles).</li>
+<li>Government dashboards &amp; equity analytics.</li>
+<li>Marketplace beta (vetted creators).</li>
+<li>Plagiarism/AI-content detection at scale.</li>
+<li>SOC 2 Type II + ISO 27001.</li>
+<li>Multi-region deployment (US, EU, APAC).</li>
+<li><strong>Goal:</strong> $20M ARR; first government contract;
+expansion stage funding.</li>
+</ul>
+<h3 id="122-ai-maturity-curve">12.2 AI Maturity Curve</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr class="header">
+<th>Stage</th>
+<th>Capability</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Reactive</strong></td>
+<td>Tutor answers questions on demand.</td>
+</tr>
+<tr class="even">
+<td><strong>Adaptive</strong></td>
+<td>Recommendations and item selection adjust per learner.</td>
+</tr>
+<tr class="odd">
+<td><strong>Predictive</strong></td>
+<td>At-risk learner detection; intervention suggestions to
+teachers.</td>
+</tr>
+<tr class="even">
+<td><strong>Prescriptive</strong></td>
+<td>System proposes individualized intervention plans; teacher one-click
+approves.</td>
+</tr>
+<tr class="odd">
+<td><strong>Generative (curated)</strong></td>
+<td>New practice items, explanations, lesson variations generated on
+demand and gated by teacher review.</td>
+</tr>
+</tbody>
+</table></div>
+<p><span class="tag tag-rec">Recommendation</span> Move down this curve
+only after each step proves value with measured learning gain.</p>
+<h3 id="123-international-expansion-strategy">12.3 International
+Expansion Strategy</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr class="header">
+<th>Region</th>
+<th>Entry Mode</th>
+<th>Why</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>South Asia (IN, NP, BD, LK)</strong></td>
+<td>Direct, mobile-first, vernacular-first</td>
+<td>Largest underserved market; founder familiarity;
+price-sensitive.</td>
+</tr>
+<tr class="even">
+<td><strong>Southeast Asia (ID, PH, VN)</strong></td>
+<td>Direct + reseller</td>
+<td>Mobile-first; growing edtech demand.</td>
+</tr>
+<tr class="odd">
+<td><strong>Sub-Saharan Africa</strong></td>
+<td>Partnership-led (NGO, gov)</td>
+<td>High mission impact; tougher ARPU.</td>
+</tr>
+<tr class="even">
+<td><strong>MENA</strong></td>
+<td>Direct + partner</td>
+<td>Strong gov edu spend; Arabic localization.</td>
+</tr>
+<tr class="odd">
+<td><strong>LATAM</strong></td>
+<td>Reseller / partnership</td>
+<td>Spanish/Portuguese localization; payment friction.</td>
+</tr>
+<tr class="even">
+<td><strong>Western Europe</strong></td>
+<td>Selective; enterprise + higher-ed</td>
+<td>Mature competition; only enter with differentiated wedge.</td>
+</tr>
+<tr class="odd">
+<td><strong>North America</strong></td>
+<td>Higher-ed + enterprise; avoid K-12 procurement quagmire
+initially</td>
+<td>Hardest go-to-market; pursue with reference customers.</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2 id="13-ux--service-design">13. UX &amp; Service Design</h2>
+<h3 id="131-student-journey-service-blueprint-simplified">13.1 Student
+Journey (Service Blueprint, simplified)</h3>
+<pre><code>Awareness ─► Sign-up ─► Onboarding diagnostic ─► Personalized path ─► Daily learning loop ─► Assessment ─► Reflection ─► Mastery / cert
+                              │                        │                      │                  │
+                       (Sets ability θ)         (BKT updates)         (CAT-driven)       (Spaced review queued)</code></pre>
+<p><strong>Key moments of truth:</strong></p>
+<ul>
+<li>First 5 minutes: must reach "learning a thing" — no admin
+friction.</li>
+<li>First assessment: must feel fair, not punitive; show progress, not
+just score.</li>
+<li>First struggle: tutor + scaffolded hints; never a dead end.</li>
+</ul>
+<h3 id="132-teacher-journey">13.2 Teacher Journey</h3>
+<pre><code>Class setup ─► Curriculum import / map to graph ─► Roster sync ─► Assign work ─► Monitor dashboards ─► Intervene ─► Grade (AI-assisted) ─► Iterate</code></pre>
+<p><strong>Anti-pattern to avoid:</strong> dumping AI grades on teachers
+without explanation. Each AI suggestion must show <em>why</em> and let
+the teacher overrule with one click.</p>
+<h3 id="133-admin-workflow">13.3 Admin Workflow</h3>
+<ul>
+<li>Tenant setup (SSO, branding, data residency choice).</li>
+<li>Roster / SIS integration (OneRoster).</li>
+<li>License management; seat reclamation.</li>
+<li>Compliance reports (FERPA/GDPR DSAR fulfillment).</li>
+<li>Outcome dashboards: equity gap, mastery distribution, at-risk
+cohorts.</li>
+</ul>
+<h3 id="134-parent-dashboard">13.4 Parent Dashboard</h3>
+<ul>
+<li><strong>Plain-language summary</strong>: "This week, Aarav mastered
+4 concepts in fractions and is stuck on common denominators."</li>
+<li><strong>Concrete next step</strong>: 1–2 things they can do at home,
+reading-level appropriate.</li>
+<li><strong>No raw data dumps.</strong> Parents bounce off PDF
+gradebooks; invest in narrative + 2 charts.</li>
+<li><strong>Localized for parent literacy</strong>: text + voice
+playback; SMS digest for low-bandwidth households.</li>
+</ul>
+<h3 id="135-accessibility">13.5 Accessibility</h3>
+<ul>
+<li><strong>WCAG 2.2 AA</strong> as a launch gate, not a backlog
+item.</li>
+<li>Screen reader tested with NVDA + VoiceOver each release.</li>
+<li>Keyboard-only navigation paths covered in e2e tests.</li>
+<li>Captions mandatory on all instructional video; auto-generated then
+teacher-corrected.</li>
+<li>Color contrast and dyslexia-friendly font option.</li>
+<li>Low-bandwidth mode (text-only fallback) for 2G/3G users.</li>
+</ul>
+<hr />
+<h2 id="14-final-recommendations">14. Final Recommendations</h2>
+<h3 id="141-best-technology-stack--crisp-picks">14.1 Best Technology
+Stack — Crisp Picks</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr class="header">
+<th>Layer</th>
+<th>Choice</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Web frontend</td>
+<td>Next.js + TypeScript + Tailwind + Radix</td>
+</tr>
+<tr class="even">
+<td>Mobile</td>
+<td>Flutter (Android-first)</td>
+</tr>
+<tr class="odd">
+<td>Domain services</td>
+<td>NestJS (TypeScript)</td>
+</tr>
+<tr class="even">
+<td>AI services</td>
+<td>FastAPI (Python) + vLLM</td>
+</tr>
+<tr class="odd">
+<td>Edge / gateway</td>
+<td>Go (Chi) + Kong</td>
+</tr>
+<tr class="even">
+<td>Primary OLTP</td>
+<td>PostgreSQL (Aurora)</td>
+</tr>
+<tr class="odd">
+<td>Content</td>
+<td>MongoDB</td>
+</tr>
+<tr class="even">
+<td>Cache / state</td>
+<td>Redis (cluster)</td>
+</tr>
+<tr class="odd">
+<td>Vector</td>
+<td>Qdrant</td>
+</tr>
+<tr class="even">
+<td>Graph</td>
+<td>Neo4j</td>
+</tr>
+<tr class="odd">
+<td>Analytics</td>
+<td>ClickHouse</td>
+</tr>
+<tr class="even">
+<td>Stream</td>
+<td>Kafka (MSK)</td>
+</tr>
+<tr class="odd">
+<td>Orchestration</td>
+<td>Kubernetes (EKS), Argo CD, Argo Workflows</td>
+</tr>
+<tr class="even">
+<td>IaC</td>
+<td>Terraform</td>
+</tr>
+<tr class="odd">
+<td>Observability</td>
+<td>Prometheus, Grafana, Loki, Tempo, OTel</td>
+</tr>
+<tr class="even">
+<td>Auth</td>
+<td>Ory (Hydra + Kratos)</td>
+</tr>
+<tr class="odd">
+<td>Cloud</td>
+<td>AWS primary, GCP secondary for AI workloads</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="142-most-cost-efficient-architecture">14.2 Most Cost-Efficient
+Architecture</h3>
+<ol type="1">
+<li><strong>Self-host LLM inference</strong> for sustained workloads on
+GPU spot pools — typically 60–80% cheaper than API per token at steady
+volume.</li>
+<li><strong>Aggressive CDN + edge cache</strong> — content-heavy
+products live or die on cache-hit ratio; target ≥95%.</li>
+<li><strong>Spot + reserved + on-demand mix</strong> at ~70/20/10 across
+stateless tiers.</li>
+<li><strong>Single primary cloud, portable substrate</strong> —
+multi-cloud reality where it pays (AI), not as a religion.</li>
+<li><strong>Right-size databases by workload</strong> rather than
+running everything as managed Aurora.</li>
+</ol>
+<h3 id="143-most-scalable-approach">14.3 Most Scalable Approach</h3>
+<ul>
+<li>Stateless service tier sized by HPA + KEDA event metrics, not just
+CPU.</li>
+<li>Event-sourced telemetry — replayable, partitioned by tenant.</li>
+<li>Per-tenant resource quotas in Kubernetes; one greedy tenant cannot
+starve another.</li>
+<li>Sharding strategy chosen <em>now</em>, executed later —
+<code>tenant_id</code> is a column on every relevant table from day
+1.</li>
+</ul>
+<h3 id="144-highest-roi-strategic-bets">14.4 Highest-ROI Strategic
+Bets</h3>
+<ol type="1">
+<li><strong>Knowledge graph as core abstraction.</strong> Every dollar
+spent here compounds — recommendations, search, content reuse,
+analytics, and certification all lever off it.</li>
+<li><strong>AI tutor with verifiable citations.</strong> The market is
+saturated with chatbots; <em>trustworthy</em> tutors are not.</li>
+<li><strong>Emerging-markets mobile-first.</strong> Where the demand is
+growing fastest and incumbents are weakest.</li>
+<li><strong>Institutional B2B as primary channel.</strong> Better
+LTV:CAC than B2C; structural moat through integrations.</li>
+<li><strong>Open data export &amp; LTI compliance.</strong>
+Counter-intuitive but a sales accelerator — it removes the "what if we
+want to leave" objection.</li>
+</ol>
+<h3 id="145-risk-mitigation-priorities">14.5 Risk Mitigation
+Priorities</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr class="header">
+<th>Risk</th>
+<th>Mitigation</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>LLM cost spiral</td>
+<td>Self-hosting roadmap from day 1; tiered model routing (small model
+for 80% of asks).</td>
+</tr>
+<tr class="even">
+<td>Single-cloud vendor lock</td>
+<td>Kubernetes + Terraform; quarterly portability audit.</td>
+</tr>
+<tr class="odd">
+<td>Regulatory shock (AI in education)</td>
+<td>Active engagement with regulators; transparency reports; opt-out
+paths.</td>
+</tr>
+<tr class="even">
+<td>Talent concentration</td>
+<td>Distributed teams; documentation as a deliverable; bus-factor
+reviews quarterly.</td>
+</tr>
+<tr class="odd">
+<td>Tenant data leak</td>
+<td>RLS, namespaced infra, automated isolation tests.</td>
+</tr>
+<tr class="even">
+<td>Founder/key-person dependency</td>
+<td>Documented decision logs; cross-training; deputy CTO/CPO pattern by
+year 2.</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="146-future-proofing">14.6 Future-Proofing</h3>
+<ul>
+<li><strong>Model-agnostic abstraction</strong> — every LLM call goes
+through a thin in-house gateway.</li>
+<li><strong>Open standards over proprietary</strong> — LTI 1.3, xAPI,
+OneRoster, IMS Caliper — the slow-moving but compounding bets.</li>
+<li><strong>Schema evolution discipline</strong> — Protobuf with
+required compatibility, no breaking changes without dual-write
+windows.</li>
+<li><strong>AI ethics as a public posture</strong> — publish a model
+card, eval suite, and bias audit annually. Markets, regulators, and
+educators will increasingly require it.</li>
+<li><strong>Sustainability</strong>: carbon-aware scheduling for batch
+ML jobs; pursue green-region preference for non-latency-critical
+workloads.</li>
+</ul>
+<hr />
+<h2 id="closing-note">Closing Note</h2>
+<p>Veda's defensibility is not any single technology choice — every
+component listed here is replicable. The defensibility is in <strong>the
+integrated knowledge graph + mastery model + curriculum-grounded AI
+tutor + multi-stakeholder service design</strong>, executed at
+emerging-market economics. The architecture above is designed to make
+that integration possible without crushing operational debt — and to
+remain credible at every stage from 5 schools to 5 million learners.</p>
+<blockquote>
+<p><strong>Stage-gate mantra:</strong> ship narrow, measure mastery,
+scale what works.</p>
+</blockquote>
+
+  </article>
+</div>
+
+<footer>
+  Veda &middot; <span>Strategic Brief</span> &middot; Internal &amp; Confidential
+</footer>
+
+<script>
+  mermaid.initialize({
+    startOnLoad: true,
+    theme: 'base',
+    themeVariables: {
+      fontFamily: 'IBM Plex Sans, sans-serif',
+      fontSize: '13px',
+      primaryColor: '#FFFCF7',
+      primaryTextColor: '#1C1814',
+      primaryBorderColor: '#1C1814',
+      lineColor: '#4A4339',
+      secondaryColor: '#F3ECDF',
+      tertiaryColor: '#FAF6EF',
+      mainBkg: '#FFFCF7',
+      nodeBorder: '#1C1814',
+      clusterBkg: '#F3ECDF',
+      clusterBorder: '#C9BCA0',
+      titleColor: '#1C1814',
+      edgeLabelBackground: '#FAF6EF',
+      actorBkg: '#FFFCF7',
+      actorBorder: '#1C1814',
+      actorTextColor: '#1C1814',
+      actorLineColor: '#4A4339',
+      signalColor: '#4A4339',
+      signalTextColor: '#1C1814',
+      labelBoxBkgColor: '#F3ECDF',
+      labelBoxBorderColor: '#1C1814',
+      labelTextColor: '#1C1814',
+      loopTextColor: '#1C1814',
+      noteBkgColor: '#F5EFE3',
+      noteBorderColor: '#8B2635',
+      noteTextColor: '#1C1814',
+      activationBkgColor: '#8B2635',
+      activationBorderColor: '#1C1814'
+    }
+  });
+</script>
+
+</body>
+</html>
